@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using DG.Tweening;
 
 /// <summary>
 /// InputManagerで使われているボタン名の文字列を管理
@@ -40,14 +41,27 @@ public class InputUtility : Singleton<InputUtility>
     /// <summary> コントローラー </summary>
     static Gamepad _Gamepad = default;
 
+    [Header("コントローラー振動用に用いるパラメーター")]
     [SerializeField, Range(0, 1), Tooltip("コントローラーの右側の振動の強さ")]
     float _RightShakePower = 0.5f;
+
+    /// <summary>DOTween保管用 : コントローラーの右側の振動の強さ</summary>
+    float _TweenRightShakePower = 0f;
 
     [SerializeField, Range(0, 1), Tooltip("コントローラーの左側の振動の強さ")]
     float _LeftShakePower = 0.5f;
 
-    [SerializeField, Tooltip("コントローラーの振動の間隔")]
-    float _ShakeInterval = 0.2f;
+    /// <summary>DOTween保管用 : コントローラーの左側の振動の強さ</summary>
+    float _TweenLeftShakePower = 0f;
+
+    [SerializeField, Tooltip("コントローラーの振動させる時間")]
+    float _ShakeInterval = 0.75f;
+
+    [SerializeField, Tooltip("コントローラーの振動していない時間")]
+    float _UnShakeInterval = 0.75f;
+
+    [SerializeField, Tooltip("DOTweenを使って振動させる場合の使うEasingタイプ")]
+    Ease _TweenShakeMode = Ease.Linear;
     #endregion
 
     #region InputAction
@@ -107,7 +121,7 @@ public class InputUtility : Singleton<InputUtility>
         //ゲームパッド情報を取得
         _Gamepad = Gamepad.current;
 
-        StartCoroutine(PalusShake());
+        StartCoroutine(PalusTestShake());
     }
 
     // Update is called once per frame
@@ -124,6 +138,8 @@ public class InputUtility : Singleton<InputUtility>
         _JumpAction = actionMap[_ButtonNameJump];
         _CommandAction = actionMap[_ButtonNameCommand];
         _AttackAction = actionMap[_ButtonNameAttack];
+
+        SimpleShakeController(_TweenLeftShakePower, _TweenRightShakePower);
     }
 
     void OnDestroy()
@@ -158,13 +174,60 @@ public class InputUtility : Singleton<InputUtility>
     {
         while (enabled)
         {
-            SimpleShakeController(_LeftShakePower, _RightShakePower);
+            _TweenLeftShakePower = _LeftShakePower;
+            _TweenRightShakePower = _RightShakePower;
 
             yield return new WaitForSeconds(_ShakeInterval);
 
-            StopShakeController();
+            _TweenLeftShakePower = 0f;
+            _TweenRightShakePower = 0f;
+
+            yield return new WaitForSeconds(_UnShakeInterval);
+        }
+    }
+
+    /// <summary>コントローラーの振動を一定間隔で</summary>
+    IEnumerator PalusTweenShake(Ease ease = Ease.Linear)
+    {
+        while (enabled)
+        {
+            
+            DOTween.To(() => _TweenLeftShakePower, f => _TweenLeftShakePower = f, 0, _ShakeInterval).SetEase(ease);
+            DOTween.To(() => _TweenRightShakePower, f => _TweenRightShakePower = f, 0, _ShakeInterval).SetEase(ease);
 
             yield return new WaitForSeconds(_ShakeInterval);
+
+            _TweenLeftShakePower = 0f;
+            _TweenRightShakePower = 0f;
+
+            yield return new WaitForSeconds(_UnShakeInterval);
+
+            _TweenLeftShakePower = _LeftShakePower;
+            _TweenRightShakePower = _RightShakePower;
+        }
+    }
+
+    /// <summary>コントローラーの振動を一定間隔で</summary>
+    IEnumerator PalusTestShake()
+    {
+        while (enabled)
+        {
+            Sequence seqLeft = DOTween.Sequence();
+            Sequence seqRight = DOTween.Sequence();
+            seqLeft.Append(DOTween.To(() => _TweenLeftShakePower, f => _TweenLeftShakePower = f, 0, _ShakeInterval).SetEase(Ease.InCubic));
+            seqRight.Append(DOTween.To(() => _TweenRightShakePower, f => _TweenRightShakePower = f, _RightShakePower, _ShakeInterval / 2f).SetEase(Ease.InCubic));
+            seqRight.Append(DOTween.To(() => _TweenRightShakePower, f => _TweenRightShakePower = f, 0, _ShakeInterval / 2f).SetEase(Ease.OutCubic));
+            seqLeft.Play();
+            seqRight.Play();
+
+            yield return seqRight.WaitForCompletion();
+
+            _TweenLeftShakePower = 0f;
+            _TweenRightShakePower = 0f;
+
+            yield return new WaitForSeconds(_UnShakeInterval);
+
+            _TweenLeftShakePower = _LeftShakePower;
         }
     }
 }
