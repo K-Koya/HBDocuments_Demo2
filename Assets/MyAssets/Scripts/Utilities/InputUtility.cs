@@ -36,10 +36,10 @@ public class InputUtility : Singleton<InputUtility>
     [SerializeField, Tooltip("InputActionにおける、攻撃入力名")]
     string _ButtonNameAttack = "Attack";
     #endregion
-
+    /*
     #region コントローラー振動用メンバ
     /// <summary> コントローラー </summary>
-    static Gamepad _Gamepad = default;
+    //static Gamepad _Gamepad = default;
 
     [Header("コントローラー振動用に用いるパラメーター")]
     [SerializeField, Range(0, 1), Tooltip("コントローラーの右側の振動の強さ")]
@@ -60,9 +60,13 @@ public class InputUtility : Singleton<InputUtility>
     [SerializeField, Tooltip("コントローラーの振動していない時間")]
     float _UnShakeInterval = 0.75f;
 
-    [SerializeField, Tooltip("DOTweenを使って振動させる場合の使うEasingタイプ")]
-    Ease _TweenShakeMode = Ease.Linear;
+    [SerializeField, Tooltip("DOTweenを使って細かい振動をさせる場合の使うEasingタイプ")]
+    Ease _TweenShakeModeRight = Ease.Linear;
+
+    [SerializeField, Tooltip("DOTweenを使って大きな振動をさせる場合の使うEasingタイプ")]
+    Ease _TweenShakeModeLeft = Ease.Linear;
     #endregion
+    */
 
     #region InputAction
     /// <summary> スタートボタンの入力状況 </summary>
@@ -118,10 +122,7 @@ public class InputUtility : Singleton<InputUtility>
     // Start is called before the first frame update
     void Start()
     {
-        //ゲームパッド情報を取得
-        _Gamepad = Gamepad.current;
 
-        StartCoroutine(PalusTestShake());
     }
 
     // Update is called once per frame
@@ -139,9 +140,8 @@ public class InputUtility : Singleton<InputUtility>
         _CommandAction = actionMap[_ButtonNameCommand];
         _AttackAction = actionMap[_ButtonNameAttack];
 
-        SimpleShakeController(_TweenLeftShakePower, _TweenRightShakePower);
     }
-
+/*
     void OnDestroy()
     {
         StopShakeController();
@@ -187,13 +187,12 @@ public class InputUtility : Singleton<InputUtility>
     }
 
     /// <summary>コントローラーの振動を一定間隔で</summary>
-    IEnumerator PalusTweenShake(Ease ease = Ease.Linear)
+    IEnumerator PalusTweenShake()
     {
         while (enabled)
         {
-            
-            DOTween.To(() => _TweenLeftShakePower, f => _TweenLeftShakePower = f, 0, _ShakeInterval).SetEase(ease);
-            DOTween.To(() => _TweenRightShakePower, f => _TweenRightShakePower = f, 0, _ShakeInterval).SetEase(ease);
+            DOTween.To(() => _TweenLeftShakePower, f => _TweenLeftShakePower = f, 0, _ShakeInterval).SetEase(_TweenShakeModeLeft);
+            DOTween.To(() => _TweenRightShakePower, f => _TweenRightShakePower = f, 0, _ShakeInterval).SetEase(_TweenShakeModeRight);
 
             yield return new WaitForSeconds(_ShakeInterval);
 
@@ -230,4 +229,5 @@ public class InputUtility : Singleton<InputUtility>
             _TweenLeftShakePower = _LeftShakePower;
         }
     }
+*/
 }
