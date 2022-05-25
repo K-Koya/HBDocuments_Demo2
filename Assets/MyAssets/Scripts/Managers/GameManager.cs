@@ -5,6 +5,20 @@ using UnityEngine;
 /// <summary> ゲーム全体の流れを制御するコンポーネント </summary>
 public class GameManager : Singleton<GameManager>
 {
+    #region メンバ
+    /// <summary>True : ポーズ中である</summary>
+    bool _IsPausing = false;
+
+
+
+    #endregion
+
+    #region プロパティ
+    /// <summary>True : ポーズ中である</summary>
+    public bool IsPausing { get => _IsPausing; }
+    #endregion
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -15,6 +29,12 @@ public class GameManager : Singleton<GameManager>
     void Update()
     {
         
+    }
+
+    /// <summary>ポーズボタンでポーズ制御するメソッド</summary>
+    void DoPausing()
+    {
+
     }
 }
 

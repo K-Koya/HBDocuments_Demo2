@@ -21,8 +21,8 @@ public class InputUtility : Singleton<InputUtility>
     [SerializeField, Tooltip("InputActionにおける、リストメニューボタン名")]
     string _ButtonNameOption = "Option";
 
-    [SerializeField, Tooltip("InputActionにおける、移動入力名")]
-    string _StickNameMove = "Move";
+    [SerializeField, Tooltip("InputActionにおける、移動方向の入力名")]
+    string _StickNameMoveDirection = "MoveDirection";
 
     [SerializeField, Tooltip("InputActionにおける、カメラ移動入力名")]
     string _StickNameCameraMove = "CameraMove";
@@ -79,7 +79,7 @@ public class InputUtility : Singleton<InputUtility>
     static InputAction _OptionAction = default;
 
     /// <summary> 移動操作の入力状況 </summary>
-    static InputAction _MoveAction = default;
+    static InputAction _MoveDirectionAction = default;
 
     /// <summary> カメラ移動操作の入力状況 </summary>
     static InputAction _CameraMoveAction = default;
@@ -101,8 +101,8 @@ public class InputUtility : Singleton<InputUtility>
     static public bool GetDownPause { get => _PauseAction.triggered; }
     /// <summary> リストメニューボタン押下直後 </summary>
     static public bool GetDownOption { get => _OptionAction.triggered; }
-    /// <summary> 移動操作の二次元値 </summary>
-    static public Vector2 GetAxis2DMove { get => _MoveAction.ReadValue<Vector2>(); }
+    /// <summary> 移動操作の方向の二次元値 </summary>
+    static public Vector2 GetAxis2DMoveDirection { get => _MoveDirectionAction.ReadValue<Vector2>(); }
     /// <summary> カメラ移動操作の二次元値 </summary>
     static public Vector2 GetAxis2DCameraMove { get => _CameraMoveAction.ReadValue<Vector2>(); }
     /// <summary> ジャンプボタン押下直後 </summary>
@@ -122,24 +122,17 @@ public class InputUtility : Singleton<InputUtility>
     // Start is called before the first frame update
     void Start()
     {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
         //入力を関連付け
         PlayerInput input = GetComponent<PlayerInput>();
         InputActionMap actionMap = input.currentActionMap;
         _StartAction = actionMap[_ButtonNameStart];
         _PauseAction = actionMap[_ButtonNamePause];
         _OptionAction = actionMap[_ButtonNameOption];
-        _MoveAction = actionMap[_StickNameMove];
+        _MoveDirectionAction = actionMap[_StickNameMoveDirection];
         _CameraMoveAction = actionMap[_StickNameCameraMove];
         _JumpAction = actionMap[_ButtonNameJump];
         _CommandAction = actionMap[_ButtonNameCommand];
         _AttackAction = actionMap[_ButtonNameAttack];
-
     }
 /*
     void OnDestroy()
