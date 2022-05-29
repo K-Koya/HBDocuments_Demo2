@@ -91,7 +91,7 @@ public class GroundCheckerForCapsuleCollider : GroundChecker
     void WithdrawalForSphereCast()
     {
         RaycastHit hit;
-        if (Physics.SphereCast(_CastBasePosition1 + transform.position, _Collider.radius * 0.9f, _GravityDirection, out hit, _Collider.radius, _GroundLayer))
+        if (Physics.SphereCast(_CastBasePosition1 + transform.position, _Collider.radius * 0.9f, _GravityDirection, out hit, _Collider.radius * 3f, _GroundLayer))
         {
             _IsGround = false;
         }

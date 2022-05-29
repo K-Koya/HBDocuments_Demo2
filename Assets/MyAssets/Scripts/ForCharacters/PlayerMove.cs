@@ -57,6 +57,8 @@ public class PlayerMove : CharacterMove
                 //速度(向き)を、入力方向へ設定
                 _Rb.velocity = Quaternion.FromToRotation(Vector3.ProjectOnPlane(_Rb.velocity, -GravityDirection), transform.forward) * _Rb.velocity;
 
+                //重力をかける
+                _Rb.AddForce(GravityDirection * 9.8f, ForceMode.Acceleration);
             }
             //移動力がなければ、現在の速度が閾値を下回った時に0にする
             else
@@ -70,7 +72,18 @@ public class PlayerMove : CharacterMove
         //空中
         else
         {
-            
+            //移動力がかかっている
+            if (_CurrentMovePower > 0f)
+            {
+                //回転する
+                CharacterRotation(_CharacterDirection, -GravityDirection, 90f);
+
+                //力をかける
+                _Rb.AddForce(_CharacterDirection * _CurrentMovePower * 5f, ForceMode.Acceleration);
+            }
+
+            //重力をかける
+            _Rb.AddForce(GravityDirection * 9.8f, ForceMode.Acceleration);
         }
 
         //速度減衰をかける
@@ -78,10 +91,8 @@ public class PlayerMove : CharacterMove
         {
             _Rb.AddForce(_ForceOfBrake, ForceMode.Acceleration);
         }
-
-        //重力をかける
-        _Rb.AddForce(GravityDirection * 9.8f, ForceMode.Acceleration);
     }
+
 
 
     /// <summary>重力方向の逐一変化をしない移動メソッド</summary>
@@ -101,7 +112,7 @@ public class PlayerMove : CharacterMove
             //移動入力の大きさを取得
             _CurrentMovePower = _CharacterDirection.magnitude;
             //移動方向を取得
-            _CharacterDirection = _CharacterDirection.normalized;
+            _CharacterDirection = _CharacterDirection * (1 / _CurrentMovePower);
         }
         else
         {
@@ -114,6 +125,22 @@ public class PlayerMove : CharacterMove
         if (isMoving)
         {
             _ForceOfBrake = -horizontal * 0.2f;
+        }
+
+
+        //着地時にジャンプ処理
+        if(IsGround && InputUtility.GetDownJump)
+        {
+            _Rb.AddForce(-GravityDirection * 7f, ForceMode.VelocityChange);
+        }
+
+        //ジャンプ力減衰
+        if (!InputUtility.GetJump)
+        {
+            if (!IsGround && Vector3.Angle(-GravityDirection, _Rb.velocity) < 90f)
+            {
+                _Rb.velocity = Vector3.ProjectOnPlane(_Rb.velocity, Vector3.up);
+            }
         }
     }
 

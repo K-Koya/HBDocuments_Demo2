@@ -18,16 +18,14 @@ public class CharacterMove : MonoBehaviour
     protected Timeline _Tl = default;
 
 
-    /// <summary>移動方向情報</summary>
-    protected Vector3 _MoveDirection = default;
-
     /// <summary>キャラクター正面方向情報</summary>
     protected Vector3 _CharacterDirection = default;
 
-
-
     /// <summary>着地判定をするコンポーネント</summary>
     GroundChecker _GroundChecker = default;
+
+
+
 
     /// <summary>移動用メソッド</summary>
     protected Action Move = default;
