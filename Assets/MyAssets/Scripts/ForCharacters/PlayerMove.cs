@@ -23,6 +23,8 @@ public class PlayerMove : CharacterMove
     #region プロパティ
     /// <summary>Rigidbodyのvelocityを移動方向平面に換算したもの</summary>
     Vector3 VelocityOnPlane => Vector3.ProjectOnPlane(_Rb.velocity, -GravityDirection);
+    /// <summary>移動速度</summary>
+    public override float Speed => VelocityOnPlane.magnitude;
     #endregion
 
     protected override void Start()
@@ -67,6 +69,9 @@ public class PlayerMove : CharacterMove
                 {
                     _Rb.velocity = Vector3.Project(_Rb.velocity, -GravityDirection);
                 }
+
+                //重力をかける
+                _Rb.AddForce(GravityDirection * 1f, ForceMode.Acceleration);
             }
         }
         //空中
@@ -128,19 +133,18 @@ public class PlayerMove : CharacterMove
         }
 
 
-        //着地時にジャンプ処理
-        if(IsGround && InputUtility.GetDownJump)
+        //ジャンプ力減衰
+        if (!InputUtility.GetJump && !IsGround && Vector3.Angle(-GravityDirection, _Rb.velocity) < 90f)
         {
-            _Rb.AddForce(-GravityDirection * 7f, ForceMode.VelocityChange);
+            _Rb.velocity = Vector3.ProjectOnPlane(_Rb.velocity, -GravityDirection);
         }
 
-        //ジャンプ力減衰
-        if (!InputUtility.GetJump)
+        //着地時にジャンプ処理
+        _JumpFlag = false;
+        if (IsGround && InputUtility.GetDownJump)
         {
-            if (!IsGround && Vector3.Angle(-GravityDirection, _Rb.velocity) < 90f)
-            {
-                _Rb.velocity = Vector3.ProjectOnPlane(_Rb.velocity, Vector3.up);
-            }
+            _Rb.AddForce(-GravityDirection * 7f, ForceMode.VelocityChange);
+            _JumpFlag = true;
         }
     }
 
