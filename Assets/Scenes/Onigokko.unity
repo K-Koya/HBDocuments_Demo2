@@ -1938,7 +1938,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 947642365}
-  m_LocalRotation: {x: 0.21246615, y: 3.5121567e-15, z: -8.215049e-16, w: 0.97716844}
+  m_LocalRotation: {x: 0.21246614, y: 0.000000014560943, z: -0.0000000031659917, w: 0.97716844}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2024,7 +2024,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0.1946568, y: -0.0000000034728485, z: 6.718981e-10, w: 0.98087144}
+  m_LocalRotation: {x: 0.1946568, y: -0.0000000034728591, z: 6.7195e-10, w: 0.98087144}
   m_LocalPosition: {x: 2.445, y: 2.5000002, z: -3.0461044}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -3336,7 +3336,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1844041289}
-  m_LocalRotation: {x: 0.17683032, y: 0.000000008467617, z: -0.0000000015213049, w: 0.98424137}
+  m_LocalRotation: {x: 0.17683032, y: -0.000000008467458, z: 0.0000000015212767, w: 0.98424137}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -3431,7 +3431,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2057701237}
   - component: {fileID: 2057701236}
-  - component: {fileID: 2057701235}
   - component: {fileID: 2057701234}
   - component: {fileID: 2057701233}
   m_Layer: 0
@@ -3468,21 +3467,6 @@ MonoBehaviour:
   PlayerIndex: -1
   XYAxis: {fileID: -3185210613003159, guid: a618ce5b1139eef4ca589b8843fcbb32, type: 3}
   ZAxis: {fileID: -3185210613003159, guid: a618ce5b1139eef4ca589b8843fcbb32, type: 3}
---- !u!114 &2057701235
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2057701232}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fb7194dc27b9df64c8beca7482ee8e0d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  PlayerIndex: -1
-  XYAxis: {fileID: -4896714835216338870, guid: a618ce5b1139eef4ca589b8843fcbb32, type: 3}
-  ZAxis: {fileID: -4896714835216338870, guid: a618ce5b1139eef4ca589b8843fcbb32, type: 3}
 --- !u!114 &2057701236
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3576,12 +3560,12 @@ MonoBehaviour:
   m_BindingMode: 4
   m_SplineCurvature: 0.2
   m_Orbits:
-  - m_Height: 4.5
-    m_Radius: 1.75
+  - m_Height: 5
+    m_Radius: 0.3
   - m_Height: 2.5
     m_Radius: 3
-  - m_Height: 0.4
-    m_Radius: 1.3
+  - m_Height: 0
+    m_Radius: 0.3
   m_LegacyHeadingBias: 3.4028235e+38
   m_Rigs:
   - {fileID: 947642366}

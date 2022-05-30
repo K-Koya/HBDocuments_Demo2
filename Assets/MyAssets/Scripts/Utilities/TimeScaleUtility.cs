@@ -8,12 +8,24 @@ using Chronos;
 [RequireComponent(typeof(Timekeeper))]
 public class TimeScaleUtility : Singleton<TimeScaleUtility>
 {
+    #region メンバ
     /// <summary> すべてのグローバルクロックを制御するタイムキーパー </summary>
     Timekeeper _Tk = default;
 
     [Header("以下、派生メンバー")]
     [SerializeField, Tooltip("登録されているGlobalclock名をここにアサイン")]
     GlobalclockName _GlobalclockName = new GlobalclockName();
+
+    /// <summary>true : ポーズフラグ</summary>
+    static bool _IsPausing = false;
+
+    #endregion
+
+    #region プロパティ
+    /// <summary>true : ポーズフラグ</summary>
+    public static bool IsPausing { get => _IsPausing; }
+
+    #endregion
 
     // Start is called before the first frame update
     void Start()
@@ -24,7 +36,19 @@ public class TimeScaleUtility : Singleton<TimeScaleUtility>
     // Update is called once per frame
     void Update()
     {
-        
+        if (InputUtility.GetDownPause)
+        {
+            if (_IsPausing)
+            {
+                _Tk.Clock(_GlobalclockName.Pausable).paused = false;
+                _IsPausing = false;
+            }
+            else
+            {
+                _Tk.Clock(_GlobalclockName.Pausable).paused = true;
+                _IsPausing = true;
+            }
+        }
     }
 
 

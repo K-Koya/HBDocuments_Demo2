@@ -19,7 +19,10 @@ public class CMFreeLookUtility : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(!_CM.Follow || !_CM.LookAt)
+        if(TimeScaleUtility.IsPausing) _CM.enabled = false;
+        else _CM.enabled = true;
+
+        if (!_CM.Follow || !_CM.LookAt)
         {
             SeekPlayer();
         }
