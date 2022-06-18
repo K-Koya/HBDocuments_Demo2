@@ -36,6 +36,7 @@ public class TimeScaleUtility : Singleton<TimeScaleUtility>
     // Update is called once per frame
     void Update()
     {
+        //ポーズ機能
         if (InputUtility.GetDownPause)
         {
             if (_IsPausing)

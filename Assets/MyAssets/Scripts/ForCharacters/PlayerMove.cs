@@ -23,6 +23,7 @@ public class PlayerMove : CharacterMove
     #region プロパティ
     /// <summary>Rigidbodyのvelocityを移動方向平面に換算したもの</summary>
     Vector3 VelocityOnPlane => Vector3.ProjectOnPlane(_Rb.velocity, -GravityDirection);
+
     /// <summary>移動速度</summary>
     public override float Speed => VelocityOnPlane.magnitude;
     #endregion
@@ -60,7 +61,7 @@ public class PlayerMove : CharacterMove
                 _Rb.velocity = Quaternion.FromToRotation(Vector3.ProjectOnPlane(_Rb.velocity, -GravityDirection), transform.forward) * _Rb.velocity;
 
                 //重力をかける
-                _Rb.AddForce(GravityDirection * 9.8f, ForceMode.Acceleration);
+                _Rb.AddForce(GravityDirection * 2f, ForceMode.Acceleration);
             }
             //移動力がなければ、現在の速度が閾値を下回った時に0にする
             else
