@@ -1,8 +1,15 @@
 using UnityEngine;
+using Chronos;
 
 [RequireComponent(typeof(CapsuleCollider))]
 public class GroundCheckerForCapsuleCollider : GroundChecker
 {
+    /// <summary>強制的に着地していない状態とするまでの時間</summary>
+    const float _ENFOERCE_NOT_GROUNDED_TIME = 0.1f;
+
+    /// <summary>地面に接していない時の計測時間</summary>
+    float _NotGroundedTimer = 0f;
+
     [SerializeField, Tooltip("当該オブジェクトのコライダー")]
     CapsuleCollider _Collider = default;
 
@@ -15,11 +22,15 @@ public class GroundCheckerForCapsuleCollider : GroundChecker
     /// <summary>登れる坂とみなすための中心点からの距離</summary>
     float _SlopeAngleThreshold = 1f;
 
+    /// <summary>当該キャラクターが持つ時間軸コンポーネント</summary>
+    Timeline _Tl = default;
+
 
 
     // Start is called before the first frame update
     void Start()
     {
+        _Tl = GetComponent<Timeline>();
         _Collider = GetComponent<CapsuleCollider>();
 
         float centerOffset = (_Collider.height - _Collider.radius * 2f) / 2f;
@@ -60,9 +71,20 @@ public class GroundCheckerForCapsuleCollider : GroundChecker
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
+        if (!_IsFindGroundObject)
+        {
+            _NotGroundedTimer += _Tl.fixedDeltaTime;
+            if(_NotGroundedTimer > _ENFOERCE_NOT_GROUNDED_TIME)
+            {
+                _IsGround = false;
+                _NotGroundedTimer = 0f;
+            }
+        }
+        else _NotGroundedTimer = 0f;
 
+        _IsFindGroundObject = false;
     }
 
     /// <summary>SphereCastで地面を探すメソッド</summary>
@@ -70,31 +92,20 @@ public class GroundCheckerForCapsuleCollider : GroundChecker
     void SeekGroundForSphereCast()
     {
         RaycastHit hit;
-        if (Physics.SphereCast(_CastBasePosition1 + transform.position, _Collider.radius * 0.9f, _GravityDirection, out hit, _Collider.radius, _GroundLayer))
+        if (Physics.SphereCast(_CastBasePosition1 + transform.position, _Collider.radius * 0.99f, _GravityDirection, out hit, _Collider.radius, _GroundLayer))
         {
             if (Vector3.SqrMagnitude(transform.position - hit.point) < _SlopeAngleThreshold * _SlopeAngleThreshold)
             {
                 _IsGround = true;
+                _IsFindGroundObject = true;
             }
-            else
-            {
-                _IsGround = false;
-            }
-        }
-        else
-        {
-            _IsGround = false;
         }
     }
 
     /// <summary>SphereCastでコライダー離脱が地面だったかを確かめるメソッド</summary>
     void WithdrawalForSphereCast()
     {
-        RaycastHit hit;
-        if (Physics.SphereCast(_CastBasePosition1 + transform.position, _Collider.radius * 1.2f, _GravityDirection, out hit, _Collider.radius * 3f, _GroundLayer))
-        {
-            _IsGround = false;
-        }
+        
     }
 
     /// <summary>CapsuleCastで地面を探すメソッド</summary>
@@ -106,15 +117,8 @@ public class GroundCheckerForCapsuleCollider : GroundChecker
             if (Vector3.Angle(-_GravityDirection, hit.normal) > (90f - _SlopeLimit))
             {
                 _IsGround = true;
+                _IsFindGroundObject = true;
             }
-            else
-            {
-                _IsGround = false;
-            }
-        }
-        else
-        {
-            _IsGround = false;
         }
     }
 }

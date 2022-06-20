@@ -1,9 +1,13 @@
 using System;
 using UnityEngine;
+using Chronos;
 
 public class GroundChecker : MonoBehaviour
 {
     #region メンバ
+    /// <summary>True : 地面オブジェクトを見つけている</summary>
+    protected bool _IsFindGroundObject = false;
+
     [SerializeField, Tooltip("True : 着地している")]
     protected bool _IsGround = false;
 
@@ -30,7 +34,6 @@ public class GroundChecker : MonoBehaviour
     /// <summary>キャラクターの重力向き</summary>
     public Vector3 GravityDirection { get => _GravityDirection; set => _GravityDirection = value; }
     #endregion
-
 
     protected void OnCollisionStay(Collision collision)
     {
