@@ -1,0 +1,126 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.AI;
+using Chronos;
+
+public class AlliesMove : CharacterMove
+{
+    #region メンバ
+    /// <summary>当該キャラクターの物理挙動コンポーネント</summary>
+    RigidbodyTimeline3D _Rb = null;
+
+    /// <summary>当該キャラクターの移動制御</summary>
+    NavMeshAgent _Nav = null;
+
+    /// <summary>前フレームの位置座標</summary>
+    Vector3 _BeforeFramePosition = Vector3.zero;
+
+    /// <summary>移動量</summary>
+    Vector3 _NavVelocity = Vector3.zero;
+
+    /// <summary>現在の移動方式</summary>
+    UsingMoveMode _MoveMode = UsingMoveMode.AddTransform;
+
+    /// <summary>移動先座標</summary>
+    Vector3? _Destination = null;
+
+    /// <summary>かかっている外力</summary>
+    Vector3? _ForceAdditon = null;
+    #endregion
+
+    #region プロパティ
+    /// <summary>Rigidbodyのvelocityを移動方向平面に換算したもの</summary>
+    Vector3 VelocityOnPlane => Vector3.ProjectOnPlane(_NavVelocity, -GravityDirection);
+
+    /// <summary>移動速度</summary>
+    public override float Speed => VelocityOnPlane.magnitude;
+
+    /// <summary>現在の移動方式</summary>
+    public UsingMoveMode MoveMode { get => _MoveMode; }
+
+    /// <summary>移動先座標</summary>
+    public Vector3? Destination { set => _Destination = value; }
+
+    /// <summary>かかっている外力</summary>
+    public Vector3? ForceAdditon { set => _ForceAdditon = value; }
+    #endregion
+
+    // Start is called before the first frame update
+    protected override void Start()
+    {
+        base.Start();
+
+        _Rb = _Tl.rigidbody;
+        _Rb.useGravity = false;
+
+        _Nav = _Tl.navMeshAgent.component;
+
+        _BeforeFramePosition = transform.position;
+    }
+
+    // Update is called once per frame
+    protected override void Update()
+    {
+        //timeScaleが0ならポーズ中
+        if (!(_Tl.timeScale > 0f)) return;
+
+        base.Update();
+
+        _NavVelocity = transform.position - _BeforeFramePosition;
+        _BeforeFramePosition = transform.position;
+    }
+
+    /// <summary>指定方向へ飛ばすような力をかける</summary>
+    /// <param name="force">指定の力の向きと大きさ</param>
+    public void AddForceImpulse(Vector3 force)
+    {
+        _Nav.isStopped = true;
+    }
+
+    /// <summary>指定位置から指定の力で外側へ飛ばすような力をかける</summary>
+    /// <param name="source">指定位置</param>
+    /// <param name="power">>指定の力の大きさ</param>
+    public void AddForceExplode(Vector3 source, float power)
+    {
+        _Nav.isStopped = true;
+        
+    }
+
+    /// <summary>NavMeshAgentのDestinationに一定間隔で目的地を指示するコルーチン</summary>
+    /// <returns></returns>
+    IEnumerator DestinationSetOnAgent()
+    {
+        while (true)
+        {
+            if(_Destination == null)
+            {
+                _Nav.isStopped = true;
+                _Rb.isKinematic = false;
+
+                yield return null;
+            }
+            else
+            {
+                RaycastHit hit;
+                if (Physics.Raycast((Vector3)_Destination + Vector3.up * 0.2f, Vector3.down, out hit, 0.3f, LayerAndTagManager.I.AllGround))
+                {
+                    _Nav.destination = hit.point;
+                }
+
+                yield return _Tl.WaitForSeconds(0.2f);
+            }
+        }
+    }
+
+    /// <summary>現在の移動動作モード</summary>
+    public enum UsingMoveMode
+    {
+        /// <summary>物理挙動を利用</summary>
+        Rigidbody,
+        /// <summary>座標移動</summary>
+        AddTransform,
+        /// <summary>ナビメッシュで誘導</summary>
+        NavMesh,
+    }
+}

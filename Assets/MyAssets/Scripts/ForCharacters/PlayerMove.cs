@@ -118,7 +118,7 @@ public class PlayerMove : CharacterMove
             //ˆÚ“®“ü—Í‚Ì‘å‚«‚³‚ðŽæ“¾
             _CurrentMovePower = _CharacterDirection.magnitude;
             //ˆÚ“®•ûŒü‚ðŽæ“¾
-            _CharacterDirection = _CharacterDirection * (1 / _CurrentMovePower);
+            _CharacterDirection *= 1 / _CurrentMovePower;
         }
         else
         {
