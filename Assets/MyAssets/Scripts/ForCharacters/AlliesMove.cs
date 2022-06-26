@@ -33,6 +33,18 @@ public class AlliesMove : CharacterMove
     /// <summary>Rigidbodyのvelocityを移動方向平面に換算したもの</summary>
     Vector3 VelocityOnPlane => Vector3.ProjectOnPlane(_NavVelocity, -GravityDirection);
 
+
+    public override bool IsGround
+    {
+        get
+        {
+            bool isGround = base.IsGround;
+            if (!_Nav.isStopped) isGround = _Nav.isOnNavMesh;
+
+            return isGround;
+        }
+    }
+
     /// <summary>移動速度</summary>
     public override float Speed => VelocityOnPlane.magnitude;
 
@@ -46,6 +58,18 @@ public class AlliesMove : CharacterMove
     public Vector3? ForceAdditon { set => _ForceAdditon = value; }
     #endregion
 
+    protected override void Awake()
+    {
+        base.Awake();
+        _Allies.Add(this);
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+        _Allies.Remove(this);
+    }
+
     // Start is called before the first frame update
     protected override void Start()
     {
@@ -57,18 +81,41 @@ public class AlliesMove : CharacterMove
         _Nav = _Tl.navMeshAgent.component;
 
         _BeforeFramePosition = transform.position;
+
+        Move = MoveByNavMesh;
     }
 
     // Update is called once per frame
     protected override void Update()
     {
-        //timeScaleが0ならポーズ中
-        if (!(_Tl.timeScale > 0f)) return;
-
         base.Update();
 
         _NavVelocity = transform.position - _BeforeFramePosition;
         _BeforeFramePosition = transform.position;
+    }
+
+    /// <summary>ナビメッシュによる移動メソッド</summary>
+    void MoveByNavMesh()
+    {
+        //力がかかって押し出されている時
+        if (_Nav.isStopped)
+        {
+            //かかっている外力が小さくなった
+            if(_Rb.velocity.sqrMagnitude < 0.04f)
+            {
+                _Rb.velocity = Vector3.zero;
+                _Nav.isStopped = false;
+            }
+        }
+
+        _Destination = Player.transform.position;
+        StartCoroutine(DestinationSetOnAgent());
+    }
+
+    /// <summary>リジッドボディによる移動メソッド</summary>
+    void MoveByRigidbody()
+    {
+
     }
 
     /// <summary>指定方向へ飛ばすような力をかける</summary>
@@ -84,7 +131,6 @@ public class AlliesMove : CharacterMove
     public void AddForceExplode(Vector3 source, float power)
     {
         _Nav.isStopped = true;
-        
     }
 
     /// <summary>NavMeshAgentのDestinationに一定間隔で目的地を指示するコルーチン</summary>

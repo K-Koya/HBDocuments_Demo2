@@ -28,6 +28,18 @@ public class PlayerMove : CharacterMove
     public override float Speed => VelocityOnPlane.magnitude;
     #endregion
 
+    protected override void Awake()
+    {
+        base.Awake();
+        _Player = this;
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+        _Player = null;
+    }
+
     protected override void Start()
     {
         base.Start();
@@ -41,9 +53,6 @@ public class PlayerMove : CharacterMove
 
     void FixedUpdate()
     {
-        //timeScaleが0ならポーズ中
-        if (!(_Tl.timeScale > 0f)) return;
-
         //着地しているか否かで分岐
         //着地中
         if (IsGround)

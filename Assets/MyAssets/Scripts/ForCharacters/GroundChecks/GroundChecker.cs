@@ -11,9 +11,6 @@ public class GroundChecker : MonoBehaviour
     [SerializeField, Tooltip("True : 着地している")]
     protected bool _IsGround = false;
 
-    [SerializeField, Tooltip("地面と判別するオブジェクトのレイヤー名")]
-    protected LayerMask _GroundLayer = default;
-
     [SerializeField, Tooltip("地面と壁の境界角度")]
     protected float _SlopeLimit = 45f;
 
