@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using Chronos;
+using DG.Tweening;
 
 public class AlliesMove : CharacterMove
 {
@@ -39,14 +40,14 @@ public class AlliesMove : CharacterMove
         get
         {
             bool isGround = base.IsGround;
-            if (!_Nav.isStopped) isGround = _Nav.isOnNavMesh;
+            if (!_Nav.isStopped) isGround = _Nav.isOnNavMesh;   
 
             return isGround;
         }
     }
 
     /// <summary>移動速度</summary>
-    public override float Speed => VelocityOnPlane.magnitude;
+    public override float Speed => VelocityOnPlane.magnitude / _Tl.deltaTime;
 
     /// <summary>現在の移動方式</summary>
     public UsingMoveMode MoveMode { get => _MoveMode; }
@@ -58,15 +59,13 @@ public class AlliesMove : CharacterMove
     public Vector3? ForceAdditon { set => _ForceAdditon = value; }
     #endregion
 
-    protected override void Awake()
+    protected override void RegisterStaticReference()
     {
-        base.Awake();
         _Allies.Add(this);
     }
 
-    protected override void OnDestroy()
+    protected override void EraseStaticReference()
     {
-        base.OnDestroy();
         _Allies.Remove(this);
     }
 
@@ -108,6 +107,47 @@ public class AlliesMove : CharacterMove
             }
         }
 
+        //OffMeshLinkに乗った時
+        if (_Nav.isOnOffMeshLink)
+        {
+            OffMeshLinkData linkData = _Nav.currentOffMeshLinkData;
+
+            //OffMeshLinkが自動生成の場合の処理分岐
+            switch (linkData.linkType)
+            {
+                //落下するリンク
+                case OffMeshLinkType.LinkTypeDropDown:
+
+
+
+                    break;
+                //離れた所にジャンプするリンク
+                case OffMeshLinkType.LinkTypeJumpAcross:
+
+
+
+                    break;
+                //手動作成・設定のリンク
+                default:
+
+                    //手動リンクにつけたtagで分岐する
+                    OffMeshLink link = linkData.offMeshLink;
+                    //ジャンプ等で上り降りする段差のリンク
+                    if (link.CompareTag(TagManager.Ins.OffMeshLinkJumpStep))
+                    {
+
+                    }
+                    //離れた所にジャンプするリンク
+                    else if (link.CompareTag(TagManager.Ins.OffMeshLinkJumpFar))
+                    {
+
+                    }
+
+                    break;
+            }
+
+        }
+
         _Destination = Player.transform.position;
         StartCoroutine(DestinationSetOnAgent());
     }
@@ -134,7 +174,6 @@ public class AlliesMove : CharacterMove
     }
 
     /// <summary>NavMeshAgentのDestinationに一定間隔で目的地を指示するコルーチン</summary>
-    /// <returns></returns>
     IEnumerator DestinationSetOnAgent()
     {
         while (true)
@@ -149,7 +188,7 @@ public class AlliesMove : CharacterMove
             else
             {
                 RaycastHit hit;
-                if (Physics.Raycast((Vector3)_Destination + Vector3.up * 0.2f, Vector3.down, out hit, 0.3f, LayerAndTagManager.I.AllGround))
+                if (Physics.Raycast((Vector3)_Destination + Vector3.up * 0.2f, Vector3.down, out hit, 10f, LayerManager.Ins.AllGround))
                 {
                     _Nav.destination = hit.point;
                 }

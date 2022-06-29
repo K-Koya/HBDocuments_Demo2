@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LayerAndTagManager : Singleton<LayerAndTagManager>
+public class LayerManager : Singleton<LayerManager>
 {
     #region メンバ
     [SerializeField, Tooltip("地面レイヤ")]
@@ -15,7 +15,6 @@ public class LayerAndTagManager : Singleton<LayerAndTagManager>
     LayerMask _Player = default;
     [SerializeField, Tooltip("味方レイヤ")]
     LayerMask _Allies = default;
-
     #endregion
 
     #region プロパティ

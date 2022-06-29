@@ -28,17 +28,16 @@ public class PlayerMove : CharacterMove
     public override float Speed => VelocityOnPlane.magnitude;
     #endregion
 
-    protected override void Awake()
+    protected override void RegisterStaticReference()
     {
-        base.Awake();
         _Player = this;
     }
 
-    protected override void OnDestroy()
+    protected override void EraseStaticReference()
     {
-        base.OnDestroy();
         _Player = null;
     }
+
 
     protected override void Start()
     {

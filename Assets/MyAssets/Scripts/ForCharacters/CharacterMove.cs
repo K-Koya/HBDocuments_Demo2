@@ -40,7 +40,6 @@ abstract public class CharacterMove : MonoBehaviour
     /// <summary>移動用メソッド</summary>
     protected Action Move = default;
 
-
     #endregion
 
     #region プロパティ
@@ -63,15 +62,23 @@ abstract public class CharacterMove : MonoBehaviour
     #endregion
 
 
-    protected virtual void Awake()
+    void Awake()
     {
-
+        RegisterStaticReference();
     }
 
-    protected virtual void OnDestroy()
+    void OnDestroy()
     {
-
+        EraseStaticReference();
     }
+
+    /// <summary>本クラスの静的メンバに自コンポーネントを登録させるメソッド</summary>
+    abstract protected void RegisterStaticReference();
+
+    /// <summary>本クラスの静的メンバから自コンポーネントを抹消するメソッド</summary>
+    abstract protected void EraseStaticReference();
+
+
 
     // Start is called before the first frame update
     protected virtual void Start()
@@ -86,6 +93,6 @@ abstract public class CharacterMove : MonoBehaviour
         //timeScaleが0ならポーズ中
         if (!(_Tl.timeScale > 0f)) return;
 
-        Move();
+        Move?.Invoke();
     }
 }

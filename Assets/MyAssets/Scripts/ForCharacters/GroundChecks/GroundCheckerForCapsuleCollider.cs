@@ -70,7 +70,6 @@ public class GroundCheckerForCapsuleCollider : GroundChecker
         }
     }
 
-    // Update is called once per frame
     void FixedUpdate()
     {
         if (!_IsFindGroundObject)
@@ -92,7 +91,7 @@ public class GroundCheckerForCapsuleCollider : GroundChecker
     void SeekGroundForSphereCast()
     {
         RaycastHit hit;
-        if (Physics.SphereCast(_CastBasePosition1 + transform.position, _Collider.radius * 0.99f, _GravityDirection, out hit, _Collider.radius, LayerAndTagManager.I.AllGround))
+        if (Physics.SphereCast(_CastBasePosition1 + transform.position, _Collider.radius * 0.99f, _GravityDirection, out hit, _Collider.radius, LayerManager.Ins.AllGround))
         {
             if (Vector3.SqrMagnitude(transform.position - hit.point) < _SlopeAngleThreshold * _SlopeAngleThreshold)
             {
@@ -112,7 +111,7 @@ public class GroundCheckerForCapsuleCollider : GroundChecker
     void SeekGroundForCapsuleCast()
     {
         RaycastHit hit;
-        if (Physics.CapsuleCast(_CastBasePosition1, (Vector3)_CastBasePosition2, _Collider.radius * 0.9f, _GravityDirection, out hit, _Collider.radius * 1.1f, LayerAndTagManager.I.AllGround))
+        if (Physics.CapsuleCast(_CastBasePosition1, (Vector3)_CastBasePosition2, _Collider.radius * 0.9f, _GravityDirection, out hit, _Collider.radius * 1.1f, LayerManager.Ins.AllGround))
         {
             if (Vector3.Angle(-_GravityDirection, hit.normal) > (90f - _SlopeLimit))
             {

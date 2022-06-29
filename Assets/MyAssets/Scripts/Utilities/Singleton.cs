@@ -4,7 +4,7 @@ using UnityEngine;
 /// シングルトン化させるコンポーネントの基底クラス
 /// </summary>
 /// <typeparam name="T">MonoBehaviourを継承する（Inspector上に出したい）コンポーネント</typeparam>
-public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
+public abstract class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 {
     [Header("シングルトンオブジェクトである")]
     [SerializeField, Tooltip("ture : DontDestroyOnLoadの対象にする")]
@@ -15,24 +15,24 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
     /// <summary>
     /// Inspector上に出ているシングルトンのコンポーネントインスタンス
     /// </summary>
-    static T _I;
+    static T _Instance;
 
 
     /* プロパティ */
     /// <summary>
-    /// Inspector上に出ているシングルトンのコンポーネントインスタンス
+    /// Inspector上に出ているシングルトンのコンポーネントのインスタンス
     /// </summary>
-    public static T I
+    public static T Ins
     {
         get
         {
             //対象のシングルトンコンポーネントが登録されてなければ、現在のシーンから拾ってくる
-            if (!_I)
+            if (!_Instance)
             {
-                _I = (T)FindObjectOfType(typeof(T));
-                if (!_I) Debug.LogError("シングルトンコンポーネントの " + typeof(T) + " が、現在のシーンに存在しません！");
+                _Instance = (T)FindObjectOfType(typeof(T));
+                if (!_Instance) Debug.LogError("シングルトンコンポーネントの " + typeof(T) + " が、現在のシーンに存在しません！");
             }
-            return _I;
+            return _Instance;
         }
     }
 
@@ -49,10 +49,19 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 
         //登録されているシングルトンコンポーネントが自分のインスタンスと同じなら、DontDestroyOnLoadに登録する
         //異なれば、自分を破棄する
-        if (this != I) Destroy(this.gameObject);
+        if (this != Ins) Destroy(this.gameObject);
         else
         {
             DontDestroyOnLoad(this.gameObject);
         }
+    }
+
+    protected virtual void OnDestroy()
+    {
+        //DontDestroyOnLoadに登録するコンポーネントなら離脱
+        if (_isDontDestroyOnLoad) return;
+
+        //このインスタンスをstaticから除去
+        _Instance = null;
     }
 }
