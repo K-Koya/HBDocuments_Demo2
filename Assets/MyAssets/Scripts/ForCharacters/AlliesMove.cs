@@ -7,6 +7,11 @@ using DG.Tweening;
 
 public class AlliesMove : CharacterMove
 {
+    #region 定数
+    /// <summary>小ジャンプ高度</summary>
+    const float JUMP_HEIGHT_LITTLE = 0.3f;
+    #endregion
+
     #region メンバ
     /// <summary>当該キャラクターの物理挙動コンポーネント</summary>
     RigidbodyTimeline3D _Rb = null;
@@ -20,14 +25,15 @@ public class AlliesMove : CharacterMove
     /// <summary>移動量</summary>
     Vector3 _NavVelocity = Vector3.zero;
 
-    /// <summary>現在の移動方式</summary>
-    UsingMoveMode _MoveMode = UsingMoveMode.AddTransform;
 
     /// <summary>移動先座標</summary>
     Vector3? _Destination = null;
 
     /// <summary>かかっている外力</summary>
     Vector3? _ForceAdditon = null;
+
+    /// <summary>OffMeshLinkに乗っているときの連続動作をするためのコルーチン</summary>
+    Coroutine _OffMeshLinkMotion = null;
     #endregion
 
     #region プロパティ
@@ -46,11 +52,7 @@ public class AlliesMove : CharacterMove
         }
     }
 
-    /// <summary>移動速度</summary>
     public override float Speed => VelocityOnPlane.magnitude / _Tl.deltaTime;
-
-    /// <summary>現在の移動方式</summary>
-    public UsingMoveMode MoveMode { get => _MoveMode; }
 
     /// <summary>移動先座標</summary>
     public Vector3? Destination { set => _Destination = value; }
@@ -97,6 +99,7 @@ public class AlliesMove : CharacterMove
     void MoveByNavMesh()
     {
         //力がかかって押し出されている時
+        /*
         if (_Nav.isStopped)
         {
             //かかっている外力が小さくなった
@@ -106,46 +109,15 @@ public class AlliesMove : CharacterMove
                 _Nav.isStopped = false;
             }
         }
+        */
 
-        //OffMeshLinkに乗った時
-        if (_Nav.isOnOffMeshLink)
+        //OffMeshLinkに初めて乗った時
+        if (_OffMeshLinkMotion == null && _Nav.isOnOffMeshLink)
         {
             OffMeshLinkData linkData = _Nav.currentOffMeshLinkData;
+            OffMeshLink link = linkData.offMeshLink;
 
-            //OffMeshLinkが自動生成の場合の処理分岐
-            switch (linkData.linkType)
-            {
-                //落下するリンク
-                case OffMeshLinkType.LinkTypeDropDown:
-
-
-
-                    break;
-                //離れた所にジャンプするリンク
-                case OffMeshLinkType.LinkTypeJumpAcross:
-
-
-
-                    break;
-                //手動作成・設定のリンク
-                default:
-
-                    //手動リンクにつけたtagで分岐する
-                    OffMeshLink link = linkData.offMeshLink;
-                    //ジャンプ等で上り降りする段差のリンク
-                    if (link.CompareTag(TagManager.Ins.OffMeshLinkJumpStep))
-                    {
-
-                    }
-                    //離れた所にジャンプするリンク
-                    else if (link.CompareTag(TagManager.Ins.OffMeshLinkJumpFar))
-                    {
-
-                    }
-
-                    break;
-            }
-
+            if(link) _OffMeshLinkMotion = StartCoroutine(OffMeshLinkMonementForJump(link));
         }
 
         _Destination = Player.transform.position;
@@ -196,6 +168,41 @@ public class AlliesMove : CharacterMove
                 yield return _Tl.WaitForSeconds(0.2f);
             }
         }
+    }
+
+    IEnumerator OffMeshLinkMonementForJump(OffMeshLink link)
+    {
+        _Nav.isStopped = true;
+
+        //スタートとゴールどっちが上にあるかを判定
+        //スタートから見たゴールまでのベクトルの向きを、重力方向ベクトルと角度を比較する
+        Vector3 directDistance = link.endTransform.position - link.startTransform.position;
+
+        Debug.Log($"start : {link.startTransform.position}\nend : {link.endTransform.position}");
+
+        bool isJumpUp = Vector3.Angle(GravityDirection, directDistance) < 90f;
+
+        //ジャンプ高度を計算
+        float jumpPower = JUMP_HEIGHT_LITTLE;
+        if (isJumpUp)
+        {
+            jumpPower += Vector3.Magnitude(Vector3.Project(directDistance, -GravityDirection));
+        }
+
+        //ジャンプ動作
+        Sequence seq = transform.DOJump(link.endTransform.position, jumpPower, 1, 1f);
+
+        //ジャンプ終わるまで待つ
+        yield return seq.WaitForCompletion();
+
+        link.activated = false;
+        _Nav.CompleteOffMeshLink();
+        _Nav.isStopped = false;
+
+        yield return _Tl.WaitForSeconds(2f);
+
+        link.activated = true;
+        _OffMeshLinkMotion = null;
     }
 
     /// <summary>現在の移動動作モード</summary>
