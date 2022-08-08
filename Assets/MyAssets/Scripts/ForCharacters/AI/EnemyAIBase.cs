@@ -2,12 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using Chronos;
-using DG.Tweening;
 
-public class AlliesMove : CharacterMove
+[RequireComponent(typeof(CharacterParameter))]
+public class EnemyAIBase : MonoBehaviour
 {
     #region メンバ
+    /// <summary>キャラクターの持つ情報</summary>
+    CharacterParameter _Param = null;
+
     /// <summary>当該キャラクターの移動制御</summary>
     NavMeshAgent _Nav = null;
 
@@ -26,24 +28,23 @@ public class AlliesMove : CharacterMove
     public Vector3? Destination { set => _Destination = value; }
     #endregion
 
+
     // Start is called before the first frame update
-    protected override void Start()
+    void Start()
     {
-        base.Start();
+        _Param = GetComponent<CharacterParameter>();
 
         _Nav = _Param.Tl.navMeshAgent.component;
         _Nav.isStopped = true;
-
-        Move = MoveByNavMesh;
     }
 
     // Update is called once per frame
-    protected override void Update()
+    void Update()
     {
-        base.Update();
+        MoveByNavMesh();
     }
 
-    /// <summary>ナビメッシュを利用した移動メソッド</summary>
+    /// <summary>ナビメッシュを利用した移動指定メソッド</summary>
     void MoveByNavMesh()
     {
         //目的地指定
@@ -54,7 +55,7 @@ public class AlliesMove : CharacterMove
         Vector3 currentNextPassing = transform.position;
         foreach (Vector3 passing in _Nav.path.corners)
         {
-            if(Vector3.SqrMagnitude(passing - transform.position) > 0.01f)
+            if (Vector3.SqrMagnitude(passing - transform.position) > 0.01f)
             {
                 currentNextPassing = passing;
                 break;
@@ -63,36 +64,15 @@ public class AlliesMove : CharacterMove
 
         //直近の通過ポイントに向けて力をかける
         _Param.Direction = Vector3.Normalize(currentNextPassing - transform.position);
-
-
-        //入力があれば移動力の処理
-        if (_Param.Direction.sqrMagnitude > 0)
-        {
-            //移動入力の大きさを取得
-            _CurrentMovePower = _Param.Direction.magnitude;
-            //移動方向を取得
-            _Param.Direction *= 1 / _CurrentMovePower;
-        }
-        else
-        {
-            _CurrentMovePower = 0f;
-            _Param.Direction = Vector3.zero;
-        }
-
-        //重力方向以外で移動量成分があった場合、ブレーキ量を計算する
-        bool isMoving = Vector3.SqrMagnitude(VelocityOnPlane) > 0.01f;
-        if (isMoving)
-        {
-            _ForceOfBrake = -VelocityOnPlane.normalized * 0.2f;
-        }
     }
+
 
     /// <summary>NavMeshAgentのDestinationに一定間隔で目的地を指示するコルーチン</summary>
     IEnumerator DestinationSetOnAgent()
     {
         while (true)
         {
-            if(_Destination == null)
+            if (_Destination == null)
             {
                 yield return null;
             }

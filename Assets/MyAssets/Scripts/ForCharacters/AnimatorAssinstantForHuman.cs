@@ -30,8 +30,8 @@ public class AnimatorAssinstantForHuman : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (_Cm.JumpFlag) _Am.SetTrigger(_ParamNameDoJump);
         _Am.SetFloat(_ParamNameSpeed, _Cm.Speed);
         _Am.SetBool(_ParamNameIsGround, _Cm.IsGround);
-        if (_Cm.JumpFlag) _Am.SetTrigger(_ParamNameDoJump);
     }
 }

@@ -31,7 +31,7 @@ public class CMFreeLookUtility : MonoBehaviour
     /// <summary>操作キャラクターの位置情報をCinemachineに反映</summary>
     void SeekPlayer()
     {
-        PlayerMove player = FindObjectOfType<PlayerMove>();
+        PlayerParameter player = FindObjectOfType<PlayerParameter>();
 
         if(player)
         {
