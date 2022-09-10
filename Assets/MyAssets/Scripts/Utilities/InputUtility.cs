@@ -107,34 +107,44 @@ public class InputUtility : Singleton<InputUtility>
     #endregion
 
     #region プロパティ
-    /// <summary> スタートボタンの入力状況 </summary>
-    static public InputAction StartAction { get => _StartAction; }
-    /// <summary> ポーズメニュー起動の入力状況 </summary>
-    static public InputAction PauseAction { get => _PauseAction; }
-    /// <summary> リストメニュー起動の入力状況 </summary>
-    static public InputAction OptionAction { get => _OptionAction; }
-    /// <summary> 移動操作の入力状況 </summary>
-    static public InputAction MoveDirectionAction { get => _MoveDirectionAction; }
-    /// <summary> カメラ移動操作の入力状況 </summary>
-    static public InputAction CameraMoveAction { get => _CameraMoveAction; }
-    /// <summary> ジャンプの入力状況 </summary>
-    static public InputAction JumpAction { get => _JumpAction; }
-    /// <summary> 特殊コマンドボタンの入力状況 </summary>
-    static public InputAction AimCommandAction { get => _AimCommandAction; }
-    /// <summary> 攻撃ボタンの入力状況 </summary>
-    static public InputAction AttackAction { get => _AttackAction; }
-    /// <summary> ガードボタンの入力状況 </summary>
-    static public InputAction GuardAction { get => _GuardAction; }
-    /// <summary> 回避ボタンの入力状況 </summary>
-    static public InputAction DodgeAction { get => _DodgeAction; }
-
-
     /// <summary> スタートボタン押下直後 </summary>
     static public bool GetDownStart { get => _StartAction.triggered; }
     /// <summary> ポーズボタン押下直後 </summary>
     static public bool GetDownPause { get => _PauseAction.triggered; }
     /// <summary> リストメニューボタン押下直後 </summary>
     static public bool GetDownOption { get => _OptionAction.triggered; }
+    /// <summary> 移動操作直後 </summary>
+    static public bool GetMoveDown { get => _MoveDirectionAction.triggered; }
+    /// <summary> 移動操作の方向取得 </summary>
+    static public Vector2 GetMoveDirection { get => _MoveDirectionAction.ReadValue<Vector2>(); }
+    /// <summary> 移動操作終了 </summary>
+    static public bool GetMoveUp { get => _MoveDirectionAction.WasReleasedThisFrame(); }
+    /// <summary> カメラ操作直後 </summary>
+    static public bool GetCameraMoveDown { get => _CameraMoveAction.triggered; }
+    /// <summary> カメラ操作の方向取得 </summary>
+    static public Vector2 GetCameraMoveDirection { get => _CameraMoveAction.ReadValue<Vector2>(); }
+    /// <summary> カメラ操作終了 </summary>
+    static public bool GetCameraMoveUp { get => _CameraMoveAction.WasReleasedThisFrame(); }
+    /// <summary> ジャンプボタン押下直後 </summary>
+    static public bool GetDownJump { get => _JumpAction.triggered; }
+    /// <summary> ジャンプボタン押下中 </summary>
+    static public bool GetJump { get => _JumpAction.IsPressed(); }
+    /// <summary> 特殊コマンドボタン押下直後 </summary>
+    static public bool GetDownAimCommand { get => _AimCommandAction.triggered; }
+    /// <summary> 特殊コマンドボタン押下中 </summary>
+    static public bool GetAimCommand { get => _AimCommandAction.IsPressed(); }
+    /// <summary> 攻撃ボタン押下直後 </summary>
+    static public bool GetDownAttack { get => _AttackAction.triggered; }
+    /// <summary> 攻撃ボタン押下中 </summary>
+    static public bool GetAttack { get => _AttackAction.IsPressed(); }
+    /// <summary> ガードボタン押下直後 </summary>
+    static public bool GetDownGuard { get => _GuardAction.triggered; }
+    /// <summary> ガードボタン押下中 </summary>
+    static public bool GetGuard { get => _GuardAction.IsPressed(); }
+    /// <summary> 回避ボタン押下直後 </summary>
+    static public bool GetDownDodge { get => _DodgeAction.triggered; }
+    /// <summary> 回避ボタン押下中 </summary>
+    static public bool GetDodge { get => _DodgeAction.IsPressed(); }
     #endregion
 
     // Start is called before the first frame update
@@ -151,6 +161,8 @@ public class InputUtility : Singleton<InputUtility>
         _JumpAction = actionMap[_ButtonNameJump];
         _AimCommandAction = actionMap[_ButtonNameAimCommand];
         _AttackAction = actionMap[_ButtonNameAttack];
+        _GuardAction = actionMap[_ButtonNameGuard];
+        _DodgeAction = actionMap[_ButtonNameDodge];
     }
     /*
         void OnDestroy()

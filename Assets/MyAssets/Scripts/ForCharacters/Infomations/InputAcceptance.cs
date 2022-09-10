@@ -1,29 +1,25 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 /// <summary>操作可否状態を管理するクラス</summary>
 [System.Serializable]
 public class InputAcceptance
 {
     /// <summary>true : 入力移動を受け付ける</summary>
-    public bool _CanMove = true;
+    public bool _Move = true;
 
     /// <summary>true : 入力でジャンプを受け付ける</summary>
-    public bool _CanJump = true;
+    public bool _Jump = true;
 
     /// <summary>true : シフトスライド（短距離回避）を受け付ける</summary>
-    public bool _CanShiftSlide = true;
+    public bool _ShiftSlide = true;
 
     /// <summary>true : ロングトリップ（長距離回避）を受け付ける</summary>
-    public bool _CanLongTrip = true;
+    public bool _LongTrip = true;
 
     /// <summary>true : ガードを受け付ける</summary>
-    public bool _CanGurad = true;
+    public bool _Gurad = true;
 
     /// <summary>true : 通常コンボを受け付ける</summary>
-    public bool _CanComboNormal = true;
+    public bool _ComboNormal = true;
 
     /// <summary>true : コンボフィニッシュを受け付ける</summary>
-    public bool _CanComboFinish = false;
+    public bool _ComboFinish = false;
 }

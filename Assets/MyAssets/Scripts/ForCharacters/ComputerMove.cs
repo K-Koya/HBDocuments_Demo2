@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using Chronos;
-using DG.Tweening;
 
-public class AlliesMove : CharacterMove
+[RequireComponent(typeof(NavMeshAgent))]
+public class ComputerMove : CharacterMove
 {
     #region メンバ
     /// <summary>当該キャラクターの移動制御</summary>
@@ -14,16 +14,18 @@ public class AlliesMove : CharacterMove
     /// <summary>前フレームの位置座標</summary>
     Vector3 _BeforeFramePosition = Vector3.zero;
 
-    /// <summary>true : 目的地に到着している</summary>
-    bool _IsArrival = true;
-
     /// <summary>移動先座標</summary>
     Vector3? _Destination = null;
+
+    /// <summary>移動先を定めるコルーチン</summary>
+    Coroutine _SetDestinationCoroutine = null;
     #endregion
 
     #region プロパティ
     /// <summary>移動先座標</summary>
     public Vector3? Destination { set => _Destination = value; }
+    /// <summary>ナビメッシュ上における移動先座標</summary>
+    public Vector3 DestinationOnNavMesh { get => _Nav.destination; }
     #endregion
 
     // Start is called before the first frame update
@@ -46,9 +48,18 @@ public class AlliesMove : CharacterMove
     /// <summary>ナビメッシュを利用した移動メソッド</summary>
     void MoveByNavMesh()
     {
-        //目的地指定
-        _Destination = CharacterParameter.Player.transform.position;
-        StartCoroutine(DestinationSetOnAgent());
+        //目的地指定があればコルーチンを実行
+        if (_Destination == null)
+        {
+            _SetDestinationCoroutine = null;
+        }
+        else
+        {
+            if (_SetDestinationCoroutine == null)
+            {
+                _SetDestinationCoroutine = StartCoroutine(DestinationSetOnAgent());
+            }            
+        }
 
         //経路パス一覧より、極めて近すぎでない、直近の位置を取得する
         Vector3 currentNextPassing = transform.position;
@@ -61,17 +72,23 @@ public class AlliesMove : CharacterMove
             }
         }
 
-        //直近の通過ポイントに向けて力をかける
-        _Param.Direction = Vector3.Normalize(currentNextPassing - transform.position);
-
+        //移動先座標を指定していれば、直近の通過ポイントに向けて力をかける
+        if (_Destination == null)
+        {
+            _Param.Direction = Vector3.zero;
+        }
+        else
+        {
+            _Param.Direction = Vector3.Normalize(currentNextPassing - transform.position);
+        }
 
         //入力があれば移動力の処理
-        if (_Param.Direction.sqrMagnitude > 0)
+        if (_Param.Direction.sqrMagnitude > 0f)
         {
             //移動入力の大きさを取得
             _CurrentMovePower = _Param.Direction.magnitude;
             //移動方向を取得
-            _Param.Direction *= 1 / _CurrentMovePower;
+            _Param.Direction *= 1f / _CurrentMovePower;
         }
         else
         {
@@ -109,6 +126,7 @@ public class AlliesMove : CharacterMove
         }
     }
 
+    /// <summary>ナビメッシュによる移動経路を書き出し</summary>
     void OnDrawGizmos()
     {
         if (_Nav && _Nav.enabled)
