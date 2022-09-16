@@ -46,6 +46,8 @@ abstract public class CharacterParameter : MonoBehaviour
     /// <summary>操作可否情報</summary>
     protected InputAcceptance _Can = default;
 
+    /// <summary>ターゲットキャラクターにむける周回移動ルート情報</summary>
+    protected OrbitalSystem _Orbit = default;
     #endregion
 
 
@@ -74,6 +76,8 @@ abstract public class CharacterParameter : MonoBehaviour
     public MotionState State { get => _State; set => _State = value; }
     /// <summary>操作可否情報</summary>
     public InputAcceptance Can { get => _Can; set => _Can = value; }
+    /// <summary>ターゲットキャラクターにむける周回移動ルート情報</summary>
+    public OrbitalSystem Orbit { get => _Orbit; }
     #endregion
 
     /// <summary>本クラスの静的メンバに自コンポーネントを登録させるメソッド</summary>
@@ -98,6 +102,7 @@ abstract public class CharacterParameter : MonoBehaviour
     protected virtual void Start()
     {
         _Tl = GetComponent<Timeline>();
+        _Orbit = GetComponentInChildren<OrbitalSystem>();
     }
 
     // Update is called once per frame

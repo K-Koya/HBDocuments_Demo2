@@ -30,7 +30,7 @@ public class ComputerAIBase : MonoBehaviour
 
     /// <summary>生成された乱数</summary>
     float _Capricious = 0f;
-
+        
     /// <summary>思考メソッド</summary>
     System.Action Think = null;
 
@@ -67,7 +67,7 @@ public class ComputerAIBase : MonoBehaviour
 
         _TargetParam = CharacterParameter.Player;
 
-        Think = ApproachToOrbitVigilance;
+        Think = OrbitWandering;
         Movement = Trip;
     }
 
@@ -127,6 +127,18 @@ public class ComputerAIBase : MonoBehaviour
         }
     }
 
+    /// <summary>思考メソッド : ターゲットを中心に円周上をうろつく</summary>
+    void OrbitWandering()
+    {
+        //周回ルート情報がなければ離脱
+        if (!_Param.Orbit || !_Param.Orbit.IsDefined)
+        {
+            return;
+        }
+
+
+    }
+
     /// <summary>思考メソッド : 対象に接近し、周囲を警戒しながらうろつく</summary>
     void ApproachToOrbitVigilance()
     {
@@ -151,8 +163,7 @@ public class ComputerAIBase : MonoBehaviour
         //対象が対象の遠距離攻撃射程より近づけば周囲をうろつく
         else
         {
-            _Move.Destination = null;
-            Movement = Staying;
+            OrbitWandering();
         }
     }
 
@@ -177,8 +188,6 @@ public class ComputerAIBase : MonoBehaviour
     /// <summary>行動メソッド : 対象相手の遠距離攻撃も警戒して周囲を移動するような動作</summary>
     void OrbitVigilanceFar()
     {
-
+        
     }
-
-
 }
