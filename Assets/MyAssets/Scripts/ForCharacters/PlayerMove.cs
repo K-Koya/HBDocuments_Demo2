@@ -47,13 +47,16 @@ public class PlayerMove : CharacterMove
         if (_Param.Direction.sqrMagnitude > 0)
         {
             //ˆÚ“®“ü—Í‚Ì‘å‚«‚³‚ğæ“¾
-            _CurrentMovePower = _Param.Direction.magnitude;
+            _MoveInputRate = _Param.Direction.magnitude;
             //ˆÚ“®•ûŒü‚ğæ“¾
-            _Param.Direction *= 1 / _CurrentMovePower;
+            _Param.Direction *= 1 / _MoveInputRate;
+            //ˆÚ“®—Íw’è
+            MovePower = _Param.LimitSpeedRun;
         }
         else
         {
-            _CurrentMovePower = 0f;
+            MovePower = 0f;
+            _MoveInputRate = 0f;
             _Param.Direction = Vector3.zero;
         }
 
@@ -64,9 +67,8 @@ public class PlayerMove : CharacterMove
             _ForceOfBrake = -VelocityOnPlane.normalized * 0.2f;
         }
 
-
         //ƒWƒƒƒ“ƒv—ÍŒ¸Š
-        if (InputUtility.GetJump && !IsGround && Vector3.Angle(-GravityDirection, _Rb.velocity) < 90f)
+        if (!InputUtility.GetJump && !IsGround && Vector3.Angle(-GravityDirection, _Rb.velocity) < 90f)
         {
             _Rb.velocity = Vector3.ProjectOnPlane(_Rb.velocity, -GravityDirection);
         }

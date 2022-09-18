@@ -13,7 +13,10 @@ abstract public class CharacterMove : MonoBehaviour
     #endregion
 
     #region メンバ
-    /// <summary>移動速度</summary>
+    /// <summary>移動向けに力をかける時の力の大きさ</summary>
+    float _MovePower = 3.0f;
+
+    /// <summary>結果の移動速度</summary>
     float _Speed = 0.0f;
 
     /// <summary>キャラクターの持つ情報</summary>
@@ -29,7 +32,7 @@ abstract public class CharacterMove : MonoBehaviour
     GroundChecker _GroundChecker = default;
 
     /// <summary>移動入力の大きさ</summary>
-    protected float _CurrentMovePower = 0f;
+    protected float _MoveInputRate = 0f;
 
     /// <summary>かけるブレーキ力</summary>
     protected Vector3 _ForceOfBrake = Vector3.zero;
@@ -40,15 +43,15 @@ abstract public class CharacterMove : MonoBehaviour
     #endregion
 
     #region プロパティ
-
-    public CharacterParameter Status => _Param;
     /// <summary>True : 着地している</summary>
     public bool IsGround => _GroundChecker.IsGround;
     /// <summary>重力方向</summary>
     protected Vector3 GravityDirection => _GroundChecker.GravityDirection;
     /// <summary>Rigidbodyのvelocityを移動方向平面に換算したもの</summary>
     protected Vector3 VelocityOnPlane => Vector3.ProjectOnPlane(_Rb.velocity, -GravityDirection);
-    /// <summary>移動速度</summary>
+    /// <summary>移動向けに力をかける時の力の大きさ</summary>
+    public float MovePower { set => _MovePower = value; }
+    /// <summary>結果の移動速度</summary>
     public float Speed => _Speed;
     /// <summary>ジャンプ直後フラグ</summary>
     public bool JumpFlag => _JumpFlag;
@@ -85,13 +88,13 @@ abstract public class CharacterMove : MonoBehaviour
         if (IsGround)
         {
             //移動力がかかっている
-            if (_CurrentMovePower > 0f)
+            if (_MoveInputRate > 0f)
             {
                 //回転する
                 CharacterRotation(_Param.Direction, -GravityDirection, 360f);
 
                 //力をかける
-                _Rb.AddForce(transform.forward * _CurrentMovePower * 5f, ForceMode.Acceleration);
+                _Rb.AddForce(transform.forward * _MoveInputRate * _MovePower, ForceMode.Acceleration);
 
                 //速度(向き)を、入力方向へ設定
                 _Rb.velocity = Quaternion.FromToRotation(Vector3.ProjectOnPlane(_Rb.velocity, -GravityDirection), transform.forward) * _Rb.velocity;
@@ -115,13 +118,13 @@ abstract public class CharacterMove : MonoBehaviour
         else
         {
             //移動力がかかっている
-            if (_CurrentMovePower > 0f)
+            if (_MoveInputRate > 0f)
             {
                 //回転する
                 CharacterRotation(_Param.Direction, -GravityDirection, 90f);
 
                 //力をかける
-                _Rb.AddForce(_Param.Direction * _CurrentMovePower * 5f, ForceMode.Acceleration);
+                _Rb.AddForce(_Param.Direction * _MoveInputRate * _MovePower, ForceMode.Acceleration);
             }
 
             //重力をかける

@@ -86,13 +86,13 @@ public class ComputerMove : CharacterMove
         if (_Param.Direction.sqrMagnitude > 0f)
         {
             //ˆÚ“®“ü—Í‚Ì‘å‚«‚³‚ðŽæ“¾
-            _CurrentMovePower = _Param.Direction.magnitude;
+            _MoveInputRate = _Param.Direction.magnitude;
             //ˆÚ“®•ûŒü‚ðŽæ“¾
-            _Param.Direction *= 1f / _CurrentMovePower;
+            _Param.Direction *= 1f / _MoveInputRate;
         }
         else
         {
-            _CurrentMovePower = 0f;
+            _MoveInputRate = 0f;
             _Param.Direction = Vector3.zero;
         }
 

@@ -1,7 +1,5 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 
 [RequireComponent(typeof(CharacterParameter), typeof(ComputerMove))]
 public class ComputerAIBase : MonoBehaviour
@@ -28,8 +26,8 @@ public class ComputerAIBase : MonoBehaviour
     /// <summary>キャラクターを移動させる機能を集約したコンポーネント</summary>
     ComputerMove _Move = null;
 
-    /// <summary>生成された乱数</summary>
-    float _Capricious = 0f;
+    /// <summary>ターゲット周辺をうろつかせる回転情報</summary>
+    Quaternion _RelativeOrbitQuat = Quaternion.identity;
 
     /// <summary>思考メソッド</summary>
     System.Action Think = null;
@@ -41,7 +39,7 @@ public class ComputerAIBase : MonoBehaviour
     float _CreateRandomInterval = 1f;
 
     [SerializeField, Tooltip("うろつきで居場所を変えようとする確率(0～100)")]
-    sbyte _DetectAthorPlaceRatio = 20;
+    sbyte _DetectAthorPlaceRatio = 5;
 
     [SerializeField, Tooltip("自由行動する場合の行動範囲")]
     float _WanderingDistance = 8f;
@@ -67,7 +65,7 @@ public class ComputerAIBase : MonoBehaviour
 
         _TargetParam = CharacterParameter.Player;
 
-        Think = ApproachToOrbitVigilance;
+        Think = ApproachToVigilanceMiddle;
         Movement = Trip;
     }
 
@@ -76,40 +74,28 @@ public class ComputerAIBase : MonoBehaviour
     {
         Think?.Invoke();
         Movement?.Invoke();
-    }
 
-    void OnEnable()
-    {
-        StartCoroutine(CreateRandom());
+        //Debug.Log($"Think : {Think.Method.Name} & Movement : {Movement.Method.Name}");
     }
-
-    /// <summary>指定間隔で乱数を作らせるコルーチン</summary>
-    IEnumerator CreateRandom()
-    {
-        yield return null;
-        while (true)
-        {
-            _Capricious = Random.value;
-            yield return _Param.Tl.WaitForSeconds(_CreateRandomInterval);
-        }
-    }
-
+    
     /// <summary>目的地到達判定</summary>
     /// <param name="destination">目的地</param>
     /// <returns>true : 到着した</returns>
     bool GetArrival(Vector3 destination, float buffer = 0f)
     {
-        float sqrArrivalDistance = Mathf.Pow(_ARRAIVAL_DISTANCE_BASE + buffer + _Move.Speed * 0.75f, 2);
+        float sqrArrivalDistance = Mathf.Pow(_ARRAIVAL_DISTANCE_BASE + buffer + _Move.Speed * _Move.Speed * 0.5f, 2);
         return Vector3.SqrMagnitude(destination - transform.position) < sqrArrivalDistance;
     }
 
     /// <summary>思考メソッド : うろうろする</summary>
     void Wandering()
     {
+        _Move.MovePower = _Param.LimitSpeedWalk;
+
         //行動状態が待機なら別の移動先を考えるように思案
-        if(Movement == Staying)
+        if (Movement == Staying)
         {
-            if ((_DetectAthorPlaceRatio / 100.0f) > _Capricious)
+            if ((_DetectAthorPlaceRatio / 100.0f) > Random.value)
             {
                 //移動先を指定したうえで移動
                 _Move.Destination = _BasePosition + new Vector3(Random.Range(1, _WanderingDistance), 0f, Random.Range(1, _WanderingDistance));
@@ -119,7 +105,7 @@ public class ComputerAIBase : MonoBehaviour
         //行動状態が移動中なら目的地付近へ到着したか確認
         else if (Movement == Trip)
         {
-            if(GetArrival(_Move.DestinationOnNavMesh))
+            if (GetArrival(_Move.DestinationOnNavMesh))
             {
                 _Move.Destination = null;
                 Movement = Staying;
@@ -127,8 +113,42 @@ public class ComputerAIBase : MonoBehaviour
         }
     }
 
+    /// <summary>思考メソッド : 対象相手の遠距離攻撃も警戒してうろうろするような動作</summary>
+    void VigilanceMiddle()
+    {
+        _Move.MovePower = _Param.LimitSpeedWalk;
+
+        //行動状態が待機なら別の移動先を考えるように思案
+        if (Movement == Staying || Movement == Trip)
+        {
+            if ((_DetectAthorPlaceRatio / 100.0f) > Random.value)
+            {
+                //移動先の相対位置を指定
+                _RelativeOrbitQuat = Quaternion.AngleAxis(Random.Range(-45f, 45f), _TargetParam.transform.up);
+                Movement = Trip;
+            }
+            else if (GetArrival(_Move.DestinationOnNavMesh))
+            {
+                _RelativeOrbitQuat = Quaternion.identity;
+                _Move.Destination = null;
+                Movement = Staying;
+            }
+        }
+        else
+        {
+            Movement = Staying;
+        }
+
+        if (_RelativeOrbitQuat != Quaternion.identity)
+        {
+            Vector3 _RelativeVigilancePoint = Vector3.Normalize(transform.position - _TargetParam.transform.position) * _TargetParam.AttackRangeMiddle;
+            _RelativeVigilancePoint = _RelativeOrbitQuat * _RelativeVigilancePoint;
+            _Move.Destination = _RelativeVigilancePoint + _TargetParam.transform.position;
+        }
+    }
+
     /// <summary>思考メソッド : 対象に接近し、周囲を警戒しながらうろつく</summary>
-    void ApproachToOrbitVigilance()
+    void ApproachToVigilanceMiddle()
     {
         //対象がいなければ離脱
         if (!_TargetParam)
@@ -146,13 +166,15 @@ public class ComputerAIBase : MonoBehaviour
         //対象が対象の遠距離攻撃射程より遠ければ、ターゲットめがけて移動する
         else if (sqrDistance > _TargetParam.AttackRangeFar * _TargetParam.AttackRangeFar)
         {
+            _Move.MovePower = _Param.LimitSpeedRun;
             Movement = Approach;
         }
         //対象が対象の遠距離攻撃射程より近づけば周囲をうろつく
         else
         {
+            _Move.MovePower = _Param.LimitSpeedWalk;
             _Move.Destination = null;
-            Movement = Staying;
+            VigilanceMiddle();
         }
     }
 
@@ -173,12 +195,5 @@ public class ComputerAIBase : MonoBehaviour
     {
         _Move.Destination = _TargetParam.transform.position;
     }
-
-    /// <summary>行動メソッド : 対象相手の遠距離攻撃も警戒して周囲を移動するような動作</summary>
-    void OrbitVigilanceFar()
-    {
-
-    }
-
 
 }

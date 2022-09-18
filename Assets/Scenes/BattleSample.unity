@@ -1933,6 +1933,8 @@ MonoBehaviour:
   _AttackRangeFar: 5
   _AttackRangeMiddle: 3
   _ChaseEnemyDistance: 40
+  _LimitSpeedWalk: 2
+  _LimitSpeedRun: 5
 --- !u!114 &1211911761
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2486,7 +2488,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _CreateRandomInterval: 1
-  _DetectAthorPlaceRatio: 20
+  _DetectAthorPlaceRatio: 5
   _WanderingDistance: 10
 --- !u!114 &1743858337
 MonoBehaviour:
@@ -2532,6 +2534,8 @@ MonoBehaviour:
   _AttackRangeFar: 5
   _AttackRangeMiddle: 3
   _ChaseEnemyDistance: 40
+  _LimitSpeedWalk: 2
+  _LimitSpeedRun: 5
 --- !u!1 &1844041289
 GameObject:
   m_ObjectHideFlags: 3

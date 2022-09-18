@@ -46,6 +46,11 @@ abstract public class CharacterParameter : MonoBehaviour
     /// <summary>操作可否情報</summary>
     protected InputAcceptance _Can = default;
 
+    [SerializeField, Tooltip("歩行最高速")]
+    protected float _LimitSpeedWalk = 2f;
+
+    [SerializeField, Tooltip("走行最高速")]
+    protected float _LimitSpeedRun = 5f;
     #endregion
 
 
@@ -71,9 +76,13 @@ abstract public class CharacterParameter : MonoBehaviour
     /// <summary>敵への追跡を継続する判定距離</summary>
     public float ChaseEnemyDistance { get => _ChaseEnemyDistance; }
     /// <summary>キャラクターの行動状態</summary>
-    public MotionState State { get => _State; set => _State = value; }
+    public MotionState State { get => _State; }
     /// <summary>操作可否情報</summary>
-    public InputAcceptance Can { get => _Can; set => _Can = value; }
+    public InputAcceptance Can { get => _Can; }
+    /// <summary>歩行最高速</summary>
+    public float LimitSpeedWalk { get => _LimitSpeedWalk; }
+    /// <summary>走行最高速</summary>
+    public float LimitSpeedRun { get => _LimitSpeedRun; }
     #endregion
 
     /// <summary>本クラスの静的メンバに自コンポーネントを登録させるメソッド</summary>
