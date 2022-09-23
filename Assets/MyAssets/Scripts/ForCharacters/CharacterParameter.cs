@@ -40,10 +40,16 @@ abstract public class CharacterParameter : MonoBehaviour
     /// <summary>キャラクター正面方向情報</summary>
     protected Vector3 _CharacterDirection = default;
 
-    /// <summary>キャラクターの行動状態</summary>
+    [SerializeField, Tooltip("攻撃を当てる対象のレイヤー")]
+    protected LayerMask _HostilityLayer = default;
+
+    /// <summary>キャラクターの当たり判定コライダー</summary>
+    protected Collider _HitArea = null;
+
+    [SerializeField, Tooltip("キャラクターの行動状態")]
     protected MotionState _State = default;
 
-    /// <summary>操作可否情報</summary>
+    [SerializeField, Tooltip("操作可否情報")]
     protected InputAcceptance _Can = default;
 
     [SerializeField, Tooltip("歩行最高速")]
@@ -51,6 +57,9 @@ abstract public class CharacterParameter : MonoBehaviour
 
     [SerializeField, Tooltip("走行最高速")]
     protected float _LimitSpeedRun = 5f;
+
+    /// <summary>攻撃範囲情報</summary>
+    protected List<AttackArea> _AttackAreas = new List<AttackArea>(10);
     #endregion
 
 
@@ -67,6 +76,10 @@ abstract public class CharacterParameter : MonoBehaviour
     public Timeline Tl { get => _Tl; }
     /// <summary>キャラクター正面方向情報</summary>
     public Vector3 Direction { get => _CharacterDirection; set => _CharacterDirection = value; }
+    /// <summary>攻撃を当てる対象のレイヤー</summary>
+    public LayerMask HostilityLayer { get => _HostilityLayer; }
+    /// <summary>キャラクターの当たり判定コライダー</summary>
+    public Collider HitArea { get => _HitArea; }
     /// <summary>仲間と集まる際にとる距離</summary>
     public float AliseGatherRange { get => _AliseGatherRange; }
     /// <summary>自分の近接攻撃の射程:遠距離</summary>
@@ -83,6 +96,8 @@ abstract public class CharacterParameter : MonoBehaviour
     public float LimitSpeedWalk { get => _LimitSpeedWalk; }
     /// <summary>走行最高速</summary>
     public float LimitSpeedRun { get => _LimitSpeedRun; }
+    /// <summary>攻撃範囲情報</summary>
+    public List<AttackArea> AttackAreas => _AttackAreas;
     #endregion
 
     /// <summary>本クラスの静的メンバに自コンポーネントを登録させるメソッド</summary>
@@ -93,6 +108,9 @@ abstract public class CharacterParameter : MonoBehaviour
 
     void Awake()
     {
+        _State = new MotionState();
+        _Can = new InputAcceptance();
+
         RegisterStaticReference();
     }
 
@@ -107,6 +125,7 @@ abstract public class CharacterParameter : MonoBehaviour
     protected virtual void Start()
     {
         _Tl = GetComponent<Timeline>();
+        _HitArea = GetComponent<Collider>();
     }
 
     // Update is called once per frame
@@ -115,10 +134,25 @@ abstract public class CharacterParameter : MonoBehaviour
         
     }
 
-    /*
-    /// <summary>エンゲージメントを書き出し</summary>
+
+    
     void OnDrawGizmos()
     {
+        if(_AttackAreas != null && _AttackAreas.Count > 0)
+        {
+            Gizmos.color = Color.red;
+            foreach(AttackArea at in _AttackAreas)
+            {
+                Gizmos.DrawWireSphere(at.CenterPos, at.Radius);
+                if(at.GetType() == typeof(AttackAreaCapsule))
+                {
+                    Gizmos.DrawWireSphere((at as AttackAreaCapsule).CenterPos2, at.Radius);
+                }
+            }
+        }
+
+        /*
+        //エンゲージメントを書き出し
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, AttackRangeMiddle);
 
@@ -127,6 +161,6 @@ abstract public class CharacterParameter : MonoBehaviour
 
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, ChaseEnemyDistance);
+        */
     }
-    */
 }

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Chronos;
@@ -19,13 +18,19 @@ abstract public class CharacterMove : MonoBehaviour
     /// <summary>結果の移動速度</summary>
     float _Speed = 0.0f;
 
+    /// <summary>true : 攻撃アニメーションが終了した</summary>
+    protected bool _IsAttackEnd = true;
+
+    /// <summary>true : コンボ攻撃入力</summary>
+    protected bool _DoCombo = false;
+
     /// <summary>キャラクターの持つ情報</summary>
     protected CharacterParameter _Param = null;
 
     /// <summary>当該キャラクターの物理挙動コンポーネント</summary>
     protected RigidbodyTimeline3D _Rb = null;
 
-    /// <summary>true : ジャンプ直後</summary>
+    /// <summary>True : ジャンプ直後</summary>
     protected bool _JumpFlag = false;
 
     /// <summary>着地判定をするコンポーネント</summary>
@@ -38,11 +43,16 @@ abstract public class CharacterMove : MonoBehaviour
     protected Vector3 _ForceOfBrake = Vector3.zero;
 
     /// <summary>移動用メソッド</summary>
-    protected Action Move = default;
+    protected System.Action Move = null;
+
+    /// <summary>攻撃用メソッド</summary>
+    protected System.Action Attack = null;
 
     #endregion
 
     #region プロパティ
+    /// <summary>true : コンボ攻撃入力があった(直後フラグを折る)</summary>
+    public bool DoCombo => _DoCombo;
     /// <summary>True : 着地している</summary>
     public bool IsGround => _GroundChecker.IsGround;
     /// <summary>重力方向</summary>
@@ -79,6 +89,7 @@ abstract public class CharacterMove : MonoBehaviour
         //速度測定
         _Speed = VelocityOnPlane.magnitude;
         Move?.Invoke();
+        Attack?.Invoke();
     }
 
     void FixedUpdate()
@@ -153,5 +164,45 @@ abstract public class CharacterMove : MonoBehaviour
             else charDirectionQuaternion = Quaternion.LookRotation(targetDirection + (trunDirection * 0.001f));
             transform.rotation = Quaternion.RotateTowards(transform.rotation, charDirectionQuaternion, rotateSpeed * Time.deltaTime);
         }
+    }
+
+    
+    /// <summary>アニメーションイベントにて、攻撃アニメーション開始情報を受け取る</summary>
+    public void AttackStartCall()
+    {
+        _IsAttackEnd = false;
+        _Param.State.Process = MotionState.ProcessKind.Playing;
+
+        //攻撃を作成
+        foreach(AttackArea at in _Param.AttackAreas)
+        {
+            CharacterParameter[] attackHits = at.EmitArea(_Param.HostilityLayer);
+        }
+    }
+
+    /// <summary>アニメーションイベントにて、攻撃アニメーションの攻撃部分の終了情報を受け取る</summary>
+    public void AttackEndCall()
+    {
+        _Param.AttackAreas.Clear();
+        _Param.State.Process = MotionState.ProcessKind.Interval;
+    }
+
+    /// <summary>アニメーションイベントにて、コンボフィニッシュアニメーションの攻撃部分の終了情報を受け取る</summary>
+    public void ComboFinishEndCall()
+    {
+        _Param.State.Process = MotionState.ProcessKind.EndSoon;
+    }
+
+    /// <summary>コンボ追加入力受付</summary>
+    public void ComboAcceptCall()
+    {
+        _IsAttackEnd = true;
+    }
+
+    /// <summary>アニメーションイベントにて、攻撃アニメーションそのものの終了情報を受け取る</summary>
+    public void AttackAnimationEndCall()
+    {
+        _IsAttackEnd = true;
+        _Param.State.Process = MotionState.ProcessKind.NotPlaying;
     }
 }

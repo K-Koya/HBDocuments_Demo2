@@ -37,6 +37,7 @@ public class ComputerMove : CharacterMove
         _Nav.isStopped = true;
 
         Move = MoveByNavMesh;
+
     }
 
     // Update is called once per frame
@@ -73,7 +74,7 @@ public class ComputerMove : CharacterMove
         }
 
         //移動先座標を指定していれば、直近の通過ポイントに向けて力をかける
-        if (_Destination == null)
+        if (!_Param.Can._Move && _Destination == null)
         {
             _Param.Direction = Vector3.zero;
         }

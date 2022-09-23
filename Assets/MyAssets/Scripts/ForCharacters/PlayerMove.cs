@@ -14,12 +14,12 @@ public class PlayerMove : CharacterMove
 
         _MainCameraTransform = Camera.main.transform;
         Move = MoveOnPlane;
+        Attack = AttackByNormalCombo;
     }
 
     // Update is called once per frame
     protected override void Update()
     {
-
         base.Update();
     }
 
@@ -28,6 +28,8 @@ public class PlayerMove : CharacterMove
     /// <returns>移動方向</returns>
     Vector3 CalculateMoveDirection(Vector2 input)
     {
+        if (!_Param.Can._Move) return Vector3.zero;
+
         //前方向と右方向を取得し、移動入力値を反映
         Vector3 vertical = Vector3.ProjectOnPlane(_MainCameraTransform.forward, -GravityDirection);
         vertical = vertical.normalized * input.y;
@@ -73,12 +75,65 @@ public class PlayerMove : CharacterMove
             _Rb.velocity = Vector3.ProjectOnPlane(_Rb.velocity, -GravityDirection);
         }
 
-        //着地時にジャンプ処理
+        //接地時にジャンプ処理
         _JumpFlag = false;
-        if (IsGround && InputUtility.GetDownJump)
+        if (_Param.Can._Jump && IsGround && InputUtility.GetDownJump)
         {
             _Rb.AddForce(-GravityDirection * 7f, ForceMode.VelocityChange);
             _JumpFlag = true;
+        }
+    }
+
+    /// <summary>通常コンボによる攻撃メソッド</summary>
+    void AttackByNormalCombo()
+    {
+        _DoCombo = false;
+
+        if (_Param.Can._ComboNormal)
+        {
+            switch (_Param.State.State)
+            {
+                case MotionState.StateKind.Stay:
+                case MotionState.StateKind.Walk:
+                case MotionState.StateKind.Run:
+                    if (_IsAttackEnd && InputUtility.GetDownAttack)
+                    {
+                        _DoCombo = true;
+                        _IsAttackEnd = false;
+                        _Param.AttackAreas.Add(new AttackAreaCapsule(1f, transform.position, transform.position + transform.forward * _Param.AttackRangeMiddle));
+                        _Param.State.State = MotionState.StateKind.ComboNormal;
+                        _Param.State.Process = MotionState.ProcessKind.Preparation;
+                        _Param.Can._Move = false;
+                    }
+
+                    break;
+                case MotionState.StateKind.ComboNormal:
+
+                    switch (_Param.State.Process)
+                    {
+                        case MotionState.ProcessKind.Interval:
+
+                            if (_IsAttackEnd && InputUtility.GetDownAttack)
+                            {
+                                _DoCombo = true;
+                                _IsAttackEnd = false;
+                                _Param.AttackAreas.Add(new AttackAreaCapsule(1f, transform.position, transform.position + transform.forward * _Param.AttackRangeMiddle));
+                                _Param.State.Process = MotionState.ProcessKind.Preparation;
+                            }
+                            break;
+
+                        case MotionState.ProcessKind.NotPlaying:
+
+                            _Param.State.State = MotionState.StateKind.Stay;
+                            _Param.State.Process = MotionState.ProcessKind.Playing;
+                            _Param.Can._Move = true;
+                            break;
+
+                        default: break;
+                    }
+
+                    break;
+            }
         }
     }
 }

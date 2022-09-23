@@ -1,11 +1,11 @@
 fileFormatVersion: 2
-guid: 07f63f7100cddd74b8d20c094c8648fb
+guid: 48569f48fde8f094fa89a191f9526f7c
 ModelImporter:
   serializedVersion: 22102
   internalIDToNameTable:
   - first:
       74: -1678946955522051210
-    second: Idol
+    second: Idle
   externalObjects: {}
   materials:
     materialImportMode: 2
@@ -36,7 +36,7 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Idol
+      name: Idle
       takeName: A01_NormalStand
       internalID: 0
       firstFrame: -1

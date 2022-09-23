@@ -35,6 +35,9 @@ public class ComputerAIBase : MonoBehaviour
     /// <summary>行動メソッド</summary>
     System.Action Movement = null;
 
+    /// <summary>思考メソッドの割り込み時に保持するキャッシュ</summary>
+    System.Action ThinkCash = null;
+
     [SerializeField, Tooltip("乱数の生成間隔")]
     float _CreateRandomInterval = 1f;
 
@@ -74,8 +77,6 @@ public class ComputerAIBase : MonoBehaviour
     {
         Think?.Invoke();
         Movement?.Invoke();
-
-        //Debug.Log($"Think : {Think.Method.Name} & Movement : {Movement.Method.Name}");
     }
     
     /// <summary>目的地到達判定</summary>
@@ -85,6 +86,23 @@ public class ComputerAIBase : MonoBehaviour
     {
         float sqrArrivalDistance = Mathf.Pow(_ARRAIVAL_DISTANCE_BASE + buffer + _Move.Speed * _Move.Speed * 0.5f, 2);
         return Vector3.SqrMagnitude(destination - transform.position) < sqrArrivalDistance;
+    }
+
+    /// <summary>思考メソッド : よけようとする</summary>
+    void Avoidance()
+    {
+        Movement = Trip;
+        if (GetArrival(_Move.DestinationOnNavMesh))
+        {
+            _Move.Destination = null;
+            Movement = Staying;
+        }
+
+        //復帰
+        if (_TargetParam.AttackAreas == null || _TargetParam.AttackAreas.Count < 1)
+        {
+            Think = ThinkCash;
+        }
     }
 
     /// <summary>思考メソッド : うろうろする</summary>
@@ -154,6 +172,27 @@ public class ComputerAIBase : MonoBehaviour
         if (!_TargetParam)
         {
             return;
+        }
+
+        //敵対相手が攻撃しそうなら、範囲外へ逃げようとする
+        if (_TargetParam.AttackAreas != null && _TargetParam.AttackAreas.Count > 0)
+        {
+            Vector3 outDirection = Vector3.zero;
+            foreach (AttackArea at in _TargetParam.AttackAreas)
+            {
+                Vector3? buffer = at.InsideArea(_Param.HitArea);
+                outDirection = buffer == null ? outDirection : (Vector3)buffer;
+            }
+
+            if(outDirection.sqrMagnitude > 0f)
+            {
+                _Move.MovePower = _Param.LimitSpeedRun;
+                _Move.Destination = transform.position + outDirection * 2f;
+                ThinkCash = Think;
+                Think = Avoidance;
+
+                return;
+            }
         }
 
         float sqrDistance = Vector3.SqrMagnitude(transform.position - _TargetParam.transform.position);
