@@ -74,7 +74,7 @@ public class ComputerMove : CharacterMove
         }
 
         //移動先座標を指定していれば、直近の通過ポイントに向けて力をかける
-        if (!_Param.Can._Move && _Destination == null)
+        if (!_Param.Can.Move && _Destination == null)
         {
             _Param.Direction = Vector3.zero;
         }

@@ -320,7 +320,7 @@
                 {
                     "name": "",
                     "id": "1222ebbd-028d-4385-96c0-3d5c6148846d",
-                    "path": "<Gamepad>/leftTrigger",
+                    "path": "<Gamepad>/buttonSouth",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -331,7 +331,7 @@
                 {
                     "name": "",
                     "id": "99f46b49-b590-40dd-b84e-088eb25d80f0",
-                    "path": "<XInputController>/leftTrigger",
+                    "path": "<XInputController>/buttonSouth",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

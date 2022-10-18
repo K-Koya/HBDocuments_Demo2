@@ -13,16 +13,19 @@ abstract public class CharacterMove : MonoBehaviour
 
     #region メンバ
     /// <summary>移動向けに力をかける時の力の大きさ</summary>
-    float _MovePower = 3.0f;
+    protected float _MovePower = 3.0f;
 
     /// <summary>結果の移動速度</summary>
     float _Speed = 0.0f;
 
-    /// <summary>true : 攻撃アニメーションが終了した</summary>
-    protected bool _IsAttackEnd = true;
+    /// <summary>キャラクターの、武器を出したりして臨戦態勢になる継続タイマー</summary>
+    protected float _ArmedTimer = 0.0f;
 
     /// <summary>true : コンボ攻撃入力</summary>
     protected bool _DoCombo = false;
+
+    /// <summary>true : 回避入力</summary>
+    protected bool _DoDodge = false;
 
     /// <summary>キャラクターの持つ情報</summary>
     protected CharacterParameter _Param = null;
@@ -51,8 +54,12 @@ abstract public class CharacterMove : MonoBehaviour
     #endregion
 
     #region プロパティ
-    /// <summary>true : コンボ攻撃入力があった(直後フラグを折る)</summary>
+    /// <summary>true : コンボ攻撃入力があった</summary>
     public bool DoCombo => _DoCombo;
+    /// <summary>true : 回避入力があった</summary>
+    public bool DoDodge => _DoDodge;
+    /// <summary>キャラクターの、武器を出したりして臨戦態勢になる継続タイマー</summary>
+    public float ArmedTimer => _ArmedTimer;
     /// <summary>True : 着地している</summary>
     public bool IsGround => _GroundChecker.IsGround;
     /// <summary>重力方向</summary>
@@ -65,6 +72,8 @@ abstract public class CharacterMove : MonoBehaviour
     public float Speed => _Speed;
     /// <summary>ジャンプ直後フラグ</summary>
     public bool JumpFlag => _JumpFlag;
+    /// <summary>移動方向</summary>
+    public Vector3 MoveDirection => _Param.Direction;
     
     #endregion
 
@@ -90,6 +99,9 @@ abstract public class CharacterMove : MonoBehaviour
         _Speed = VelocityOnPlane.magnitude;
         Move?.Invoke();
         Attack?.Invoke();
+
+        //臨戦態勢
+        SetArmedTimer();
     }
 
     void FixedUpdate()
@@ -101,14 +113,20 @@ abstract public class CharacterMove : MonoBehaviour
             //移動力がかかっている
             if (_MoveInputRate > 0f)
             {
+                Vector3 moveDirection = _Param.Direction;
+
                 //回転する
-                CharacterRotation(_Param.Direction, -GravityDirection, 360f);
+                if (_Param.IsSyncDirection) 
+                {
+                    CharacterRotation(_Param.Direction, -GravityDirection, 360f);
+                    moveDirection = transform.forward;
+                }
 
                 //力をかける
-                _Rb.AddForce(transform.forward * _MoveInputRate * _MovePower, ForceMode.Acceleration);
+                _Rb.AddForce(moveDirection * _MoveInputRate * _MovePower, ForceMode.Acceleration);
 
                 //速度(向き)を、入力方向へ設定
-                _Rb.velocity = Quaternion.FromToRotation(Vector3.ProjectOnPlane(_Rb.velocity, -GravityDirection), transform.forward) * _Rb.velocity;
+                _Rb.velocity = Quaternion.FromToRotation(Vector3.ProjectOnPlane(_Rb.velocity, -GravityDirection), moveDirection) * _Rb.velocity;
 
                 //重力をかける
                 _Rb.AddForce(GravityDirection * 2f, ForceMode.Acceleration);
@@ -132,7 +150,7 @@ abstract public class CharacterMove : MonoBehaviour
             if (_MoveInputRate > 0f)
             {
                 //回転する
-                CharacterRotation(_Param.Direction, -GravityDirection, 90f);
+                if (_Param.IsSyncDirection) CharacterRotation(_Param.Direction, -GravityDirection, 90f);
 
                 //力をかける
                 _Rb.AddForce(_Param.Direction * _MoveInputRate * _MovePower, ForceMode.Acceleration);
@@ -148,7 +166,6 @@ abstract public class CharacterMove : MonoBehaviour
             _Rb.AddForce(_ForceOfBrake, ForceMode.Acceleration);
         }
     }
-
 
     /// <summary> キャラクターを指定向きに回転させる </summary>
     /// <param name="targetDirection">目標向き</param>
@@ -166,43 +183,41 @@ abstract public class CharacterMove : MonoBehaviour
         }
     }
 
-    
-    /// <summary>アニメーションイベントにて、攻撃アニメーション開始情報を受け取る</summary>
-    public void AttackStartCall()
+    /// <summary>臨戦態勢をチェック</summary>
+    void SetArmedTimer()
     {
-        _IsAttackEnd = false;
-        _Param.State.Process = MotionState.ProcessKind.Playing;
-
-        //攻撃を作成
-        foreach(AttackArea at in _Param.AttackAreas)
+        if(_DoCombo)
         {
-            CharacterParameter[] attackHits = at.EmitArea(_Param.HostilityLayer);
+            _ArmedTimer = 10f;
+        }
+        else if(_ArmedTimer > 0f)
+        {
+            _ArmedTimer -= Time.deltaTime;
+            if(_ArmedTimer < 0f) _ArmedTimer = 0f;
         }
     }
-
-    /// <summary>アニメーションイベントにて、攻撃アニメーションの攻撃部分の終了情報を受け取る</summary>
-    public void AttackEndCall()
+        
+    /// <summary>アニメーションイベントにて、予備動作に入った情報を受け取る</summary>
+    public void ProcessCallPreparation()
     {
-        _Param.AttackAreas.Clear();
+        _Param.State.Process = MotionState.ProcessKind.Preparation;
+    }
+
+    /// <summary>アニメーションイベントにて、本動作に入った情報を受け取る</summary>
+    public void ProcessCallPlaying()
+    {
+        _Param.State.Process = MotionState.ProcessKind.Playing;
+    }
+
+    /// <summary>アニメーションイベントにて、動作の空き時間になった情報を受け取る</summary>
+    public void ProcessCallInterval()
+    {
         _Param.State.Process = MotionState.ProcessKind.Interval;
     }
 
-    /// <summary>アニメーションイベントにて、コンボフィニッシュアニメーションの攻撃部分の終了情報を受け取る</summary>
-    public void ComboFinishEndCall()
+    /// <summary>アニメーションイベントにて、動作終了予定の情報を受け取る</summary>
+    public void ProcessCallEndSoon()
     {
         _Param.State.Process = MotionState.ProcessKind.EndSoon;
-    }
-
-    /// <summary>コンボ追加入力受付</summary>
-    public void ComboAcceptCall()
-    {
-        _IsAttackEnd = true;
-    }
-
-    /// <summary>アニメーションイベントにて、攻撃アニメーションそのものの終了情報を受け取る</summary>
-    public void AttackAnimationEndCall()
-    {
-        _IsAttackEnd = true;
-        _Param.State.Process = MotionState.ProcessKind.NotPlaying;
     }
 }

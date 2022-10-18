@@ -37,8 +37,11 @@ abstract public class CharacterParameter : MonoBehaviour
     /// <summary>当該キャラクターが持つ時間軸コンポーネント</summary>
     protected Timeline _Tl = default;
 
+    /// <summary>true : キャラクターの向きと移動方向を同期する</summary>
+    protected bool _IsSyncDirection = true;
+
     /// <summary>キャラクター正面方向情報</summary>
-    protected Vector3 _CharacterDirection = default;
+    protected Vector3 _Direction = default;
 
     [SerializeField, Tooltip("攻撃を当てる対象のレイヤー")]
     protected LayerMask _HostilityLayer = default;
@@ -50,7 +53,7 @@ abstract public class CharacterParameter : MonoBehaviour
     protected MotionState _State = default;
 
     [SerializeField, Tooltip("操作可否情報")]
-    protected InputAcceptance _Can = default;
+    protected InputAcceptance _Acceptance = default;
 
     [SerializeField, Tooltip("歩行最高速")]
     protected float _LimitSpeedWalk = 2f;
@@ -74,8 +77,10 @@ abstract public class CharacterParameter : MonoBehaviour
     public Transform EyePoint { get => _EyePoint; set => _EyePoint = value; }
     /// <summary>本キャラクターの時間情報</summary>
     public Timeline Tl { get => _Tl; }
+    /// <summary>true : キャラクターの向きと移動方向を同期する</summary>
+    public bool IsSyncDirection { get => _IsSyncDirection; set => _IsSyncDirection = value; }
     /// <summary>キャラクター正面方向情報</summary>
-    public Vector3 Direction { get => _CharacterDirection; set => _CharacterDirection = value; }
+    public Vector3 Direction { get => _Direction; set => _Direction = value; }
     /// <summary>攻撃を当てる対象のレイヤー</summary>
     public LayerMask HostilityLayer { get => _HostilityLayer; }
     /// <summary>キャラクターの当たり判定コライダー</summary>
@@ -91,7 +96,7 @@ abstract public class CharacterParameter : MonoBehaviour
     /// <summary>キャラクターの行動状態</summary>
     public MotionState State { get => _State; }
     /// <summary>操作可否情報</summary>
-    public InputAcceptance Can { get => _Can; }
+    public InputAcceptance Can { get => _Acceptance; }
     /// <summary>歩行最高速</summary>
     public float LimitSpeedWalk { get => _LimitSpeedWalk; }
     /// <summary>走行最高速</summary>
@@ -109,7 +114,7 @@ abstract public class CharacterParameter : MonoBehaviour
     void Awake()
     {
         _State = new MotionState();
-        _Can = new InputAcceptance();
+        _Acceptance = new InputAcceptance();
 
         RegisterStaticReference();
     }
@@ -131,13 +136,135 @@ abstract public class CharacterParameter : MonoBehaviour
     // Update is called once per frame
     protected virtual void Update()
     {
-        
+        SetAcceptant();
     }
 
+    /// <summary>操作可否情報を様々なステート状態から設定する</summary>
+    void SetAcceptant()
+    {
+        switch (_State.Kind)
+        {
+            case MotionState.StateKind.Stay:
+            case MotionState.StateKind.Walk:
+                _Acceptance.Move = true;
+                _Acceptance.Jump = true;
+                _Acceptance.ShiftSlide = true;
+                _Acceptance.LongTrip = true;
+                _Acceptance.Gurad = true;
+                _Acceptance.ComboNormal = true;
+                _Acceptance.ComboFinish = false;
 
-    
+                break;
+            case MotionState.StateKind.Run:
+                _Acceptance.Move = true;
+                _Acceptance.Jump = true;
+                _Acceptance.ShiftSlide = false;
+                _Acceptance.LongTrip = true;
+                _Acceptance.Gurad = true;
+                _Acceptance.ComboNormal = true;
+                _Acceptance.ComboFinish = false;
+
+                break;
+            case MotionState.StateKind.JumpNoraml:
+            case MotionState.StateKind.FallNoraml:
+                _Acceptance.Move = true;
+                _Acceptance.Jump = false;
+                _Acceptance.ShiftSlide = false;
+                _Acceptance.LongTrip = false;
+                _Acceptance.Gurad = false;
+                _Acceptance.ComboNormal = true;
+                _Acceptance.ComboFinish = false;
+
+                break;
+            case MotionState.StateKind.ShiftSlide:
+            case MotionState.StateKind.LongTrip:
+                switch (_State.Process)
+                {
+                    case MotionState.ProcessKind.Preparation:
+                    case MotionState.ProcessKind.Playing:
+                        _Acceptance.Move = false;
+                        _Acceptance.Jump = false;
+                        _Acceptance.ShiftSlide = false;
+                        _Acceptance.LongTrip = false;
+                        _Acceptance.Gurad = false;
+                        _Acceptance.ComboNormal = false;
+                        _Acceptance.ComboFinish = false;
+
+                        _IsSyncDirection = false;
+                        break;
+
+                    case MotionState.ProcessKind.EndSoon:
+                        _State.Kind = MotionState.StateKind.Stay;
+                        _State.Process = MotionState.ProcessKind.Playing;
+                        _Acceptance.Move = true;
+                        _Acceptance.Jump = true;
+                        _Acceptance.ShiftSlide = true;
+                        _Acceptance.LongTrip = true;
+                        _Acceptance.Gurad = true;
+                        _Acceptance.ComboNormal = true;
+                        _Acceptance.ComboFinish = false;
+
+                        _IsSyncDirection = true;
+                        break;
+
+                }
+
+                break;
+            case MotionState.StateKind.Guard:
+                _Acceptance.Move = false;
+                _Acceptance.Jump = false;
+                _Acceptance.ShiftSlide = false;
+                _Acceptance.LongTrip = false;
+                _Acceptance.Gurad = true;
+                _Acceptance.ComboNormal = false;
+                _Acceptance.ComboFinish = false;
+
+                break;
+            case MotionState.StateKind.ComboNormal:
+                switch (_State.Process)
+                {
+                    case MotionState.ProcessKind.Interval:
+                        _Acceptance.Move = false;
+                        _Acceptance.Jump = false;
+                        _Acceptance.ShiftSlide = false;
+                        _Acceptance.LongTrip = false;
+                        _Acceptance.Gurad = false;
+                        _Acceptance.ComboNormal = true;
+                        _Acceptance.ComboFinish = true;
+
+                        break;
+                    case MotionState.ProcessKind.EndSoon:
+                        _State.Kind = MotionState.StateKind.Stay;
+                        _State.Process = MotionState.ProcessKind.Playing;
+                        _Acceptance.Move = true;
+                        _Acceptance.Jump = true;
+                        _Acceptance.ShiftSlide = true;
+                        _Acceptance.LongTrip = true;
+                        _Acceptance.Gurad = true;
+                        _Acceptance.ComboNormal = true;
+                        _Acceptance.ComboFinish = false;
+
+                        break;
+                    default:
+                        _Acceptance.Move = false;
+                        _Acceptance.Jump = false;
+                        _Acceptance.ShiftSlide = false;
+                        _Acceptance.LongTrip = false;
+                        _Acceptance.Gurad = false;
+                        _Acceptance.ComboNormal = false;
+                        _Acceptance.ComboFinish = false;
+
+                        break;
+                }
+                break;
+
+            default: break;
+        }
+    }
+
     void OnDrawGizmos()
     {
+        /*
         if(_AttackAreas != null && _AttackAreas.Count > 0)
         {
             Gizmos.color = Color.red;
@@ -151,7 +278,6 @@ abstract public class CharacterParameter : MonoBehaviour
             }
         }
 
-        /*
         //エンゲージメントを書き出し
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, AttackRangeMiddle);

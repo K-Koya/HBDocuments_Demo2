@@ -3,23 +3,23 @@
 public class InputAcceptance
 {
     /// <summary>true : 入力移動を受け付ける</summary>
-    public bool _Move = true;
+    public bool Move = true;
 
     /// <summary>true : 入力でジャンプを受け付ける</summary>
-    public bool _Jump = true;
+    public bool Jump = true;
 
     /// <summary>true : シフトスライド（短距離回避）を受け付ける</summary>
-    public bool _ShiftSlide = true;
+    public bool ShiftSlide = true;
 
     /// <summary>true : ロングトリップ（長距離回避）を受け付ける</summary>
-    public bool _LongTrip = true;
+    public bool LongTrip = true;
 
     /// <summary>true : ガードを受け付ける</summary>
-    public bool _Gurad = true;
+    public bool Gurad = true;
 
     /// <summary>true : 通常コンボを受け付ける</summary>
-    public bool _ComboNormal = true;
+    public bool ComboNormal = true;
 
     /// <summary>true : コンボフィニッシュを受け付ける</summary>
-    public bool _ComboFinish = false;
+    public bool ComboFinish = false;
 }

@@ -60,43 +60,43 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.1047619
-        functionName: AttackStartCall
+      - time: 0
+        functionName: ProcessCallPreparation
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.29285714
-        functionName: AttackEndCall
+      - time: 0.11827957
+        functionName: ProcessCallPlaying
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.55714285
-        functionName: AttackStartCall
+      - time: 0.28673837
+        functionName: ProcessCallPreparation
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.6595238
-        functionName: AttackEndCall
+      - time: 0.49462363
+        functionName: ProcessCallPlaying
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.6840088
-        functionName: ComboAcceptCall
+      - time: 0.6738351
+        functionName: ProcessCallInterval
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.9086091
-        functionName: AttackAnimationEndCall
+      - time: 0.97132623
+        functionName: ProcessCallEndSoon
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0

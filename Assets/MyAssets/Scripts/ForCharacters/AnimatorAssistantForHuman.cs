@@ -13,16 +13,26 @@ public class AnimatorAssistantForHuman : MonoBehaviour
     Animator _Am = default;
 
     [SerializeField, Tooltip("Animatorのパラメーター名 : Speed")]
-    string _ParamNameSpeed = "Speed";
+    static string _ParamNameSpeed = "Speed";
 
     [SerializeField, Tooltip("Animatorのパラメーター名 : IsGround")]
-    string _ParamNameIsGround = "IsGround";
+    static string _ParamNameIsGround = "IsGround";
+
+    [SerializeField, Tooltip("Animatorのパラメーター名 : IsArmed")]
+    static string _ParamNameIsArmed = "IsArmed";
 
     [SerializeField, Tooltip("Animatorのパラメーター名 : DoJump")]
-    string _ParamNameDoJump = "DoJump";
+    static string _ParamNameDoJump = "DoJump";
 
     [SerializeField, Tooltip("Animatorのパラメーター名 : DoCombo")]
-    string _ParamNameDoCombo = "DoCombo";
+    static string _ParamNameDoCombo = "DoCombo";
+
+    [SerializeField, Tooltip("Animatorのパラメーター名 : DoDodge")]
+    static string _ParamNameDoDodge = "DoDodge";
+
+    [SerializeField, Tooltip("Animatorのパラメーター名 : DirectionAngle")]
+    static string _ParamNameDirectionAngle = "DirectionAngle";
+
 
     // Start is called before the first frame update
     void Start()
@@ -46,36 +56,36 @@ public class AnimatorAssistantForHuman : MonoBehaviour
         if (_Cm.JumpFlag) _Am.SetTrigger(_ParamNameDoJump);
         _Am.SetFloat(_ParamNameSpeed, _Cm.Speed);
         _Am.SetBool(_ParamNameIsGround, _Cm.IsGround);
+        _Am.SetBool(_ParamNameIsArmed, _Cm.ArmedTimer > 0f);
         if (_Cm.DoCombo) _Am.SetTrigger(_ParamNameDoCombo);
+        if (_Cm.DoDodge) _Am.SetTrigger(_ParamNameDoDodge);
+
+        float angle = Vector3.Angle(_Cm.transform.forward, _Cm.MoveDirection);
+        if (Vector3.Dot(_Cm.transform.right, _Cm.MoveDirection) < 0f) angle *= -1f;
+        _Am.SetFloat(_ParamNameDirectionAngle, angle);
     }
 
-    /// <summary>攻撃アニメーション開始情報を受け取る</summary>
-    public void AttackStartCall()
+    /// <summary>アニメーションイベントにて、予備動作に入った情報を受け取る</summary>
+    public void ProcessCallPreparation()
     {
-        _Cm.AttackStartCall();
+        _Cm.ProcessCallPreparation();
     }
 
-    /// <summary>攻撃アニメーションの攻撃部分の終了情報を受け取る</summary>
-    public void AttackEndCall()
+    /// <summary>アニメーションイベントにて、本動作に入った情報を受け取る</summary>
+    public void ProcessCallPlaying()
     {
-        _Cm.AttackEndCall();
+        _Cm.ProcessCallPlaying();
     }
 
-    /// <summary>コンボフィニッシュアニメーションの攻撃部分の終了情報を受け取る</summary>
-    public void ComboFinishEndCall()
+    /// <summary>アニメーションイベントにて、動作の空き時間になった情報を受け取る</summary>
+    public void ProcessCallInterval()
     {
-        _Cm.ComboFinishEndCall();
+        _Cm.ProcessCallInterval();
     }
 
-    /// <summary>コンボ追加入力受付</summary>
-    public void ComboAcceptCall()
+    /// <summary>アニメーションイベントにて、動作終了予定の情報を受け取る</summary>
+    public void ProcessCallEndSoon()
     {
-        _Cm.ComboAcceptCall();
-    }
-
-    /// <summary>攻撃アニメーションそのものの終了情報を受け取る</summary>
-    public void AttackAnimationEndCall()
-    {
-        _Cm.AttackAnimationEndCall();
+        _Cm.ProcessCallEndSoon();
     }
 }
