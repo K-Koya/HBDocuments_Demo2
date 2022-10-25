@@ -1029,7 +1029,7 @@ AnimatorStateMachine:
   m_AnyStatePosition: {x: 50, y: 20, z: 0}
   m_EntryPosition: {x: 50, y: 120, z: 0}
   m_ExitPosition: {x: 800, y: 120, z: 0}
-  m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
+  m_ParentStateMachinePosition: {x: 120, y: -220, z: 0}
   m_DefaultState: {fileID: -3835868429434507308}
 --- !u!1102 &-2678851127245892703
 AnimatorState:
@@ -1069,9 +1069,9 @@ AnimatorTransition:
   - m_ConditionMode: 1
     m_ConditionEvent: DoDodge
     m_EventTreshold: 0
-  - m_ConditionMode: 4
-    m_ConditionEvent: Speed
-    m_EventTreshold: 2
+  - m_ConditionMode: 3
+    m_ConditionEvent: DirectionAngle
+    m_EventTreshold: 1000
   m_DstStateMachine: {fileID: -1909476004846461220}
   m_DstState: {fileID: 0}
   m_Solo: 0
@@ -1111,9 +1111,9 @@ AnimatorTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 3
-    m_ConditionEvent: Speed
-    m_EventTreshold: 2
+  - m_ConditionMode: 4
+    m_ConditionEvent: DirectionAngle
+    m_EventTreshold: 1000
   - m_ConditionMode: 1
     m_ConditionEvent: DoDodge
     m_EventTreshold: 0
@@ -1480,43 +1480,43 @@ AnimatorController:
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: IsGround
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: IsArmed
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: DoJump
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: DoCombo
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: DoDodge
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: DirectionAngle
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Base Layer
@@ -1944,9 +1944,9 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.25
-  m_TransitionOffset: 0
-  m_ExitTime: 0.75
+  m_TransitionDuration: 0.07174945
+  m_TransitionOffset: 0.13368794
+  m_ExitTime: 0.88368785
   m_HasExitTime: 0
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
@@ -2307,10 +2307,10 @@ AnimatorTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 3
-    m_ConditionEvent: Speed
+    m_ConditionEvent: DirectionAngle
     m_EventTreshold: 45
   - m_ConditionMode: 4
-    m_ConditionEvent: Speed
+    m_ConditionEvent: DirectionAngle
     m_EventTreshold: 135
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 483421098638518641}
@@ -2493,9 +2493,9 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.25
-  m_TransitionOffset: 0
-  m_ExitTime: 0.78571427
+  m_TransitionDuration: 0.116036296
+  m_TransitionOffset: 0.1004728
+  m_ExitTime: 0.87183386
   m_HasExitTime: 0
   m_HasFixedDuration: 1
   m_InterruptionSource: 0

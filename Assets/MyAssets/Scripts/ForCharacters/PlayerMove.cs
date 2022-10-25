@@ -111,8 +111,9 @@ public class PlayerMove : CharacterMove
             {
                 _MovePower = 0f;
                 _DoDodge = true;
-                _Param.Direction = CalculateMoveDirection(InputUtility.GetMoveDirection);
-                _Rb.AddForce(_Param.Direction * 4f, ForceMode.VelocityChange);
+                _Rb.velocity = Vector3.Project(_Rb.velocity, -GravityDirection);
+                _Param.Direction = CalculateMoveDirection(InputUtility.GetMoveDirection).normalized;
+                _Rb.AddForce(_Param.Direction * 6f, ForceMode.VelocityChange);
                 _Param.State.Kind = MotionState.StateKind.ShiftSlide;
                 _Param.State.Process = MotionState.ProcessKind.Playing;
             }
@@ -121,7 +122,7 @@ public class PlayerMove : CharacterMove
             {
                 _MovePower = 0f;
                 _DoDodge = true;
-                _Param.Direction = CalculateMoveDirection(InputUtility.GetMoveDirection);
+                _Param.Direction = CalculateMoveDirection(InputUtility.GetMoveDirection).normalized;
                 _Rb.AddForce(_Param.Direction * 8f, ForceMode.VelocityChange);
                 _Param.State.Kind = MotionState.StateKind.LongTrip;
                 _Param.State.Process = MotionState.ProcessKind.Playing;

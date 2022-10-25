@@ -6,6 +6,9 @@ using Chronos;
 [RequireComponent(typeof(Animator))]
 public class AnimatorAssistantForHuman : MonoBehaviour
 {
+    /// <summary>移動方向の角度</summary>
+    const float _DIRECTION_OUT_OF_RANGE = 10000f;
+
     /// <summary>該当のキャラクターを移動させるコンポーネント</summary>
     CharacterMove _Cm = default;
 
@@ -60,9 +63,17 @@ public class AnimatorAssistantForHuman : MonoBehaviour
         if (_Cm.DoCombo) _Am.SetTrigger(_ParamNameDoCombo);
         if (_Cm.DoDodge) _Am.SetTrigger(_ParamNameDoDodge);
 
-        float angle = Vector3.Angle(_Cm.transform.forward, _Cm.MoveDirection);
-        if (Vector3.Dot(_Cm.transform.right, _Cm.MoveDirection) < 0f) angle *= -1f;
-        _Am.SetFloat(_ParamNameDirectionAngle, angle);
+        //回避行動用アニメーションを設定
+        if(Vector3.SqrMagnitude(_Cm.MoveDirection) > 0f)
+        {
+            float angle = Vector3.Angle(_Cm.transform.forward, _Cm.MoveDirection);
+            if (Vector3.Dot(_Cm.transform.right, _Cm.MoveDirection) < 0f) angle *= -1f;
+            _Am.SetFloat(_ParamNameDirectionAngle, angle);
+        }
+        else
+        {
+            _Am.SetFloat(_ParamNameDirectionAngle, _DIRECTION_OUT_OF_RANGE);
+        }
     }
 
     /// <summary>アニメーションイベントにて、予備動作に入った情報を受け取る</summary>

@@ -41,6 +41,9 @@ public class InputUtility : Singleton<InputUtility>
 
     [SerializeField, Tooltip("InputActionにおける、回避入力名")]
     string _ButtonNameDodge = "Dodge";
+
+    [SerializeField, Tooltip("InputActionにおける、決定ボタン入力名")]
+    string _ButtonNameDecide = "Decide";
     #endregion
     /*
     #region コントローラー振動用メンバ
@@ -104,6 +107,9 @@ public class InputUtility : Singleton<InputUtility>
 
     /// <summary> 回避ボタンの入力状況 </summary>
     static InputAction _DodgeAction = default;
+
+    /// <summary> 決定ボタンの入力状況 </summary>
+    static InputAction _DecideAction = default;
     #endregion
 
     #region プロパティ
@@ -145,6 +151,8 @@ public class InputUtility : Singleton<InputUtility>
     static public bool GetDownDodge { get => _DodgeAction.triggered; }
     /// <summary> 回避ボタン押下中 </summary>
     static public bool GetDodge { get => _DodgeAction.IsPressed(); }
+    /// <summary> 決定ボタン押下直後 </summary>
+    static public bool GetDownDecide { get => _DecideAction.triggered; }
     #endregion
 
     // Start is called before the first frame update
@@ -163,6 +171,7 @@ public class InputUtility : Singleton<InputUtility>
         _AttackAction = actionMap[_ButtonNameAttack];
         _GuardAction = actionMap[_ButtonNameGuard];
         _DodgeAction = actionMap[_ButtonNameDodge];
+        _DecideAction = actionMap[_ButtonNameDecide];
     }
     /*
         void OnDestroy()
