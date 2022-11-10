@@ -6,9 +6,6 @@ using Chronos;
 [RequireComponent(typeof(Animator))]
 public class AnimatorAssistantForHuman : MonoBehaviour
 {
-    /// <summary>移動方向の角度</summary>
-    const float _DIRECTION_OUT_OF_RANGE = 10000f;
-
     /// <summary>該当のキャラクターを移動させるコンポーネント</summary>
     CharacterMove _Cm = default;
 
@@ -27,14 +24,12 @@ public class AnimatorAssistantForHuman : MonoBehaviour
     [SerializeField, Tooltip("Animatorのパラメーター名 : DoJump")]
     static string _ParamNameDoJump = "DoJump";
 
-    [SerializeField, Tooltip("Animatorのパラメーター名 : DoCombo")]
-    static string _ParamNameDoCombo = "DoCombo";
+    [SerializeField, Tooltip("Animatorのパラメーター名 : DoAction")]
+    static string _ParamNameDoAction = "DoAction";
 
-    [SerializeField, Tooltip("Animatorのパラメーター名 : DoDodge")]
-    static string _ParamNameDoDodge = "DoDodge";
+    [SerializeField, Tooltip("Animatorのパラメーター名 : AnimationKind")]
+    static string _ParamNameAnimationKind = "AnimationKind";
 
-    [SerializeField, Tooltip("Animatorのパラメーター名 : DirectionAngle")]
-    static string _ParamNameDirectionAngle = "DirectionAngle";
 
 
     // Start is called before the first frame update
@@ -60,20 +55,50 @@ public class AnimatorAssistantForHuman : MonoBehaviour
         _Am.SetFloat(_ParamNameSpeed, _Cm.Speed);
         _Am.SetBool(_ParamNameIsGround, _Cm.IsGround);
         _Am.SetBool(_ParamNameIsArmed, _Cm.ArmedTimer > 0f);
-        if (_Cm.DoCombo) _Am.SetTrigger(_ParamNameDoCombo);
-        if (_Cm.DoDodge) _Am.SetTrigger(_ParamNameDoDodge);
 
-        //回避行動用アニメーションを設定
-        if(Vector3.SqrMagnitude(_Cm.MoveDirection) > 0f)
+        if (_Cm.DoAction)
         {
-            float angle = Vector3.Angle(_Cm.transform.forward, _Cm.MoveDirection);
-            if (Vector3.Dot(_Cm.transform.right, _Cm.MoveDirection) < 0f) angle *= -1f;
-            _Am.SetFloat(_ParamNameDirectionAngle, angle);
+            _Am.SetTrigger(_ParamNameDoAction);
+            switch (_Cm.State)
+            {
+                case MotionState.StateKind.ShiftSlide:
+
+                    //前後左右4方向のどれに近いか
+                    float fowardCheck = Vector3.Dot(_Cm.transform.forward, _Cm.MoveDirection);
+                    float rightCheck = Vector3.Dot(_Cm.transform.right, _Cm.MoveDirection);
+                    int val = (int)AnimationKind.ShiftSlideBack;
+                    if (Mathf.Abs(fowardCheck) > Mathf.Abs(rightCheck))
+                    {
+                        if(fowardCheck > 0f) val = (int)AnimationKind.ShiftSlideFoward;
+                    }
+                    else
+                    {
+                        if (rightCheck > 0f) val = (int)AnimationKind.ShiftSlideRight;
+                        else val = (int)AnimationKind.ShiftSlideLeft;
+                    }
+                    _Am.SetInteger(_ParamNameAnimationKind, val);
+
+                    break;
+                case MotionState.StateKind.LongTrip:
+                    _Am.SetInteger(_ParamNameAnimationKind, (int)AnimationKind.LongTrip);
+                    break;
+                case MotionState.StateKind.ComboNormal:
+                    _Am.SetInteger(_ParamNameAnimationKind, (int)AnimationKind.ComboGroundFoward);
+                    break;
+                default: 
+                    _Am.SetInteger(_ParamNameAnimationKind, (int)AnimationKind.NoCall);
+                    break;
+            }
         }
-        else
-        {
-            _Am.SetFloat(_ParamNameDirectionAngle, _DIRECTION_OUT_OF_RANGE);
-        }
+        else _Am.SetInteger(_ParamNameAnimationKind, (int)AnimationKind.NoCall);
+    }
+
+    #region アニメーションイベント
+
+    /// <summary>アニメーションイベントにて、アニメーション遷移におけるフリーズ回避のため、待機状態にする</summary>
+    public void StateCallStaying()
+    {
+        _Cm.StateCallStaying();
     }
 
     /// <summary>アニメーションイベントにて、予備動作に入った情報を受け取る</summary>
@@ -98,5 +123,44 @@ public class AnimatorAssistantForHuman : MonoBehaviour
     public void ProcessCallEndSoon()
     {
         _Cm.ProcessCallEndSoon();
+    }
+
+    #endregion
+
+    /// <summary>アニメーションの種類</summary>
+    public enum AnimationKind : ushort
+    {
+        NoCall = 0,
+        Idle,
+        Move,
+        Jump,
+        Fall,
+
+        ShiftSlideFoward = 100,
+        ShiftSlideBack,
+        ShiftSlideRight,
+        ShiftSlideLeft,
+        LongTrip,
+
+        GuardGroundFoward = 200,
+        GuardGroundBack,
+        GuardAirFoward,
+        GuardAirBack,
+
+        UseItemSpray = 500,
+        UseItemFood,
+        UseItemDrink,
+
+        ComboGroundFoward = 1000,
+        ComboGroundFowardFar,
+        ComboGroundBack,
+        ComboGroundWide,
+        ComboGroundFinish,
+        ComboAirFoward,
+        ComboAirFowardFar,
+        ComboAirBack,
+        ComboAirWide,
+        ComboAirFinish,
+        
     }
 }

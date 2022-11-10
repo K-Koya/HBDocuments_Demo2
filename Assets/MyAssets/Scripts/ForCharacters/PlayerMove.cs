@@ -14,6 +14,7 @@ public class PlayerMove : CharacterMove
 
         _MainCameraTransform = Camera.main.transform;
         Move = MoveByPlayer;
+        Act = ActByPlayer;
     }
 
     // Update is called once per frame
@@ -36,7 +37,7 @@ public class PlayerMove : CharacterMove
         return vertical + horizontal;
     }
 
-    /// <summary>重力方向の逐一変化をしない移動メソッド</summary>
+    /// <summary>標準の移動操作メソッド</summary>
     void MoveByPlayer()
     {
         //移動入力
@@ -48,7 +49,6 @@ public class PlayerMove : CharacterMove
         {
             _Param.Direction = Vector3.zero;
         }
-            
 
         //入力があれば移動力の処理
         if (_Param.Direction.sqrMagnitude > 0)
@@ -73,12 +73,14 @@ public class PlayerMove : CharacterMove
         {
             _ForceOfBrake = -VelocityOnPlane.normalized * 0.2f;
         }
+    }
 
-        
+    /// <summary>標準の行動操作メソッド</summary>
+    void ActByPlayer()
+    {
         _JumpFlag = false;
-        _DoCombo = false;
-        _DoDodge = false;
-        
+        _DoAction = false;
+
 
         //接地時
         if (IsGround)
@@ -110,22 +112,22 @@ public class PlayerMove : CharacterMove
             if (_Param.Can.ShiftSlide && InputUtility.GetDodge && InputUtility.GetMoveDown)
             {
                 _MovePower = 0f;
-                _DoDodge = true;
                 _Rb.velocity = Vector3.Project(_Rb.velocity, -GravityDirection);
                 _Param.Direction = CalculateMoveDirection(InputUtility.GetMoveDirection).normalized;
                 _Rb.AddForce(_Param.Direction * 6f, ForceMode.VelocityChange);
                 _Param.State.Kind = MotionState.StateKind.ShiftSlide;
                 _Param.State.Process = MotionState.ProcessKind.Playing;
+                _DoAction = true;
             }
             //長距離回避距離
             else if(_Param.Can.LongTrip && InputUtility.GetMoveDirection.sqrMagnitude > 0f && InputUtility.GetDownDodge)
             {
                 _MovePower = 0f;
-                _DoDodge = true;
                 _Param.Direction = CalculateMoveDirection(InputUtility.GetMoveDirection).normalized;
                 _Rb.AddForce(_Param.Direction * 8f, ForceMode.VelocityChange);
                 _Param.State.Kind = MotionState.StateKind.LongTrip;
                 _Param.State.Process = MotionState.ProcessKind.Playing;
+                _DoAction = true;
             }
             //ジャンプ処理
             else if (_Param.Can.Jump && InputUtility.GetDownJump)
@@ -138,10 +140,10 @@ public class PlayerMove : CharacterMove
             //コンボ攻撃処理
             else if (_Param.Can.ComboNormal && InputUtility.GetDownAttack)
             {
-                _DoCombo = true;
                 _Param.State.Kind = MotionState.StateKind.ComboNormal;
                 _Param.State.Process = MotionState.ProcessKind.Preparation;
                 Debug.Log("コンボ!");
+                _DoAction = true;
             }
         }
         //空中時
@@ -157,10 +159,10 @@ public class PlayerMove : CharacterMove
             //コンボ攻撃処理
             else if (_Param.Can.ComboNormal && InputUtility.GetDownAttack)
             {
-                _DoCombo = true;
                 _Param.State.Kind = MotionState.StateKind.ComboNormal;
                 _Param.State.Process = MotionState.ProcessKind.Preparation;
                 Debug.Log("空中コンボ!");
+                _DoAction = true;
             }
         }
     }

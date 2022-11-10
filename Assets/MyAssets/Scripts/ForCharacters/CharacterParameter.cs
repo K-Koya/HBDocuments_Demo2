@@ -153,6 +153,7 @@ abstract public class CharacterParameter : MonoBehaviour
                 _Acceptance.Gurad = true;
                 _Acceptance.ComboNormal = true;
                 _Acceptance.ComboFinish = false;
+                _IsSyncDirection = true;
 
                 break;
             case MotionState.StateKind.Run:
@@ -163,6 +164,7 @@ abstract public class CharacterParameter : MonoBehaviour
                 _Acceptance.Gurad = true;
                 _Acceptance.ComboNormal = true;
                 _Acceptance.ComboFinish = false;
+                _IsSyncDirection = true;
 
                 break;
             case MotionState.StateKind.JumpNoraml:
@@ -174,10 +176,10 @@ abstract public class CharacterParameter : MonoBehaviour
                 _Acceptance.Gurad = false;
                 _Acceptance.ComboNormal = true;
                 _Acceptance.ComboFinish = false;
+                _IsSyncDirection = true;
 
                 break;
             case MotionState.StateKind.ShiftSlide:
-            case MotionState.StateKind.LongTrip:
                 switch (_State.Process)
                 {
                     case MotionState.ProcessKind.Preparation:
@@ -189,7 +191,6 @@ abstract public class CharacterParameter : MonoBehaviour
                         _Acceptance.Gurad = false;
                         _Acceptance.ComboNormal = false;
                         _Acceptance.ComboFinish = false;
-
                         _IsSyncDirection = false;
                         break;
 
@@ -203,10 +204,39 @@ abstract public class CharacterParameter : MonoBehaviour
                         _Acceptance.Gurad = true;
                         _Acceptance.ComboNormal = true;
                         _Acceptance.ComboFinish = false;
-
                         _IsSyncDirection = true;
                         break;
 
+                }
+
+                break;
+            case MotionState.StateKind.LongTrip:
+                switch (_State.Process)
+                {
+                    case MotionState.ProcessKind.Preparation:
+                    case MotionState.ProcessKind.Playing:
+                        _Acceptance.Move = false;
+                        _Acceptance.Jump = false;
+                        _Acceptance.ShiftSlide = false;
+                        _Acceptance.LongTrip = false;
+                        _Acceptance.Gurad = false;
+                        _Acceptance.ComboNormal = false;
+                        _Acceptance.ComboFinish = false;
+                        _IsSyncDirection = false;
+                        break;
+
+                    case MotionState.ProcessKind.EndSoon:
+                        _State.Kind = MotionState.StateKind.FallNoraml;
+                        _State.Process = MotionState.ProcessKind.Playing;
+                        _Acceptance.Move = true;
+                        _Acceptance.Jump = false;
+                        _Acceptance.ShiftSlide = false;
+                        _Acceptance.LongTrip = false;
+                        _Acceptance.Gurad = false;
+                        _Acceptance.ComboNormal = true;
+                        _Acceptance.ComboFinish = false;
+                        _IsSyncDirection = true;
+                        break;
                 }
 
                 break;
@@ -221,6 +251,8 @@ abstract public class CharacterParameter : MonoBehaviour
 
                 break;
             case MotionState.StateKind.ComboNormal:
+
+                _IsSyncDirection = true;
                 switch (_State.Process)
                 {
                     case MotionState.ProcessKind.Interval:

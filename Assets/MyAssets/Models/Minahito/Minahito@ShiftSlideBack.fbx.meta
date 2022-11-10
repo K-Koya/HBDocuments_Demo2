@@ -23,7 +23,7 @@ ModelImporter:
     rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: Event ProcessCallPlaying has a time (0.000000) outside
-      the clip's valid range (0.016667..1.000000). It will never be fired
+      the clip's valid range (0.016667..1.016667). It will never be fired
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
@@ -41,7 +41,7 @@ ModelImporter:
       takeName: A10_ShiftSlideBack
       internalID: 0
       firstFrame: -1
-      lastFrame: 59
+      lastFrame: 60
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -75,7 +75,7 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.92082804
+      - time: 0.920828
         functionName: ProcessCallEndSoon
         data: 
         objectReferenceParameter: {instanceID: 0}

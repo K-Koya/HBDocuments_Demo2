@@ -34,6 +34,9 @@ public class AnimatorAssistantForAttack : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (_Cm.DoCombo) _Am.SetTrigger(_ParamNameDoCombo);
+        if (_Cm.DoAction && _Cm.State == MotionState.StateKind.ComboNormal)
+        {
+            _Am.SetTrigger(_ParamNameDoCombo);
+        }
     }
 }

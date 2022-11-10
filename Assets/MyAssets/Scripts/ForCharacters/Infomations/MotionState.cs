@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>本キャラクターがどのような動作をしているかをまとめるクラス</summary>
@@ -32,7 +30,7 @@ public class MotionState
         FallNoraml,
         /// <summary>短距離回避(シフトスライド)中の状態</summary>
         ShiftSlide,
-        /// <summary>長距離回避(ロングトリップ)中の状</summary>
+        /// <summary>長距離回避(ロングトリップ)中の状態</summary>
         LongTrip,
         /// <summary>ガード中の状態</summary>
         Guard,

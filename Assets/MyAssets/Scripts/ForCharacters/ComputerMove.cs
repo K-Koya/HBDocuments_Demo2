@@ -11,11 +11,11 @@ public class ComputerMove : CharacterMove
     /// <summary>当該キャラクターの移動制御</summary>
     NavMeshAgent _Nav = null;
 
-    /// <summary>前フレームの位置座標</summary>
-    Vector3 _BeforeFramePosition = Vector3.zero;
-
     /// <summary>移動先座標</summary>
     Vector3? _Destination = null;
+
+    /// <summary>力をかける補正値</summary>
+    Vector3 _ForceCorrection = Vector3.zero;
 
     /// <summary>移動先を定めるコルーチン</summary>
     Coroutine _SetDestinationCoroutine = null;
@@ -44,6 +44,26 @@ public class ComputerMove : CharacterMove
     protected override void Update()
     {
         base.Update();
+    }
+
+    /// <summary>外力を任意の方向にかける方法でターゲット周りを周回させる移動メソッド</summary>
+    void MoveByAddForceOrbit()
+    {
+        if (_Destination is null) return;
+
+        //ターゲット方向
+        Vector3 targetDirection = _Destination.Value - transform.position;
+
+        //移動方向を見る
+        if (_Param.IsSyncDirection)
+        {
+            _Param.Direction = Vector3.Normalize(Vector3.Cross(GravityDirection, targetDirection));
+        }
+        //ターゲット方向を見る
+        else
+        {
+            CharacterRotation(targetDirection, GravityDirection, 720f);
+        }
     }
 
     /// <summary>ナビメッシュを利用した移動メソッド</summary>

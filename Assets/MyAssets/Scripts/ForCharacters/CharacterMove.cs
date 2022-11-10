@@ -21,11 +21,8 @@ abstract public class CharacterMove : MonoBehaviour
     /// <summary>キャラクターの、武器を出したりして臨戦態勢になる継続タイマー</summary>
     protected float _ArmedTimer = 0.0f;
 
-    /// <summary>true : コンボ攻撃入力</summary>
-    protected bool _DoCombo = false;
-
-    /// <summary>true : 回避入力</summary>
-    protected bool _DoDodge = false;
+    /// <summary>true : 各種アクションを実施直後</summary>
+    protected bool _DoAction = false;
 
     /// <summary>キャラクターの持つ情報</summary>
     protected CharacterParameter _Param = null;
@@ -48,33 +45,32 @@ abstract public class CharacterMove : MonoBehaviour
     /// <summary>移動用メソッド</summary>
     protected System.Action Move = null;
 
-    /// <summary>攻撃用メソッド</summary>
-    protected System.Action Attack = null;
+    /// <summary>各種行動用メソッド</summary>
+    protected System.Action Act = null;
 
     #endregion
 
     #region プロパティ
-    /// <summary>true : コンボ攻撃入力があった</summary>
-    public bool DoCombo => _DoCombo;
-    /// <summary>true : 回避入力があった</summary>
-    public bool DoDodge => _DoDodge;
+    /// <summary>true : 各種アクション入力があった</summary>
+    public bool DoAction { get => _DoAction; }
+    /// <summary>現在の行動状態</summary>
+    public MotionState.StateKind State { get => _Param.State.Kind; }
     /// <summary>キャラクターの、武器を出したりして臨戦態勢になる継続タイマー</summary>
-    public float ArmedTimer => _ArmedTimer;
+    public float ArmedTimer { get => _ArmedTimer; }
     /// <summary>True : 着地している</summary>
-    public bool IsGround => _GroundChecker.IsGround;
+    public bool IsGround { get => _GroundChecker.IsGround; }
     /// <summary>重力方向</summary>
-    protected Vector3 GravityDirection => _GroundChecker.GravityDirection;
+    protected Vector3 GravityDirection { get => _GroundChecker.GravityDirection; }
     /// <summary>Rigidbodyのvelocityを移動方向平面に換算したもの</summary>
-    protected Vector3 VelocityOnPlane => Vector3.ProjectOnPlane(_Rb.velocity, -GravityDirection);
+    protected Vector3 VelocityOnPlane { get => Vector3.ProjectOnPlane(_Rb.velocity, -GravityDirection); }
     /// <summary>移動向けに力をかける時の力の大きさ</summary>
     public float MovePower { set => _MovePower = value; }
     /// <summary>結果の移動速度</summary>
-    public float Speed => _Speed;
+    public float Speed { get => _Speed; }
     /// <summary>ジャンプ直後フラグ</summary>
-    public bool JumpFlag => _JumpFlag;
+    public bool JumpFlag { get => _JumpFlag; }
     /// <summary>移動方向</summary>
-    public Vector3 MoveDirection => _Param.Direction;
-    
+    public Vector3 MoveDirection { get => _Param.Direction; }
     #endregion
 
 
@@ -97,8 +93,10 @@ abstract public class CharacterMove : MonoBehaviour
 
         //速度測定
         _Speed = VelocityOnPlane.magnitude;
+
+        //操作
         Move?.Invoke();
-        Attack?.Invoke();
+        Act?.Invoke();
 
         //臨戦態勢
         SetArmedTimer();
@@ -186,7 +184,7 @@ abstract public class CharacterMove : MonoBehaviour
     /// <summary>臨戦態勢をチェック</summary>
     void SetArmedTimer()
     {
-        if(_DoCombo)
+        if(State == MotionState.StateKind.ComboNormal)
         {
             _ArmedTimer = 10f;
         }
@@ -196,7 +194,14 @@ abstract public class CharacterMove : MonoBehaviour
             if(_ArmedTimer < 0f) _ArmedTimer = 0f;
         }
     }
-        
+
+    /// <summary>アニメーションイベントにて、アニメーション遷移におけるフリーズ回避のため、待機状態にする</summary>
+    public void StateCallStaying()
+    {
+        _Param.State.Kind = MotionState.StateKind.Stay;
+        _Param.State.Process = MotionState.ProcessKind.Playing;
+    }
+
     /// <summary>アニメーションイベントにて、予備動作に入った情報を受け取る</summary>
     public void ProcessCallPreparation()
     {
