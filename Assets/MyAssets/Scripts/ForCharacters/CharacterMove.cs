@@ -60,9 +60,9 @@ abstract public class CharacterMove : MonoBehaviour
     /// <summary>True : ’…’n‚µ‚Ä‚¢‚é</summary>
     public bool IsGround { get => _GroundChecker.IsGround; }
     /// <summary>d—Í•ûŒü</summary>
-    protected Vector3 GravityDirection { get => _GroundChecker.GravityDirection; }
+    public Vector3 GravityDirection { get => _GroundChecker.GravityDirection; }
     /// <summary>Rigidbody‚Ìvelocity‚ğˆÚ“®•ûŒü•½–Ê‚ÉŠ·Z‚µ‚½‚à‚Ì</summary>
-    protected Vector3 VelocityOnPlane { get => Vector3.ProjectOnPlane(_Rb.velocity, -GravityDirection); }
+    public Vector3 VelocityOnPlane { get => Vector3.ProjectOnPlane(_Rb.velocity, -GravityDirection); }
     /// <summary>ˆÚ“®Œü‚¯‚É—Í‚ğ‚©‚¯‚é‚Ì—Í‚Ì‘å‚«‚³</summary>
     public float MovePower { set => _MovePower = value; }
     /// <summary>Œ‹‰Ê‚ÌˆÚ“®‘¬“x</summary>

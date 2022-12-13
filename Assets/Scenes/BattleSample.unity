@@ -1644,7 +1644,7 @@ GameObject:
   - component: {fileID: 696406688}
   - component: {fileID: 696406683}
   - component: {fileID: 696406687}
-  - component: {fileID: 696406686}
+  - component: {fileID: 696406689}
   m_Layer: 10
   m_Name: BossDragon
   m_TagString: Untagged
@@ -1711,13 +1711,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _EyePoint: {fileID: 0}
-  _AliseGatherRange: 5
-  _AttackRangeFar: 7
-  _AttackRangeMiddle: 5
-  _ChaseEnemyDistance: 40
+  _AliseGatherRange: 30
+  _AttackRangeFar: 45
+  _AttackRangeMiddle: 30
+  _ChaseEnemyDistance: 50
   _HostilityLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 768
   _State:
     _Kind: 0
     _Process: 0
@@ -1770,23 +1770,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 1
---- !u!114 &696406686
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 696406679}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bd4eb1158e355974e8411a012b93c84d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _DetectAthorPlaceRatio: 5
-  _WanderingDistance: 8
-  _FollowEnemy:
-    _AttractInfluence: 0
-    _RepulsionInfluence: 0
 --- !u!114 &696406687
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1814,6 +1797,18 @@ MonoBehaviour:
   _Collider: {fileID: 696406681}
   _IsGround: 0
   _SlopeLimit: 45
+--- !u!114 &696406689
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 696406679}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85e97826db25b784f89cf9a54c1a73de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -2126,7 +2121,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.7777778, y: 1}
+    m_SensorSize: {x: 1.912114, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -2331,7 +2326,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.7777778, y: 1}
+    m_SensorSize: {x: 1.912114, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -3015,6 +3010,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9586004, guid: eb58e8f2831a51f45a44a261e6710cdd, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 5feeab4720b87a2479048dd5669d0370, type: 2}
     m_RemovedComponents: []
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: eb58e8f2831a51f45a44a261e6710cdd, type: 3}
@@ -3023,6 +3022,40 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 485588, guid: eb58e8f2831a51f45a44a261e6710cdd, type: 3}
   m_PrefabInstance: {fileID: 1028352183}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1035614528 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 139696, guid: eb58e8f2831a51f45a44a261e6710cdd, type: 3}
+  m_PrefabInstance: {fileID: 1028352183}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1035614530
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1035614528}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6090da511f8374135a15dd8655adcd44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _recordingInterval: 0.5
+  _mode: 1
+  _globalClockKey: Enemy
+  _rewindable: 0
+  _recordingDuration: 30
+--- !u!114 &1035614531
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1035614528}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d8f1f18b1c8aad4fa54591d286487e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1125764779
 GameObject:
   m_ObjectHideFlags: 0
@@ -5596,11 +5629,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd4eb1158e355974e8411a012b93c84d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _DetectAthorPlaceRatio: 5
-  _WanderingDistance: 10
-  _FollowEnemy:
-    _AttractInfluence: 0
-    _RepulsionInfluence: 0
 --- !u!114 &1743858338
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5699,7 +5727,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.7777778, y: 1}
+    m_SensorSize: {x: 1.912114, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -8101,7 +8129,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.7777778, y: 1}
+    m_SensorSize: {x: 1.912114, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0

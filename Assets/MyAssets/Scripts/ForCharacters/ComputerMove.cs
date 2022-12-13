@@ -19,13 +19,20 @@ public class ComputerMove : CharacterMove
 
     /// <summary>移動先を定めるコルーチン</summary>
     Coroutine _SetDestinationCoroutine = null;
+
+    /// <summary>true : 移動先をNavMesh上に見つけられた</summary>
+    bool _IsFoundDestination = false;
     #endregion
 
     #region プロパティ
     /// <summary>移動先座標</summary>
     public Vector3? Destination { set => _Destination = value; }
+    /// <summary>力をかける補正値</summary>
+    public Vector3 ForceCorrection { set => _ForceCorrection = value; }
     /// <summary>ナビメッシュ上における移動先座標</summary>
     public Vector3 DestinationOnNavMesh { get => _Nav.destination; }
+    /// <summary>true : 移動先をNavMesh上に見つけられた</summary>
+    public bool IsFoundDestination { get => _IsFoundDestination; }
     #endregion
 
     // Start is called before the first frame update
@@ -37,33 +44,12 @@ public class ComputerMove : CharacterMove
         _Nav.isStopped = true;
 
         Move = MoveByNavMesh;
-
     }
 
     // Update is called once per frame
     protected override void Update()
     {
         base.Update();
-    }
-
-    /// <summary>外力を任意の方向にかける方法でターゲット周りを周回させる移動メソッド</summary>
-    void MoveByAddForceOrbit()
-    {
-        if (_Destination is null) return;
-
-        //ターゲット方向
-        Vector3 targetDirection = _Destination.Value - transform.position;
-
-        //移動方向を見る
-        if (_Param.IsSyncDirection)
-        {
-            _Param.Direction = Vector3.Normalize(Vector3.Cross(GravityDirection, targetDirection));
-        }
-        //ターゲット方向を見る
-        else
-        {
-            CharacterRotation(targetDirection, GravityDirection, 720f);
-        }
     }
 
     /// <summary>ナビメッシュを利用した移動メソッド</summary>
@@ -103,6 +89,9 @@ public class ComputerMove : CharacterMove
             _Param.Direction = Vector3.Normalize(currentNextPassing - transform.position);
         }
 
+        //移動力補正を合算
+        _Param.Direction += _ForceCorrection;
+
         //入力があれば移動力の処理
         if (_Param.Direction.sqrMagnitude > 0f)
         {
@@ -130,7 +119,9 @@ public class ComputerMove : CharacterMove
     {
         while (true)
         {
-            if(_Destination == null)
+            _IsFoundDestination = false;
+
+            if (_Destination == null)
             {
                 yield return null;
             }
@@ -140,6 +131,7 @@ public class ComputerMove : CharacterMove
                 if (Physics.Raycast((Vector3)_Destination + Vector3.up * 0.2f, Vector3.down, out hit, 10f, LayerManager.Ins.AllGround))
                 {
                     _Nav.destination = hit.point;
+                    _IsFoundDestination = true;
                 }
 
                 yield return _Param.Tl.WaitForSeconds(0.2f);

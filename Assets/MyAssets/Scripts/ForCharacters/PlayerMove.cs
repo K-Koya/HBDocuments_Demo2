@@ -119,8 +119,8 @@ public class PlayerMove : CharacterMove
                 _Param.State.Process = MotionState.ProcessKind.Playing;
                 _DoAction = true;
             }
-            //’·‹——£‰ñ”ð‹——£
-            else if(_Param.Can.LongTrip && InputUtility.GetMoveDirection.sqrMagnitude > 0f && InputUtility.GetDownDodge)
+            //’·‹——£‰ñ”ðˆ—
+            else if (_Param.Can.LongTrip && InputUtility.GetMoveDirection.sqrMagnitude > 0f && InputUtility.GetDownDodge)
             {
                 _MovePower = 0f;
                 _Param.Direction = CalculateMoveDirection(InputUtility.GetMoveDirection).normalized;
