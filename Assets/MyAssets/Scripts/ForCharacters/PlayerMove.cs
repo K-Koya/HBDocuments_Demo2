@@ -91,18 +91,17 @@ public class PlayerMove : CharacterMove
                 case MotionState.StateKind.FallNoraml:
                 case MotionState.StateKind.JumpNoraml:
 
-                    _Param.State.Kind = MotionState.StateKind.Stay;
-                    _Param.State.Process = MotionState.ProcessKind.Playing;
+                    _CommandHolder.Jump.LandingProcess(_Param);
                     break;
 
                 //回避時の移動力チェック
                 case MotionState.StateKind.ShiftSlide:
+
+                    _CommandHolder.ShiftSlide.ShiftSlidePostProcess(_Param, _Rb.component, GravityDirection);
+                    break;
                 case MotionState.StateKind.LongTrip:
-                    if (_Param.State.Process == MotionState.ProcessKind.Interval)
-                    {
-                        _Rb.velocity = Vector3.Project(_Rb.velocity, -GravityDirection);
-                        _Param.State.Process = MotionState.ProcessKind.Preparation;
-                    }
+
+                    _CommandHolder.LongTrip.LongTripPostProcess(_Param, _Rb.component, GravityDirection);
                     break;
             }
 
@@ -112,11 +111,8 @@ public class PlayerMove : CharacterMove
             if (_Param.Can.ShiftSlide && InputUtility.GetDodge && InputUtility.GetMoveDown)
             {
                 _MovePower = 0f;
-                _Rb.velocity = Vector3.Project(_Rb.velocity, -GravityDirection);
                 _Param.Direction = CalculateMoveDirection(InputUtility.GetMoveDirection).normalized;
-                _Rb.AddForce(_Param.Direction * 6f, ForceMode.VelocityChange);
-                _Param.State.Kind = MotionState.StateKind.ShiftSlide;
-                _Param.State.Process = MotionState.ProcessKind.Playing;
+                _CommandHolder.ShiftSlide.ShiftSlideOrder(_Param, _Rb.component, GravityDirection);
                 _DoAction = true;
             }
             //長距離回避処理
@@ -124,18 +120,14 @@ public class PlayerMove : CharacterMove
             {
                 _MovePower = 0f;
                 _Param.Direction = CalculateMoveDirection(InputUtility.GetMoveDirection).normalized;
-                _Rb.AddForce(_Param.Direction * 8f, ForceMode.VelocityChange);
-                _Param.State.Kind = MotionState.StateKind.LongTrip;
-                _Param.State.Process = MotionState.ProcessKind.Playing;
+                _CommandHolder.LongTrip.LongTripOrder(_Param, _Rb.component);
                 _DoAction = true;
             }
             //ジャンプ処理
             else if (_Param.Can.Jump && InputUtility.GetDownJump)
             {
-                _Rb.AddForce(-GravityDirection * 7f, ForceMode.VelocityChange);
+                _CommandHolder.Jump.JumpOrder(_Param, _Rb.component, GravityDirection);
                 _JumpFlag = true;
-                _Param.State.Kind = MotionState.StateKind.JumpNoraml;
-                _Param.State.Process = MotionState.ProcessKind.Playing;
             }
             //コンボ攻撃処理
             else if (_Param.Can.ComboNormal && InputUtility.GetDownAttack)
@@ -152,9 +144,7 @@ public class PlayerMove : CharacterMove
             //ジャンプ力減衰
             if (!InputUtility.GetJump && Vector3.Angle(-GravityDirection, _Rb.velocity) < 90f)
             {
-                _Rb.velocity = Vector3.ProjectOnPlane(_Rb.velocity, -GravityDirection);
-                _Param.State.Kind = MotionState.StateKind.FallNoraml;
-                _Param.State.Process = MotionState.ProcessKind.Playing;
+                _CommandHolder.Jump.JumpOrderOnAir(_Param, _Rb.component, GravityDirection);
             }
             //コンボ攻撃処理
             else if (_Param.Can.ComboNormal && InputUtility.GetDownAttack)

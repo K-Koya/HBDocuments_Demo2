@@ -48,6 +48,9 @@ abstract public class CharacterMove : MonoBehaviour
     /// <summary>各種行動用メソッド</summary>
     protected System.Action Act = null;
 
+    /// <summary>コマンドを格納するコンポーネント</summary>
+    protected CommandHolder _CommandHolder = null;
+
     #endregion
 
     #region プロパティ
@@ -80,6 +83,8 @@ abstract public class CharacterMove : MonoBehaviour
     {
         _Param = GetComponent<CharacterParameter>();
         _GroundChecker = GetComponent<GroundChecker>();
+
+        _CommandHolder = GetComponentInChildren<CommandHolder>();
 
         _Rb = _Param.Tl.rigidbody;
         _Rb.useGravity = false;

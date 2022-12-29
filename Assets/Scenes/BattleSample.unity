@@ -330,8 +330,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 172936489}
+  - component: {fileID: 172936490}
   m_Layer: 8
-  m_Name: EyePoint
+  m_Name: EyePoint_CommandHolder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -352,6 +353,40 @@ Transform:
   m_Father: {fileID: 1211911750}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &172936490
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 172936488}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d7c46ac90017fb4aac6973f9c14699e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _CommandJump:
+    _Name: "\u30B8\u30E3\u30F3\u30D7"
+    _Explain: "\u901A\u5E38\u306E\u30B8\u30E3\u30F3\u30D7\u3002\u5730\u306B\u8DB3\u304C\u3064\u3044\u3066\u3044\u308B\u3068\u304D\u306B\u30B8\u30E3\u30F3\u30D7\u30DC\u30BF\u30F3\u3092\u62BC\u3059\u3068\u3001\u98DB\u3073\u4E0A\u304C\u308B\u3002\u62BC\u3059\u9577\u3055\u3067\u9AD8\u3055\u304C\u5909\u308F\u308B\u3002"
+  _CommandShiftSlide:
+    _Name: "\u30B7\u30D5\u30C8\u30B9\u30E9\u30A4\u30C9"
+    _Explain: "\u77ED\u8DDD\u96E2\u306E\u56DE\u907F\u624B\u6BB5\u3002\u5730\u306B\u8DB3\u3064\u3051\u3066\u7ACB\u3061\u6B62\u307E\u308A\u3001\u56DE\u907F\u30DC\u30BF\u30F3\u3092\u62BC\u3057\u306A\u304C\u3089\u79FB\u52D5\u3059\u308B\u3068\u3001\u540C\u3058\u65B9\u5411\u3092\u5411\u304D\u306A\u304C\u3089\u524D\u5F8C\u5DE6\u53F3\u306B\u4F53\u3092\u306F\u3089\u3046\u3002"
+  _CommandLongTrip:
+    _Name: "\u30ED\u30F3\u30B0\u30C8\u30EA\u30C3\u30D7"
+    _Explain: "\u9577\u8DDD\u96E2\u306E\u56DE\u907F\u624B\u6BB5\u3002\u5730\u306B\u8DB3\u3064\u3051\u3066\u8D70\u3063\u3066\u3044\u308B\u3068\u304D\u306B\u56DE\u907F\u30DC\u30BF\u30F3\u3092\u62BC\u3059\u3068\u3001\u8D70\u3063\u3066\u3044\u305F\u65B9\u5411\u306B\u6ED1\u308B\u3088\u3046\u306B\u9AD8\u901F\u79FB\u52D5\u3092\u3059\u308B\u3002"
+  _ActiveSkills:
+  - _Name: EMPTY
+    _Explain: "\u30B9\u30AD\u30EB\u30B3\u30DE\u30F3\u30C9\u304C\u672A\u633F\u5165\u3067\u3059\u3002"
+    _Priolity: 0
+  - _Name: EMPTY
+    _Explain: "\u30B9\u30AD\u30EB\u30B3\u30DE\u30F3\u30C9\u304C\u672A\u633F\u5165\u3067\u3059\u3002"
+    _Priolity: 0
+  - _Name: EMPTY
+    _Explain: "\u30B9\u30AD\u30EB\u30B3\u30DE\u30F3\u30C9\u304C\u672A\u633F\u5165\u3067\u3059\u3002"
+    _Priolity: 0
+  - _Name: EMPTY
+    _Explain: "\u30B9\u30AD\u30EB\u30B3\u30DE\u30F3\u30C9\u304C\u672A\u633F\u5165\u3067\u3059\u3002"
+    _Priolity: 0
 --- !u!1 &246193318
 GameObject:
   m_ObjectHideFlags: 0

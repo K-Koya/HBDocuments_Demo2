@@ -2,25 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CommandBase : MonoBehaviour
+public abstract class CommandBase
 {
     [SerializeField, Tooltip("コマンド名")]
     protected string _Name = "";
 
-    [SerializeField, Tooltip("コマンド説明文"), TextArea(4,10)]
+    [SerializeField, Tooltip("コマンド説明文"), TextArea(2, 3)]
     protected string _Explain = "";
 
+    /// <summary>コマンド名</summary>
+    public string Name { get => _Name; }
 
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    /// <summary>コマンド説明文</summary>
+    public string Explain { get => _Explain; }
 }
