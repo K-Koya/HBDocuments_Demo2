@@ -142,7 +142,7 @@ public class PlayerMove : CharacterMove
         else
         {
             //ƒWƒƒƒ“ƒv—ÍŒ¸Š
-            if (!InputUtility.GetJump && Vector3.Angle(-GravityDirection, _Rb.velocity) < 90f)
+            if (!InputUtility.GetJump && Vector3.Dot(GravityDirection, _Rb.velocity) < 0f)
             {
                 _CommandHolder.Jump.JumpOrderOnAir(_Param, _Rb.component, GravityDirection);
             }

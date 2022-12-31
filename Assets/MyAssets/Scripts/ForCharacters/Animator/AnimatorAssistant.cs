@@ -33,7 +33,7 @@ public class AnimatorAssistant : MonoBehaviour
 
 
     // Start is called before the first frame update
-    void Start()
+    protected virtual void Start()
     {
         _Cm = GetComponentInParent<CharacterMove>();
 
@@ -81,42 +81,43 @@ public class AnimatorAssistant : MonoBehaviour
     }
 
     #endregion
-
-    /// <summary>アニメーションの種類</summary>
-    public enum AnimationKind : ushort
-    {
-        NoCall = 0,
-        Idle,
-        Move,
-        Jump,
-        Fall,
-
-        ShiftSlideFoward = 100,
-        ShiftSlideBack,
-        ShiftSlideRight,
-        ShiftSlideLeft,
-        LongTrip,
-
-        GuardGroundFoward = 200,
-        GuardGroundBack,
-        GuardAirFoward,
-        GuardAirBack,
-
-        UseItemSpray = 500,
-        UseItemFood,
-        UseItemDrink,
-
-        ComboGroundFoward = 1000,
-        ComboGroundFowardFar,
-        ComboGroundBack,
-        ComboGroundWide,
-        ComboGroundFinish,
-        ComboAirFoward,
-        ComboAirFowardFar,
-        ComboAirBack,
-        ComboAirWide,
-        ComboAirFinish,
+}
 
 
-    }
+/// <summary>アニメーションの種類</summary>
+public enum AnimationKind : ushort
+{
+    NoCall = 0,
+    Idle,
+    Move,
+    Jump,
+    Fall,
+
+    ShiftSlideFoward = 100,
+    ShiftSlideBack,
+    ShiftSlideRight,
+    ShiftSlideLeft,
+    LongTrip,
+
+    GuardGroundFoward = 200,
+    GuardGroundBack,
+    GuardAirFoward,
+    GuardAirBack,
+
+    UseItemSpray = 500,
+    UseItemFood,
+    UseItemDrink,
+
+    ComboGroundFoward = 1000,
+    ComboGroundFowardFar,
+    ComboGroundBack,
+    ComboGroundWide,
+    ComboGroundFinish,
+    ComboAirFoward,
+    ComboAirFowardFar,
+    ComboAirBack,
+    ComboAirWide,
+    ComboAirFinish,
+
+
 }

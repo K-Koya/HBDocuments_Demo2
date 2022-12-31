@@ -4,13 +4,35 @@ using UnityEngine;
 
 public class AnimatorAssistantForHuman : AnimatorAssistant
 {
+    /// <summary>アニメーターのレイヤ名 : 武装時</summary>
+    const string LAYER_NAME_ARMED_MOTION = "Armed Motion";
+
+    /// <summary>アニメーターのレイヤ番号 : 武装時</summary>
+    int layerNumberArmedMotion = 0;
+
+    protected override void Start()
+    {
+        base.Start();
+
+        layerNumberArmedMotion = _Am.GetLayerIndex(LAYER_NAME_ARMED_MOTION);
+    }
+
     // Update is called once per frame
     void Update()
     {
         if (_Cm.JumpFlag) _Am.SetTrigger(_PARAM_NAME_DO_JUMP);
         _Am.SetFloat(_PARAM_NAME_SPEED, _Cm.Speed);
         _Am.SetBool(_PARAM_NAME_IS_GROUND, _Cm.IsGround);
-        _Am.SetBool(_PARAM_NAME_IS_ARMED, _Cm.ArmedTimer > 0f);
+
+        if(_Cm.ArmedTimer > 0f)
+        {
+            _Am.SetLayerWeight(layerNumberArmedMotion, 1f);
+        }
+        else
+        {
+            _Am.SetLayerWeight(layerNumberArmedMotion, 0f);
+        }
+        
 
         if (_Cm.DoAction)
         {
