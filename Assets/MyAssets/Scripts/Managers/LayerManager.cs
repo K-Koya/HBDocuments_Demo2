@@ -34,6 +34,8 @@ public class LayerManager : Singleton<LayerManager>
     public LayerMask AllCharacter { get => _Enemy | _Player | _Allies; }
     /// <summary>全ての味方キャラクターのレイヤ</summary>
     public LayerMask AllAllies { get => _Allies | _Player; }
+    /// <summary>レティクルが乗る（ターゲットできるオブジェクト）のレイヤ</summary>
+    public LayerMask OnTheReticle { get => _Allies | _Enemy | _Ground; }
 
     #endregion
 }

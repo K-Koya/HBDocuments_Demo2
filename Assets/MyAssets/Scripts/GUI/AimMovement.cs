@@ -1,58 +1,67 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Chronos;
 
 /// <summary>
 /// プレイヤー用の照準移動処理
 /// </summary>
 public class AimMovement : MonoBehaviour
 {
+    #region メンバ
+    /// <summary>時間軸コンポーネント</summary>
+    Timeline _Tl = null;
+
     /// <summary>メインカメラコンポーネント</summary>
-    Camera _MainCamera = default;
+    Camera _MainCamera = null;
 
     /// <summary>プレイヤーのパラメータ</summary>
-    PlayerParameter _Param = default;
+    PlayerParameter _Param = null;
 
     /// <summary>照準を合わせている対象のパラメータ</summary>
-    CharacterParameter _FocusedParam = default;
+    CharacterParameter _FocusedParam = null;
 
-    
-    [SerializeField, Tooltip("地面レイヤ")]
-    LayerMask _GroundLayer = default;
 
     /// <summary>照準までの距離の実数値</summary>
     float _Distance = 0.0f;
 
     /// <summary>照準までの距離の識別</summary>
     DistanceType _DistanceType = DistanceType.OutOfRange;
+    #endregion
 
-    /* プロパティ */
+
+    #region プロパティ
     /// <summary>照準までの距離の実数値</summary>
     public float Distance { get => _Distance; }
     /// <summary>照準までの距離の識別</summary>
     public DistanceType DistType { get => _DistanceType; }
     /// <summary>照準を合わせている対象のパラメータ</summary>
     public CharacterParameter FocusedStatus { get => _FocusedParam; }
-
+    #endregion
 
 
     // Start is called before the first frame update
     void Start()
     {
+        _Tl = GetComponent<Timeline>();
         _MainCamera = Camera.main;
-        _Param = GetComponent<PlayerParameter>();
+        _Param = FindObjectOfType<PlayerParameter>();
+        _FocusedParam = null;
     }
 
 
     void FixedUpdate()
     {
+        //timeScaleが0ならポーズ中
+        if (!(_Param.Tl.timeScale > 0f)) return;
+
         //地面レイ検索用クラス
         RaycastHit rayhitGround = default;
         //Rayの地面への接触点
         Vector3 rayhitPos = Vector3.zero;
 
         //プレイヤー位置からカメラ前方方向に地面を探索
-        if (Physics.Raycast(_Param.EyePoint.transform.position, _MainCamera.transform.forward, out rayhitGround, _Param.LockMaxRange, _GroundLayer))
+        if (Physics.Raycast(_Param.EyePoint.transform.position, _MainCamera.transform.forward, out rayhitGround, _Param.LockMaxRange, LayerManager.Ins.OnTheReticle))
         {
             //確認できたら該当座標を保存
             rayhitPos = rayhitGround.point;
