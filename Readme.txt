@@ -1,2 +1,2 @@
 ChinemacineとProbuilder入れてね。
-ゲームパッドアイコンパックとChoronsとPhoton入れてね。
+ゲームパッドアイコンパックとChorons入れてね。
