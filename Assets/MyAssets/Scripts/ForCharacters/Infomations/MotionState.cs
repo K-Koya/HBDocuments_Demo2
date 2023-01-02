@@ -36,6 +36,8 @@ public class MotionState
         Guard,
         /// <summary>通常コンボ中の状態</summary>
         ComboNormal,
+        /// <summary>ダメージを受けたりしてひるんでいる状態</summary>
+        Hurt,
     }
 
     /// <summary>各行動について、その動作のどの局面かを示す列挙体</summary>

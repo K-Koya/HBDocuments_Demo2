@@ -112,26 +112,43 @@ public class PlayerMove : CharacterMove
             {
                 _MovePower = 0f;
                 _Param.Direction = CalculateMoveDirection(InputUtility.GetMoveDirection).normalized;
-                _CommandHolder.ShiftSlide.ShiftSlideOrder(_Param, _Rb.component, GravityDirection);
+
+                float fowardCheck = Vector3.Dot(transform.forward, MoveDirection);
+                float rightCheck = Vector3.Dot(transform.right, MoveDirection);
+                _AnimKind = AnimationKind.ShiftSlideBack;
+                if (Mathf.Abs(fowardCheck) > Mathf.Abs(rightCheck))
+                {
+                    if (fowardCheck > 0f) _AnimKind = AnimationKind.ShiftSlideFoward;
+                }
+                else
+                {
+                    if (rightCheck > 0f) _AnimKind = AnimationKind.ShiftSlideRight;
+                    else _AnimKind = AnimationKind.ShiftSlideLeft;
+                }
+
+                _CommandHolder.ShiftSlide.ShiftSlideOrder(_Param, _Rb.component, GravityDirection, ref _AnimKind);
                 _DoAction = true;
             }
             //長距離回避処理
             else if (_Param.Can.LongTrip && InputUtility.GetMoveDirection.sqrMagnitude > 0f && InputUtility.GetDownDodge)
             {
                 _MovePower = 0f;
+                _AnimKind = AnimationKind.LongTrip;
                 _Param.Direction = CalculateMoveDirection(InputUtility.GetMoveDirection).normalized;
-                _CommandHolder.LongTrip.LongTripOrder(_Param, _Rb.component);
+                _CommandHolder.LongTrip.LongTripOrder(_Param, _Rb.component, ref _AnimKind);
                 _DoAction = true;
             }
             //ジャンプ処理
             else if (_Param.Can.Jump && InputUtility.GetDownJump)
             {
-                _CommandHolder.Jump.JumpOrder(_Param, _Rb.component, GravityDirection);
+                _AnimKind = AnimationKind.Jump;
+                _CommandHolder.Jump.JumpOrder(_Param, _Rb.component, GravityDirection, ref _AnimKind);
                 _JumpFlag = true;
             }
             //コンボ攻撃処理
             else if (_Param.Can.ComboNormal && InputUtility.GetDownAttack)
             {
+                _AnimKind = AnimationKind.ComboGroundFoward;
                 _Param.State.Kind = MotionState.StateKind.ComboNormal;
                 _Param.State.Process = MotionState.ProcessKind.Preparation;
                 Debug.Log("コンボ!");

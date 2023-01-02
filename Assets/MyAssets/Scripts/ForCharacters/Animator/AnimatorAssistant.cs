@@ -80,6 +80,18 @@ public class AnimatorAssistant : MonoBehaviour
         _Cm.ProcessCallEndSoon();
     }
 
+    /// <summary>アニメーションイベントにて、攻撃判定を開始したい旨を受け取る</summary>
+    public void AttackCallStart()
+    {
+        _Cm.AttackCallStart();
+    }
+
+    /// <summary>アニメーションイベントにて、攻撃判定を終了したい旨を受け取る</summary>
+    public void AttackCallEnd()
+    {
+        _Cm.AttackCallEnd();
+    }
+
     #endregion
 }
 

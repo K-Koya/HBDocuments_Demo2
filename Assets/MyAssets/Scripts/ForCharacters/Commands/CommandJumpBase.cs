@@ -15,7 +15,8 @@ public class CommandJumpBase : CommandBase
     /// <param name="param">該当キャラクターのパラメータ</param>
     /// <param name="rb">リジッドボディ</param>
     /// <param name="gravityDirection">重力方向</param>
-    public virtual void JumpOrder(CharacterParameter param, Rigidbody rb, Vector3 gravityDirection)
+    /// <param name="animKind"></param>
+    public virtual void JumpOrder(CharacterParameter param, Rigidbody rb, Vector3 gravityDirection, ref AnimationKind animKind)
     {
         rb.AddForce(-gravityDirection * 7f, ForceMode.VelocityChange);
         param.State.Kind = MotionState.StateKind.JumpNoraml;

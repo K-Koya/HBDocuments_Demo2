@@ -19,6 +19,9 @@ public class CommandHolder : MonoBehaviour
     [SerializeField, Tooltip("アクティブスキルコマンドのリスト")]
     CommandActiveSkillBase[] _ActiveSkills = new CommandActiveSkillBase[NUMBER_OF_ACTIVE_SKILL];
 
+    [SerializeField, Tooltip("コンボ情報コンポーネント")]
+    CommandCombo _CommandCombo = new CommandCombo();
+
     #endregion
 
     #region プロパティ
@@ -30,6 +33,8 @@ public class CommandHolder : MonoBehaviour
     public CommandLongTripBase LongTrip { get => _CommandLongTrip; }
     /// <summary>アクティブスキルコマンドのリスト</summary>
     public CommandActiveSkillBase[] ActiveSkills { get => _ActiveSkills; }
+    /// <summary>コンボ情報コンポーネント</summary>
+    public CommandCombo Combo { get => _CommandCombo; }
     #endregion
 
 

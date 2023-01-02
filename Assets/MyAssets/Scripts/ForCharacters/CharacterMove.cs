@@ -51,6 +51,8 @@ abstract public class CharacterMove : MonoBehaviour
     /// <summary>コマンドを格納するコンポーネント</summary>
     protected CommandHolder _CommandHolder = null;
 
+    /// <summary>利用するアニメーションの種類</summary>
+    protected AnimationKind _AnimKind = AnimationKind.NoCall;
     #endregion
 
     #region プロパティ
@@ -74,6 +76,8 @@ abstract public class CharacterMove : MonoBehaviour
     public bool JumpFlag { get => _JumpFlag; }
     /// <summary>移動方向</summary>
     public Vector3 MoveDirection { get => _Param.Direction; }
+    /// <summary>利用するアニメーションの種類</summary>
+    public AnimationKind AnimKind { get => _AnimKind; }
     #endregion
 
 
@@ -200,6 +204,8 @@ abstract public class CharacterMove : MonoBehaviour
         }
     }
 
+    #region アニメーションイベント
+
     /// <summary>アニメーションイベントにて、アニメーション遷移におけるフリーズ回避のため、待機状態にする</summary>
     public void StateCallStaying()
     {
@@ -230,4 +236,18 @@ abstract public class CharacterMove : MonoBehaviour
     {
         _Param.State.Process = MotionState.ProcessKind.EndSoon;
     }
+
+    /// <summary>アニメーションイベントにて、攻撃判定を開始したい旨を受け取る</summary>
+    public void AttackCallStart()
+    {
+        
+    }
+
+    /// <summary>アニメーションイベントにて、攻撃判定を終了したい旨を受け取る</summary>
+    public void AttackCallEnd()
+    {
+
+    }
+
+    #endregion
 }

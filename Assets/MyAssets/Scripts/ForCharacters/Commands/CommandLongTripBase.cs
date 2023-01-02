@@ -14,7 +14,7 @@ public class CommandLongTripBase : CommandBase
     /// <summary>長距離回避（ロングトリップ）処理</summary>
     /// <param name="param">該当キャラクターのパラメータ</param>
     /// <param name="rb">リジッドボディ</param>
-    public virtual void LongTripOrder(CharacterParameter param, Rigidbody rb)
+    public virtual void LongTripOrder(CharacterParameter param, Rigidbody rb, ref AnimationKind animKind)
     {
         rb.AddForce(param.Direction * 8f, ForceMode.VelocityChange);
         param.State.Kind = MotionState.StateKind.LongTrip;

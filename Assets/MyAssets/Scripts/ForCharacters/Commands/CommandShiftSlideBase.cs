@@ -15,7 +15,7 @@ public class CommandShiftSlideBase : CommandBase
     /// <param name="param">該当キャラクターのパラメータ</param>
     /// <param name="rb">リジッドボディ</param>
     /// <param name="gravityDirection">重力方向</param>
-    public virtual void ShiftSlideOrder(CharacterParameter param, Rigidbody rb, Vector3 gravityDirection)
+    public virtual void ShiftSlideOrder(CharacterParameter param, Rigidbody rb, Vector3 gravityDirection, ref AnimationKind animKind)
     {
         rb.velocity = Vector3.Project(rb.velocity, gravityDirection);
         rb.AddForce(param.Direction * 6f, ForceMode.VelocityChange);

@@ -378,15 +378,23 @@ MonoBehaviour:
   - _Name: EMPTY
     _Explain: "\u30B9\u30AD\u30EB\u30B3\u30DE\u30F3\u30C9\u304C\u672A\u633F\u5165\u3067\u3059\u3002"
     _Priolity: 0
+    _Count: 1
+    _IsRunning: 0
   - _Name: EMPTY
     _Explain: "\u30B9\u30AD\u30EB\u30B3\u30DE\u30F3\u30C9\u304C\u672A\u633F\u5165\u3067\u3059\u3002"
     _Priolity: 0
+    _Count: 1
+    _IsRunning: 0
   - _Name: EMPTY
     _Explain: "\u30B9\u30AD\u30EB\u30B3\u30DE\u30F3\u30C9\u304C\u672A\u633F\u5165\u3067\u3059\u3002"
     _Priolity: 0
+    _Count: 1
+    _IsRunning: 0
   - _Name: EMPTY
     _Explain: "\u30B9\u30AD\u30EB\u30B3\u30DE\u30F3\u30C9\u304C\u672A\u633F\u5165\u3067\u3059\u3002"
     _Priolity: 0
+    _Count: 1
+    _IsRunning: 0
 --- !u!1 &246193318
 GameObject:
   m_ObjectHideFlags: 0
@@ -1745,11 +1753,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 856bee1822bf5a14cac5d3cb6bf1d8c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _HPMaximum: 1000
+  _HPCurrent: 1000
+  _MPMaximum: 10
+  _MPCurrent: 10
+  _LockMaxRange: 30
+  _ComboProximityRange: 5
   _EyePoint: {fileID: 0}
-  _AliseGatherRange: 30
-  _AttackRangeFar: 45
-  _AttackRangeMiddle: 30
-  _ChaseEnemyDistance: 50
   _HostilityLayer:
     serializedVersion: 2
     m_Bits: 768
@@ -1936,7 +1946,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!43 &720136874
 Mesh:
@@ -1944,7 +1954,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh25566
+  m_Name: pb_Mesh25586
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -2377,7 +2387,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 947642365}
-  m_LocalRotation: {x: 0.2057729, y: 1.7383424e-15, z: -3.655261e-16, w: 0.9785998}
+  m_LocalRotation: {x: 0.2057729, y: 8.50164e-16, z: 7.856311e-17, w: 0.9785998}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2469,7 +2479,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &963194229
 MonoBehaviour:
@@ -3298,7 +3308,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1125764791
 MonoBehaviour:
@@ -3436,11 +3446,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8e3709d84ee1154a80683fcd01d58a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _HPMaximum: 1000
+  _HPCurrent: 1000
+  _MPMaximum: 10
+  _MPCurrent: 10
+  _LockMaxRange: 30
+  _ComboProximityRange: 5
   _EyePoint: {fileID: 172936489}
-  _AliseGatherRange: 3
-  _AttackRangeFar: 5
-  _AttackRangeMiddle: 3
-  _ChaseEnemyDistance: 40
   _HostilityLayer:
     serializedVersion: 2
     m_Bits: 1024
@@ -3560,7 +3572,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh25616
+  m_Name: pb_Mesh25636
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -5374,7 +5386,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1627959883
 MonoBehaviour:
@@ -5688,11 +5700,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 856bee1822bf5a14cac5d3cb6bf1d8c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _HPMaximum: 1000
+  _HPCurrent: 1000
+  _MPMaximum: 10
+  _MPCurrent: 10
+  _LockMaxRange: 30
+  _ComboProximityRange: 5
   _EyePoint: {fileID: 306847363}
-  _AliseGatherRange: 3
-  _AttackRangeFar: 5
-  _AttackRangeMiddle: 3
-  _ChaseEnemyDistance: 40
   _HostilityLayer:
     serializedVersion: 2
     m_Bits: 768
@@ -5778,7 +5792,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1844041289}
-  m_LocalRotation: {x: 0.17008951, y: -0, z: -0, w: 0.98542863}
+  m_LocalRotation: {x: 0.17008951, y: -1e-45, z: -0, w: 0.98542863}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -8254,7 +8268,7 @@ Transform:
   - {fileID: 750861229}
   - {fileID: 1844041291}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2057701238
 MonoBehaviour:

@@ -18,21 +18,49 @@ abstract public class CharacterParameter : MonoBehaviour
     protected static List<CharacterParameter> _Enemies = new List<CharacterParameter>(12);
     #endregion
 
+    #region メインパラメータ
+    [SerializeField, Tooltip("最大HP")]
+    protected short _HPMaximum = 1000;
+
+    [SerializeField, Tooltip("現在のHP")]
+    protected short _HPCurrent = 1000;
+
+    [SerializeField, Tooltip("最大MP")]
+    protected float _MPMaximum = 10f;
+
+    [SerializeField, Tooltip("現在のMP")]
+    protected float _MPCurrent = 10f;
+
+
+    /// <summary>最大HP</summary>
+    public short HPMaximum { get => _HPMaximum; }
+    /// <summary>現在のHP</summary>
+    public short HPCurrent { get => _HPCurrent; }
+    /// <summary>最大MP</summary>
+    public float MPMaximum { get => _MPMaximum; }
+    /// <summary>現在のMP</summary>
+    public float MPCurrent { get => _MPCurrent; }
+
+    #endregion
+
+    #region サブパラメータ
+    [SerializeField, Tooltip("照準射程内")]
+    protected float _LockMaxRange = 30f;
+
+    [SerializeField, Tooltip("通常コンボ射程内")]
+    protected float _ComboProximityRange = 5f;
+
+
+    /// <summary>照準射程内</summary>
+    public float LockMaxRange { get => _LockMaxRange; }
+    /// <summary>通常コンボ射程内</summary>
+    public float ComboProximityRange { get => _ComboProximityRange; }
+
+    #endregion
+
     #region メンバ
     [SerializeField, Tooltip("キャラクターの目線位置")]
     protected Transform _EyePoint = default;
-
-    [SerializeField, Tooltip("仲間と集まる際にとる距離")]
-    protected float _AliseGatherRange = 5f;
-
-    [SerializeField, Tooltip("自分の近接攻撃の射程:遠距離")]
-    protected float _AttackRangeFar = 7f;
-
-    [SerializeField, Tooltip("自分の近接攻撃の射程:近距離")]
-    protected float _AttackRangeMiddle = 5f;
-
-    [SerializeField, Tooltip("敵への追跡を継続する判定距離")]
-    protected float _ChaseEnemyDistance = 40f;
 
     /// <summary>当該キャラクターが持つ時間軸コンポーネント</summary>
     protected Timeline _Tl = default;
@@ -85,14 +113,6 @@ abstract public class CharacterParameter : MonoBehaviour
     public LayerMask HostilityLayer { get => _HostilityLayer; }
     /// <summary>キャラクターの当たり判定コライダー</summary>
     public Collider HitArea { get => _HitArea; }
-    /// <summary>仲間と集まる際にとる距離</summary>
-    public float AliseGatherRange { get => _AliseGatherRange; }
-    /// <summary>自分の近接攻撃の射程:遠距離</summary>
-    public float AttackRangeFar { get => _AttackRangeFar; }
-    /// <summary>自分の近接攻撃の射程:近距離</summary>
-    public float AttackRangeMiddle { get => _AttackRangeMiddle; }
-    /// <summary>敵への追跡を継続する判定距離</summary>
-    public float ChaseEnemyDistance { get => _ChaseEnemyDistance; }
     /// <summary>キャラクターの行動状態</summary>
     public MotionState State { get => _State; }
     /// <summary>操作可否情報</summary>
@@ -289,36 +309,37 @@ abstract public class CharacterParameter : MonoBehaviour
                         break;
                 }
                 break;
+            case MotionState.StateKind.Hurt:
+                switch (_State.Process)
+                {
+                    case MotionState.ProcessKind.Preparation:
+                    case MotionState.ProcessKind.Playing:
+                        _Acceptance.Move = false;
+                        _Acceptance.Jump = false;
+                        _Acceptance.ShiftSlide = false;
+                        _Acceptance.LongTrip = false;
+                        _Acceptance.Gurad = false;
+                        _Acceptance.ComboNormal = false;
+                        _Acceptance.ComboFinish = false;
+                        _IsSyncDirection = false;
+                        break;
+
+                    case MotionState.ProcessKind.EndSoon:
+                        _State.Kind = MotionState.StateKind.FallNoraml;
+                        _State.Process = MotionState.ProcessKind.Playing;
+                        _Acceptance.Move = true;
+                        _Acceptance.Jump = false;
+                        _Acceptance.ShiftSlide = false;
+                        _Acceptance.LongTrip = false;
+                        _Acceptance.Gurad = false;
+                        _Acceptance.ComboNormal = true;
+                        _Acceptance.ComboFinish = false;
+                        _IsSyncDirection = true;
+                        break;
+                }
+                break;
 
             default: break;
         }
-    }
-
-    void OnDrawGizmos()
-    {
-        /*
-        if(_AttackAreas != null && _AttackAreas.Count > 0)
-        {
-            Gizmos.color = Color.red;
-            foreach(AttackArea at in _AttackAreas)
-            {
-                Gizmos.DrawWireSphere(at.CenterPos, at.Radius);
-                if(at.GetType() == typeof(AttackAreaCapsule))
-                {
-                    Gizmos.DrawWireSphere((at as AttackAreaCapsule).CenterPos2, at.Radius);
-                }
-            }
-        }
-
-        //エンゲージメントを書き出し
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, AttackRangeMiddle);
-
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, AttackRangeFar);
-
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, ChaseEnemyDistance);
-        */
     }
 }
