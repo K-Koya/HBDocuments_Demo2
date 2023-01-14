@@ -21,6 +21,9 @@ abstract public class CharacterMove : MonoBehaviour
     /// <summary>キャラクターの、武器を出したりして臨戦態勢になる継続タイマー</summary>
     protected float _ArmedTimer = 0.0f;
 
+    /// <summary>True : ジャンプ直後</summary>
+    protected bool _JumpFlag = false;
+
     /// <summary>true : 各種アクションを実施直後</summary>
     protected bool _DoAction = false;
 
@@ -29,9 +32,6 @@ abstract public class CharacterMove : MonoBehaviour
 
     /// <summary>当該キャラクターの物理挙動コンポーネント</summary>
     protected RigidbodyTimeline3D _Rb = null;
-
-    /// <summary>True : ジャンプ直後</summary>
-    protected bool _JumpFlag = false;
 
     /// <summary>着地判定をするコンポーネント</summary>
     GroundChecker _GroundChecker = default;

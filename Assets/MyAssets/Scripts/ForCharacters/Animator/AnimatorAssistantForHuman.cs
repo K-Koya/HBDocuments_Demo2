@@ -24,13 +24,21 @@ public class AnimatorAssistantForHuman : AnimatorAssistant
         _Am.SetFloat(_PARAM_NAME_SPEED, _Cm.Speed);
         _Am.SetBool(_PARAM_NAME_IS_GROUND, _Cm.IsGround);
 
-        if(_Cm.ArmedTimer > 0f)
+        if(_Cm.ArmedTimer > 0.5f)
         {
             _Am.SetLayerWeight(layerNumberArmedMotion, 1f);
+            foreach(GameObject aoa in _AppearOnAttack)
+            {
+                aoa.SetActive(true);
+            }
         }
         else
         {
-            _Am.SetLayerWeight(layerNumberArmedMotion, 0f);
+            _Am.SetLayerWeight(layerNumberArmedMotion, Mathf.Clamp01(_Cm.ArmedTimer * 2f));
+            foreach (GameObject aoa in _AppearOnAttack)
+            {
+                aoa.SetActive(false);
+            }
         }
         
         if (_Cm.DoAction)

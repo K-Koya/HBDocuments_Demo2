@@ -1,0 +1,72 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41b45288c3481da438387f0e2c4b0dbc, type: 3}
+  m_Name: Minahito_OriginalIK
+  m_EditorClassIdentifier: 
+  originalIkData:
+  - enable: 1
+    _fixed: 0
+    autoRotation: 0
+    spaceType: 0
+    parent: {fileID: 0}
+    position: {x: 6.8481817, y: 1.1489309, z: 0.4909867}
+    rotation: {x: -0.40461057, y: -0.61744064, z: -0.6654213, w: 0.110778496}
+    swivel: -0.08156469
+    name: Chain_015
+    solverType: 0
+    resetRotations: 1
+    level: 11
+    limbDirection: 0
+    joints:
+    - bone: {fileID: 0}
+      weight: 1
+      bonePath: skelton/Root/Hip/Spine/Chest/UpperChest/Shoulder_R/Upper_Arm_R/Lower_Arm_R/Hand_R/MinahitoWeapon/Hydro-dynamics_Bone/Base/Chain/Chain_003/Chain_004/Chain_005/Chain_006/Chain_007/Chain_008/Chain_009/Chain_010/Chain_011/Chain_012/Chain_013/Chain_014/Chain_015
+    - bone: {fileID: 0}
+      weight: 0.8
+      bonePath: skelton/Root/Hip/Spine/Chest/UpperChest/Shoulder_R/Upper_Arm_R/Lower_Arm_R/Hand_R/MinahitoWeapon/Hydro-dynamics_Bone/Base/Chain/Chain_003/Chain_004/Chain_005/Chain_006/Chain_007/Chain_008/Chain_009/Chain_010/Chain_011/Chain_012/Chain_013/Chain_014
+    - bone: {fileID: 0}
+      weight: 0.8
+      bonePath: skelton/Root/Hip/Spine/Chest/UpperChest/Shoulder_R/Upper_Arm_R/Lower_Arm_R/Hand_R/MinahitoWeapon/Hydro-dynamics_Bone/Base/Chain/Chain_003/Chain_004/Chain_005/Chain_006/Chain_007/Chain_008/Chain_009/Chain_010/Chain_011/Chain_012/Chain_013
+    - bone: {fileID: 0}
+      weight: 0.8
+      bonePath: skelton/Root/Hip/Spine/Chest/UpperChest/Shoulder_R/Upper_Arm_R/Lower_Arm_R/Hand_R/MinahitoWeapon/Hydro-dynamics_Bone/Base/Chain/Chain_003/Chain_004/Chain_005/Chain_006/Chain_007/Chain_008/Chain_009/Chain_010/Chain_011/Chain_012
+    - bone: {fileID: 0}
+      weight: 0.8
+      bonePath: skelton/Root/Hip/Spine/Chest/UpperChest/Shoulder_R/Upper_Arm_R/Lower_Arm_R/Hand_R/MinahitoWeapon/Hydro-dynamics_Bone/Base/Chain/Chain_003/Chain_004/Chain_005/Chain_006/Chain_007/Chain_008/Chain_009/Chain_010/Chain_011
+    - bone: {fileID: 0}
+      weight: 0.8
+      bonePath: skelton/Root/Hip/Spine/Chest/UpperChest/Shoulder_R/Upper_Arm_R/Lower_Arm_R/Hand_R/MinahitoWeapon/Hydro-dynamics_Bone/Base/Chain/Chain_003/Chain_004/Chain_005/Chain_006/Chain_007/Chain_008/Chain_009/Chain_010
+    - bone: {fileID: 0}
+      weight: 0.8
+      bonePath: skelton/Root/Hip/Spine/Chest/UpperChest/Shoulder_R/Upper_Arm_R/Lower_Arm_R/Hand_R/MinahitoWeapon/Hydro-dynamics_Bone/Base/Chain/Chain_003/Chain_004/Chain_005/Chain_006/Chain_007/Chain_008/Chain_009
+    - bone: {fileID: 0}
+      weight: 0.8
+      bonePath: skelton/Root/Hip/Spine/Chest/UpperChest/Shoulder_R/Upper_Arm_R/Lower_Arm_R/Hand_R/MinahitoWeapon/Hydro-dynamics_Bone/Base/Chain/Chain_003/Chain_004/Chain_005/Chain_006/Chain_007/Chain_008
+    - bone: {fileID: 0}
+      weight: 0.8
+      bonePath: skelton/Root/Hip/Spine/Chest/UpperChest/Shoulder_R/Upper_Arm_R/Lower_Arm_R/Hand_R/MinahitoWeapon/Hydro-dynamics_Bone/Base/Chain/Chain_003/Chain_004/Chain_005/Chain_006/Chain_007
+    - bone: {fileID: 0}
+      weight: 0.8
+      bonePath: skelton/Root/Hip/Spine/Chest/UpperChest/Shoulder_R/Upper_Arm_R/Lower_Arm_R/Hand_R/MinahitoWeapon/Hydro-dynamics_Bone/Base/Chain/Chain_003/Chain_004/Chain_005/Chain_006
+    - bone: {fileID: 0}
+      weight: 0.8
+      bonePath: skelton/Root/Hip/Spine/Chest/UpperChest/Shoulder_R/Upper_Arm_R/Lower_Arm_R/Hand_R/MinahitoWeapon/Hydro-dynamics_Bone/Base/Chain/Chain_003/Chain_004/Chain_005
+    - bone: {fileID: 0}
+      weight: 0.8
+      bonePath: skelton/Root/Hip/Spine/Chest/UpperChest/Shoulder_R/Upper_Arm_R/Lower_Arm_R/Hand_R/MinahitoWeapon/Hydro-dynamics_Bone/Base/Chain/Chain_003/Chain_004
+    - bone: {fileID: 0}
+      weight: 0.8
+      bonePath: skelton/Root/Hip/Spine/Chest/UpperChest/Shoulder_R/Upper_Arm_R/Lower_Arm_R/Hand_R/MinahitoWeapon/Hydro-dynamics_Bone/Base/Chain/Chain_003
+    - bone: {fileID: 0}
+      weight: 0.8
+      bonePath: skelton/Root/Hip/Spine/Chest/UpperChest/Shoulder_R/Upper_Arm_R/Lower_Arm_R/Hand_R/MinahitoWeapon/Hydro-dynamics_Bone/Base/Chain
+    parentPath: 

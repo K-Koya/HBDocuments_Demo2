@@ -5,7 +5,8 @@ using UnityEngine;
 public class PlayerMove : CharacterMove
 {
     /// <summary>MainCameraの位置等の情報</summary>
-    Transform _MainCameraTransform = default;
+    Transform _MainCameraTransform = null;
+
 
     // Start is called before the first frame update
     protected override void Start()
@@ -148,9 +149,8 @@ public class PlayerMove : CharacterMove
             //コンボ攻撃処理
             else if (_Param.Can.ComboNormal && InputUtility.GetDownAttack)
             {
-                _AnimKind = AnimationKind.ComboGroundFoward;
-                _Param.State.Kind = MotionState.StateKind.ComboNormal;
-                _Param.State.Process = MotionState.ProcessKind.Preparation;
+                PlayerParameter pp = _Param as PlayerParameter;
+                _CommandHolder.Combo.ComboOrder(_Param, _Rb.component, GravityDirection, pp.ReticlePoint - pp.EyePoint.position, ref _AnimKind);
                 Debug.Log("コンボ!");
                 _DoAction = true;
             }

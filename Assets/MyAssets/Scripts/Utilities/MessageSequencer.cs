@@ -5,7 +5,7 @@ public class MessageSequencer : MonoBehaviour
     [SerializeField]
     MessagePrinter _printer = default;
     [SerializeField]
-    MessageSituationController _situationController = null;
+    BlackoutController _situationController = null;
 
     [SerializeField, TextArea(1,4)]
     string[] _messages = default;
@@ -27,7 +27,7 @@ public class MessageSequencer : MonoBehaviour
             if (_printer.IsPrinting)
             {
                 _printer.Skip();
-                _situationController.Skip();
+                _situationController.SkipBlackout();
             }
             else 
             { 

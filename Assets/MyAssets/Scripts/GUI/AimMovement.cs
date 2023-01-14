@@ -18,9 +18,6 @@ public class AimMovement : MonoBehaviour
     /// <summary>プレイヤーのパラメータ</summary>
     PlayerParameter _Param = null;
 
-    /// <summary>照準を合わせている対象のパラメータ</summary>
-    CharacterParameter _FocusedParam = null;
-
 
     /// <summary>照準までの距離の実数値</summary>
     float _Distance = 0.0f;
@@ -35,8 +32,6 @@ public class AimMovement : MonoBehaviour
     public float Distance { get => _Distance; }
     /// <summary>照準までの距離の識別</summary>
     public DistanceType DistType { get => _DistanceType; }
-    /// <summary>照準を合わせている対象のパラメータ</summary>
-    public CharacterParameter FocusedStatus { get => _FocusedParam; }
     #endregion
 
 
@@ -46,14 +41,13 @@ public class AimMovement : MonoBehaviour
         _Tl = GetComponent<Timeline>();
         _MainCamera = Camera.main;
         _Param = FindObjectOfType<PlayerParameter>();
-        _FocusedParam = null;
     }
 
 
     void FixedUpdate()
     {
         //timeScaleが0ならポーズ中
-        if (!(_Param.Tl.timeScale > 0f)) return;
+        if (!(_Tl.timeScale > 0f)) return;
 
         //地面レイ検索用クラス
         RaycastHit rayhitGround = default;
@@ -67,7 +61,7 @@ public class AimMovement : MonoBehaviour
             rayhitPos = rayhitGround.point;
 
             //(所持していれば)対象のステータスコンポーネントを取得
-            _FocusedParam = rayhitGround.transform.GetComponent<CharacterParameter>();
+            _Param.GazeAt = rayhitGround.transform.GetComponent<CharacterParameter>();
             
             //照準位置までの実数距離から識別値を設定
             if (_Distance < _Param.ComboProximityRange)
@@ -85,10 +79,13 @@ public class AimMovement : MonoBehaviour
             rayhitPos = _Param.EyePoint.transform.position + _MainCamera.transform.forward * _Param.LockMaxRange;
             //照準までの距離の識別値を射程外に
             _DistanceType = DistanceType.OutOfRange;
+            //ステータスコンポーネントを破棄
+            _Param.GazeAt = null;
         }
 
         //照準を配置
         transform.position = rayhitPos;
+        _Param.ReticlePoint = rayhitPos;
 
         //照準位置までの距離を計算(各プレイヤーの最大射程距離を限界値とする)
         _Distance = Vector3.Distance(transform.position, _Param.EyePoint.transform.position);

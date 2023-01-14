@@ -31,6 +31,9 @@ public class AnimatorAssistant : MonoBehaviour
     /// <summary>該当のアニメーター</summary>
     protected Animator _Am = default;
 
+    [SerializeField, Tooltip("戦闘時だけ出現させるオブジェクト")]
+    protected GameObject[] _AppearOnAttack = null;
+
 
     // Start is called before the first frame update
     protected virtual void Start()
@@ -120,15 +123,26 @@ public enum AnimationKind : ushort
     UseItemFood,
     UseItemDrink,
 
+    /* 通常コンボ */
+    /// <summary>地上前方近距離</summary>
     ComboGroundFoward = 1000,
+    /// <summary>地上前方遠距離</summary>
     ComboGroundFowardFar,
+    /// <summary>地上後方</summary>
     ComboGroundBack,
+    /// <summary>地上広角</summary>
     ComboGroundWide,
+    /// <summary>地上フィニッシュ</summary>
     ComboGroundFinish,
+    /// <summary>空中前方近距離</summary>
     ComboAirFoward,
+    /// <summary>空中前方遠距離</summary>
     ComboAirFowardFar,
+    /// <summary>空中後方</summary>
     ComboAirBack,
+    /// <summary>空中広角</summary>
     ComboAirWide,
+    /// <summary>空中フィニッシュ</summary>
     ComboAirFinish,
 
 

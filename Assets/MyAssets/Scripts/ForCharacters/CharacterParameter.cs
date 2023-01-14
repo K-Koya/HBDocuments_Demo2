@@ -50,20 +50,30 @@ abstract public class CharacterParameter : MonoBehaviour
     [SerializeField, Tooltip("通常コンボ射程内")]
     protected float _ComboProximityRange = 5f;
 
+    [SerializeField, Tooltip("歩行最高速")]
+    protected float _LimitSpeedWalk = 2f;
+
+    [SerializeField, Tooltip("走行最高速")]
+    protected float _LimitSpeedRun = 5f;
+
 
     /// <summary>照準射程内</summary>
     public float LockMaxRange { get => _LockMaxRange; }
     /// <summary>通常コンボ射程内</summary>
     public float ComboProximityRange { get => _ComboProximityRange; }
+    /// <summary>歩行最高速</summary>
+    public float LimitSpeedWalk { get => _LimitSpeedWalk; }
+    /// <summary>走行最高速</summary>
+    public float LimitSpeedRun { get => _LimitSpeedRun; }
 
     #endregion
 
     #region メンバ
     [SerializeField, Tooltip("キャラクターの目線位置")]
-    protected Transform _EyePoint = default;
+    protected Transform _EyePoint = null;
 
     /// <summary>当該キャラクターが持つ時間軸コンポーネント</summary>
-    protected Timeline _Tl = default;
+    protected Timeline _Tl = null;
 
     /// <summary>true : キャラクターの向きと移動方向を同期する</summary>
     protected bool _IsSyncDirection = true;
@@ -74,20 +84,19 @@ abstract public class CharacterParameter : MonoBehaviour
     [SerializeField, Tooltip("攻撃を当てる対象のレイヤー")]
     protected LayerMask _HostilityLayer = default;
 
+    /// <summary>注視している相手のパラメータ</summary>
+    protected CharacterParameter _GazeAt = null;
+
     /// <summary>キャラクターの当たり判定コライダー</summary>
     protected Collider _HitArea = null;
 
     [SerializeField, Tooltip("キャラクターの行動状態")]
-    protected MotionState _State = default;
+    protected MotionState _State = null;
 
     [SerializeField, Tooltip("操作可否情報")]
-    protected InputAcceptance _Acceptance = default;
+    protected InputAcceptance _Acceptance = null;
 
-    [SerializeField, Tooltip("歩行最高速")]
-    protected float _LimitSpeedWalk = 2f;
-
-    [SerializeField, Tooltip("走行最高速")]
-    protected float _LimitSpeedRun = 5f;
+    
 
     /// <summary>攻撃範囲情報</summary>
     protected List<AttackArea> _AttackAreas = new List<AttackArea>(10);
@@ -111,16 +120,14 @@ abstract public class CharacterParameter : MonoBehaviour
     public Vector3 Direction { get => _Direction; set => _Direction = value; }
     /// <summary>攻撃を当てる対象のレイヤー</summary>
     public LayerMask HostilityLayer { get => _HostilityLayer; }
+    /// <summary>注視している相手のパラメータ</summary>
+    public CharacterParameter GazeAt { get => _GazeAt; set => _GazeAt = value; }
     /// <summary>キャラクターの当たり判定コライダー</summary>
     public Collider HitArea { get => _HitArea; }
     /// <summary>キャラクターの行動状態</summary>
     public MotionState State { get => _State; }
     /// <summary>操作可否情報</summary>
     public InputAcceptance Can { get => _Acceptance; }
-    /// <summary>歩行最高速</summary>
-    public float LimitSpeedWalk { get => _LimitSpeedWalk; }
-    /// <summary>走行最高速</summary>
-    public float LimitSpeedRun { get => _LimitSpeedRun; }
     /// <summary>攻撃範囲情報</summary>
     public List<AttackArea> AttackAreas => _AttackAreas;
     #endregion
