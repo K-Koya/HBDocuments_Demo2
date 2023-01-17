@@ -22,7 +22,7 @@ public abstract class Singleton<T> : MonoBehaviour where T : MonoBehaviour
     /// <summary>
     /// Inspector上に出ているシングルトンのコンポーネントのインスタンス
     /// </summary>
-    public static T Ins
+    public static T Instance
     {
         get
         {
@@ -49,7 +49,7 @@ public abstract class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 
         //登録されているシングルトンコンポーネントが自分のインスタンスと同じなら、DontDestroyOnLoadに登録する
         //異なれば、自分を破棄する
-        if (this != Ins) Destroy(this.gameObject);
+        if (this != Instance) Destroy(this.gameObject);
         else
         {
             DontDestroyOnLoad(this.gameObject);

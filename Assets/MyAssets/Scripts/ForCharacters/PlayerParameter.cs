@@ -28,7 +28,7 @@ public class PlayerParameter : CharacterParameter
     {
         base.Start();
 
-        _HostilityLayer = LayerManager.Ins.Enemy;
+        _HostilityLayer = LayerManager.Instance.Enemy;
     }
 
     // Update is called once per frame

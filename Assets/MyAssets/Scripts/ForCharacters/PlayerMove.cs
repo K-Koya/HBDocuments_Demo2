@@ -88,6 +88,33 @@ public class PlayerMove : CharacterMove
         {
             switch (_Param.State.Kind)
             {
+                //移動状態チェック
+                case MotionState.StateKind.Stay:
+                case MotionState.StateKind.Walk:
+                case MotionState.StateKind.Run:
+
+                    //移動入力がある
+                    if(_Param.Direction.sqrMagnitude > 0)
+                    {
+                        if(_Speed > _Param.LimitSpeedWalk)
+                        {
+                            _Param.State.Kind = MotionState.StateKind.Run;
+                        }
+                        else
+                        {
+                            _Param.State.Kind = MotionState.StateKind.Walk;
+                        }
+                    }
+                    else
+                    {
+                        _Param.State.Kind = MotionState.StateKind.Stay;
+                    }
+
+                    //上記の動作中
+                    _Param.State.Process = MotionState.ProcessKind.Playing;
+
+                    break;
+
                 //落下等の着地チェック
                 case MotionState.StateKind.FallNoraml:
                 case MotionState.StateKind.JumpNoraml:
@@ -150,8 +177,7 @@ public class PlayerMove : CharacterMove
             else if (_Param.Can.ComboNormal && InputUtility.GetDownAttack)
             {
                 PlayerParameter pp = _Param as PlayerParameter;
-                _CommandHolder.Combo.ComboOrder(_Param, _Rb.component, GravityDirection, pp.ReticlePoint - pp.EyePoint.position, ref _AnimKind);
-                Debug.Log("コンボ!");
+                _CommandHolder.Combo.ComboGroundOrder(_Param, _Rb.component, GravityDirection, pp.ReticlePoint - pp.EyePoint.position, ref _AnimKind);
                 _DoAction = true;
             }
         }

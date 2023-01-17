@@ -45,7 +45,7 @@ public class GroundChecker : MonoBehaviour
     {
         _IsGround = false;
         RaycastHit hit;
-        if (Physics.SphereCast(_CastBasePosition + transform.position, _Collider.radius * 0.99f, _GravityDirection, out hit, _Collider.radius, LayerManager.Ins.AllGround))
+        if (Physics.SphereCast(_CastBasePosition + transform.position, _Collider.radius * 0.99f, _GravityDirection, out hit, _Collider.radius, LayerManager.Instance.AllGround))
         {
             if (Vector3.SqrMagnitude(transform.position - hit.point) < _SlopeAngleThreshold * _SlopeAngleThreshold)
             {

@@ -81,7 +81,7 @@ abstract public class CharacterParameter : MonoBehaviour
     /// <summary>キャラクター正面方向情報</summary>
     protected Vector3 _Direction = default;
 
-    [SerializeField, Tooltip("攻撃を当てる対象のレイヤー")]
+    [SerializeField, Tooltip("攻撃を受ける対象のレイヤー")]
     protected LayerMask _HostilityLayer = default;
 
     /// <summary>注視している相手のパラメータ</summary>
@@ -100,6 +100,9 @@ abstract public class CharacterParameter : MonoBehaviour
 
     /// <summary>攻撃範囲情報</summary>
     protected List<AttackArea> _AttackAreas = new List<AttackArea>(10);
+
+    /// <summary>最も最近受けた攻撃の情報</summary>
+    protected AttackInformation _GaveAttack = null;
     #endregion
 
 
@@ -118,7 +121,7 @@ abstract public class CharacterParameter : MonoBehaviour
     public bool IsSyncDirection { get => _IsSyncDirection; set => _IsSyncDirection = value; }
     /// <summary>キャラクター正面方向情報</summary>
     public Vector3 Direction { get => _Direction; set => _Direction = value; }
-    /// <summary>攻撃を当てる対象のレイヤー</summary>
+    /// <summary>攻撃を受ける対象のレイヤー</summary>
     public LayerMask HostilityLayer { get => _HostilityLayer; }
     /// <summary>注視している相手のパラメータ</summary>
     public CharacterParameter GazeAt { get => _GazeAt; set => _GazeAt = value; }
@@ -130,6 +133,8 @@ abstract public class CharacterParameter : MonoBehaviour
     public InputAcceptance Can { get => _Acceptance; }
     /// <summary>攻撃範囲情報</summary>
     public List<AttackArea> AttackAreas => _AttackAreas;
+    /// <summary>最も最近受けた攻撃の情報</summary>
+    public AttackInformation GaveAttack { get => _GaveAttack; set => _GaveAttack = value; }
     #endregion
 
     /// <summary>本クラスの静的メンバに自コンポーネントを登録させるメソッド</summary>

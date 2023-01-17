@@ -55,7 +55,7 @@ public class AimMovement : MonoBehaviour
         Vector3 rayhitPos = Vector3.zero;
 
         //プレイヤー位置からカメラ前方方向に地面を探索
-        if (Physics.Raycast(_Param.EyePoint.transform.position, _MainCamera.transform.forward, out rayhitGround, _Param.LockMaxRange, LayerManager.Ins.OnTheReticle))
+        if (Physics.Raycast(_Param.EyePoint.transform.position, _MainCamera.transform.forward, out rayhitGround, _Param.LockMaxRange, LayerManager.Instance.OnTheReticle))
         {
             //確認できたら該当座標を保存
             rayhitPos = rayhitGround.point;

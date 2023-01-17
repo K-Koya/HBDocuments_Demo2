@@ -2046,12 +2046,12 @@ Cloth:
   m_ExternalAcceleration: {x: 0, y: -9.8, z: 0}
   m_RandomAcceleration: {x: 0, y: 0, z: 0}
   m_WorldVelocityScale: 0.5
-  m_WorldAccelerationScale: 1
+  m_WorldAccelerationScale: 0.5
   m_Friction: 0.5
   m_CollisionMassScale: 0
-  m_UseContinuousCollision: 1
-  m_UseVirtualParticles: 1
-  m_SolverFrequency: 120
+  m_UseContinuousCollision: 0
+  m_UseVirtualParticles: 0
+  m_SolverFrequency: 60
   m_SleepThreshold: 0.1
   m_Coefficients:
   - maxDistance: 0
@@ -2436,7 +2436,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5377377699690831673}
-  m_LocalRotation: {x: 0.032426536, y: 0.030381102, z: 0.03905514, w: 0.9982486}
+  m_LocalRotation: {x: 0.032426562, y: 0.030381102, z: 0.039055165, w: 0.9982486}
   m_LocalPosition: {x: -0.1612799, y: 0.000000003259629, z: -0.000000064392225}
   m_LocalScale: {x: 1, y: 1.0000001, z: 0.99999994}
   m_ConstrainProportionsScale: 0
@@ -2853,7 +2853,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5706295397145769817}
-  m_LocalRotation: {x: -0.032426532, y: 0.030381106, z: -0.039055143, w: 0.9982486}
+  m_LocalRotation: {x: -0.03242656, y: 0.030381106, z: -0.03905517, w: 0.9982486}
   m_LocalPosition: {x: -0.1612799, y: 0.000000017695129, z: -0.000000064392225}
   m_LocalScale: {x: 1, y: 1.0000001, z: 0.99999994}
   m_ConstrainProportionsScale: 0
@@ -3113,7 +3113,7 @@ GameObject:
   - component: {fileID: 849044565158110882}
   - component: {fileID: 4015735489622665494}
   - component: {fileID: 8038707052260751458}
-  - component: {fileID: 972403198265706596}
+  - component: {fileID: 5390001580016518888}
   m_Layer: 0
   m_Name: Kana
   m_TagString: Untagged
@@ -3156,7 +3156,7 @@ Animator:
   m_Controller: {fileID: 9100000, guid: b07d05effea94664893dd699b04390dc, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
-  m_ApplyRootMotion: 1
+  m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_WarningMessage: 
@@ -3195,7 +3195,7 @@ MonoBehaviour:
   _globalClockKey: Player
   _rewindable: 0
   _recordingDuration: 30
---- !u!114 &972403198265706596
+--- !u!114 &5390001580016518888
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3289,7 +3289,7 @@ MonoBehaviour:
   - skelton/Root/Hip/Upper_Leg_R/Lower_Leg_R/Foot_R
   - skelton/Root/Hip/Upper_Leg_R/Lower_Leg_R/Foot_R/Toes_R
   showBones: 000000000f00000010000000110000001200000013000000160000001700000018000000190000002d0000002e0000002f0000003000000048000000490000004a0000004b0000004c0000004d0000004e0000004f000000
-  foldoutBones: 4e0000004d0000004c0000004a0000004900000048000000460000004400000042000000410000003f0000003e0000003c0000003b00000039000000380000003600000035000000300000002f0000002e0000002d0000002b0000002a0000002800000027000000250000002400000022000000210000001f0000001e00000019000000180000001700000016000000130000001200000011000000100000000f0000000d0000000c0000000a000000080000000700000000000000
+  foldoutBones: 4e0000004d0000004c0000004a0000004900000048000000460000004400000042000000410000003f0000003e0000003c0000003b000000390000003800000036000000350000003200000031000000300000002f0000002e0000002d0000002b0000002a0000002800000027000000250000002400000022000000210000001f0000001e0000001b0000001a00000019000000180000001700000016000000130000001200000011000000100000000f0000000d0000000c0000000a000000080000000700000000000000
   mirrorBones: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff15000000140000002d0000002e0000002f00000030000000ffffffffffffffffffffffffffffffff35000000360000003700000038000000390000003a0000003b0000003c0000003d0000003e0000003f0000004000000041000000420000004300000016000000170000001800000019000000ffffffffffffffffffffffffffffffff1e0000001f000000200000002100000022000000230000002400000025000000260000002700000028000000290000002a0000002b0000002c000000460000004700000044000000450000004c0000004d0000004e0000004f00000048000000490000004a0000004b000000
   mirrorBlendShape:
   - renderer: {fileID: 5477295523860825697}
@@ -3325,11 +3325,11 @@ MonoBehaviour:
     autoRotation: 0
     spaceType: 0
     parent: {fileID: 0}
-    position: {x: 3.1333, y: 0.92356133, z: 1.7090716}
+    position: {x: 2.85105, y: -0.25986704, z: 1.730196}
     rotation: {x: 0, y: 0, z: 0, w: 1}
     headWeight: 1
     eyesWeight: 0
-    swivelRotation: 1.5110016
+    swivelRotation: 7.9367523
     swivelPosition: {x: 0, y: 0, z: 0}
     parentPath: 
   - enable: 0
@@ -3337,11 +3337,11 @@ MonoBehaviour:
     autoRotation: 0
     spaceType: 0
     parent: {fileID: 0}
-    position: {x: 2.8708928, y: 0.6108296, z: 0.85025877}
-    rotation: {x: -0.34614444, y: 0.16100702, z: -0.20846316, w: -0.9004465}
+    position: {x: 2.7834396, y: 0.55318266, z: 0.80116594}
+    rotation: {x: -0.33262652, y: 0.75869554, z: -0.20932612, w: -0.51954144}
     headWeight: 1
     eyesWeight: 0
-    swivelRotation: 101.14734
+    swivelRotation: 97.742615
     swivelPosition: {x: 0, y: 0, z: 0}
     parentPath: 
   - enable: 0
@@ -3349,11 +3349,11 @@ MonoBehaviour:
     autoRotation: 0
     spaceType: 0
     parent: {fileID: 0}
-    position: {x: 3.2471256, y: 0.6503993, z: 0.49939728}
-    rotation: {x: 0.23573816, y: 0.81334615, z: -0.028348617, w: 0.5311234}
+    position: {x: 3.0925279, y: 0.1445153, z: 0.97479755}
+    rotation: {x: 0.36500853, y: -0.59013206, z: 0.30937526, w: 0.6502306}
     headWeight: 1
     eyesWeight: 0
-    swivelRotation: -89.72168
+    swivelRotation: -90
     swivelPosition: {x: 0, y: 0, z: 0}
     parentPath: 
   - enable: 0
@@ -3361,28 +3361,28 @@ MonoBehaviour:
     autoRotation: 0
     spaceType: 0
     parent: {fileID: 0}
-    position: {x: 2.974574, y: 0.062432438, z: 0.86819494}
-    rotation: {x: -0.007049049, y: 0.0032363422, z: 0.05303529, w: 0.9985625}
+    position: {x: 2.8480022, y: 0.06627941, z: 0.6766398}
+    rotation: {x: 0.036901355, y: 0.26232257, z: 0.062455524, w: 0.9622497}
     headWeight: 1
     eyesWeight: 0
-    swivelRotation: -3.7954102
+    swivelRotation: -37.6532
     swivelPosition: {x: 0, y: 0, z: 0}
     parentPath: 
-  - enable: 1
+  - enable: 0
     _fixed: 0
     autoRotation: 0
     spaceType: 0
     parent: {fileID: 0}
-    position: {x: 3.0915403, y: 0.08315879, z: 0.49315286}
-    rotation: {x: 0.1755645, y: 0.10129023, z: -0.053860933, w: 0.9777609}
+    position: {x: 3.0252585, y: 0.09777729, z: 0.764984}
+    rotation: {x: 0.24888188, y: -0.009480574, z: 0.042442784, w: 0.967557}
     headWeight: 1
     eyesWeight: 0
-    swivelRotation: -8.48468
+    swivelRotation: -2.8965454
     swivelPosition: {x: 0, y: 0, z: 0}
     parentPath: 
   originalIkData: []
   selectionData: []
-  lastSelectAnimationClip: {fileID: 7400000, guid: 2d034cce3aa263d4989b18c675b2f9c9, type: 2}
+  lastSelectAnimationClip: {fileID: 7400000, guid: 98c77071777926e4d9887b1e0bdfd781, type: 2}
   handPoseList: []
   blendShapeList: []
 --- !u!1 &6230622647700795437

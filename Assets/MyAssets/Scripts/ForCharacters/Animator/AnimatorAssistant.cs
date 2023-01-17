@@ -84,9 +84,9 @@ public class AnimatorAssistant : MonoBehaviour
     }
 
     /// <summary>アニメーションイベントにて、攻撃判定を開始したい旨を受け取る</summary>
-    public void AttackCallStart()
+    public void AttackCallStart(int power)
     {
-        _Cm.AttackCallStart();
+        _Cm.AttackCallStart(power);
     }
 
     /// <summary>アニメーションイベントにて、攻撃判定を終了したい旨を受け取る</summary>

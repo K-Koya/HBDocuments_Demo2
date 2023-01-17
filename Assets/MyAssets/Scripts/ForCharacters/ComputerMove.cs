@@ -128,7 +128,7 @@ public class ComputerMove : CharacterMove
             else
             {
                 RaycastHit hit;
-                if (Physics.Raycast((Vector3)_Destination + Vector3.up * 0.2f, Vector3.down, out hit, 10f, LayerManager.Ins.AllGround))
+                if (Physics.Raycast((Vector3)_Destination + Vector3.up * 0.2f, Vector3.down, out hit, 10f, LayerManager.Instance.AllGround))
                 {
                     _Nav.destination = hit.point;
                     _IsFoundDestination = true;

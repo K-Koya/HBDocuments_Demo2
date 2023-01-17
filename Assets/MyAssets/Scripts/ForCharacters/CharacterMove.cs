@@ -16,7 +16,7 @@ abstract public class CharacterMove : MonoBehaviour
     protected float _MovePower = 3.0f;
 
     /// <summary>結果の移動速度</summary>
-    float _Speed = 0.0f;
+    protected float _Speed = 0.0f;
 
     /// <summary>キャラクターの、武器を出したりして臨戦態勢になる継続タイマー</summary>
     protected float _ArmedTimer = 0.0f;
@@ -235,10 +235,13 @@ abstract public class CharacterMove : MonoBehaviour
     public void ProcessCallEndSoon()
     {
         _Param.State.Process = MotionState.ProcessKind.EndSoon;
+
+        //コンボ手数をリセットする
+        _CommandHolder.Combo.ComboReset();
     }
 
     /// <summary>アニメーションイベントにて、攻撃判定を開始したい旨を受け取る</summary>
-    public void AttackCallStart()
+    public void AttackCallStart(int power)
     {
         
     }
