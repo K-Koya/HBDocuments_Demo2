@@ -59,7 +59,7 @@ public class PlayerMove : CharacterMove
             //ˆÚ“®•ûŒü‚ðŽæ“¾
             _Param.Direction *= 1 / _MoveInputRate;
             //ˆÚ“®—ÍŽw’è
-            _MovePower = _Param.LimitSpeedRun;
+            _MovePower = _Param.Sub.LimitSpeedRun;
         }
         else
         {
@@ -96,7 +96,7 @@ public class PlayerMove : CharacterMove
                     //ˆÚ“®“ü—Í‚ª‚ ‚é
                     if(_Param.Direction.sqrMagnitude > 0)
                     {
-                        if(_Speed > _Param.LimitSpeedWalk)
+                        if(_Speed > _Param.Sub.LimitSpeedWalk)
                         {
                             _Param.State.Kind = MotionState.StateKind.Run;
                         }
@@ -177,7 +177,7 @@ public class PlayerMove : CharacterMove
             else if (_Param.Can.ComboNormal && InputUtility.GetDownAttack)
             {
                 PlayerParameter pp = _Param as PlayerParameter;
-                _CommandHolder.Combo.ComboGroundOrder(_Param, _Rb.component, GravityDirection, pp.ReticlePoint - pp.EyePoint.position, ref _AnimKind);
+                _CommandHolder.Combo.DoRun(_Param, _Rb.component, GravityDirection, pp.ReticlePoint - pp.EyePoint.position, ref _AnimKind);
                 _DoAction = true;
             }
         }

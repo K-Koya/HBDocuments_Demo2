@@ -237,13 +237,14 @@ abstract public class CharacterMove : MonoBehaviour
         _Param.State.Process = MotionState.ProcessKind.EndSoon;
 
         //コンボ手数をリセットする
-        _CommandHolder.Combo.ComboReset();
+        _CommandHolder.Combo.CountReset();
     }
 
     /// <summary>アニメーションイベントにて、攻撃判定を開始したい旨を受け取る</summary>
-    public void AttackCallStart(int power)
+    /// <param name="id">AttackPowerTableにアクセスしたいカラムID</param>
+    public void AttackCallStart(int id)
     {
-        
+
     }
 
     /// <summary>アニメーションイベントにて、攻撃判定を終了したい旨を受け取る</summary>

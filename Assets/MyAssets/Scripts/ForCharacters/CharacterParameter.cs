@@ -19,53 +19,65 @@ abstract public class CharacterParameter : MonoBehaviour
     #endregion
 
     #region メインパラメータ
-    [SerializeField, Tooltip("最大HP")]
-    protected short _HPMaximum = 1000;
+    [System.Serializable]
+    public class MainParameter
+    {
+        [SerializeField, Tooltip("最大HP")]
+        short _HPMaximum = 1000;
 
-    [SerializeField, Tooltip("現在のHP")]
-    protected short _HPCurrent = 1000;
+        [SerializeField, Tooltip("現在のHP")]
+        short _HPCurrent = 1000;
 
-    [SerializeField, Tooltip("最大MP")]
-    protected float _MPMaximum = 10f;
+        [SerializeField, Tooltip("最大MP")]
+        float _MPMaximum = 10f;
 
-    [SerializeField, Tooltip("現在のMP")]
-    protected float _MPCurrent = 10f;
+        [SerializeField, Tooltip("現在のMP")]
+        float _MPCurrent = 10f;
 
+        /// <summary>最大HP</summary>
+        public short HPMaximum { get => _HPMaximum; }
+        /// <summary>現在のHP</summary>
+        public short HPCurrent { get => _HPCurrent; }
+        /// <summary>最大MP</summary>
+        public float MPMaximum { get => _MPMaximum; }
+        /// <summary>現在のMP</summary>
+        public float MPCurrent { get => _MPCurrent; }
+    }
 
-    /// <summary>最大HP</summary>
-    public short HPMaximum { get => _HPMaximum; }
-    /// <summary>現在のHP</summary>
-    public short HPCurrent { get => _HPCurrent; }
-    /// <summary>最大MP</summary>
-    public float MPMaximum { get => _MPMaximum; }
-    /// <summary>現在のMP</summary>
-    public float MPCurrent { get => _MPCurrent; }
+    [SerializeField, Tooltip("メインパラメータ")]
+    MainParameter _Main = new MainParameter();
 
     #endregion
 
     #region サブパラメータ
-    [SerializeField, Tooltip("照準射程内")]
-    protected float _LockMaxRange = 30f;
+    [System.Serializable]
+    public class SubParameter
+    {
+        [SerializeField, Tooltip("照準射程内")]
+        float _LockMaxRange = 30f;
 
-    [SerializeField, Tooltip("通常コンボ射程内")]
-    protected float _ComboProximityRange = 5f;
+        [SerializeField, Tooltip("通常コンボ射程内")]
+        float _ComboProximityRange = 5f;
 
-    [SerializeField, Tooltip("歩行最高速")]
-    protected float _LimitSpeedWalk = 2f;
+        [SerializeField, Tooltip("歩行最高速")]
+        float _LimitSpeedWalk = 2f;
 
-    [SerializeField, Tooltip("走行最高速")]
-    protected float _LimitSpeedRun = 5f;
+        [SerializeField, Tooltip("走行最高速")]
+        float _LimitSpeedRun = 5f;
 
 
-    /// <summary>照準射程内</summary>
-    public float LockMaxRange { get => _LockMaxRange; }
-    /// <summary>通常コンボ射程内</summary>
-    public float ComboProximityRange { get => _ComboProximityRange; }
-    /// <summary>歩行最高速</summary>
-    public float LimitSpeedWalk { get => _LimitSpeedWalk; }
-    /// <summary>走行最高速</summary>
-    public float LimitSpeedRun { get => _LimitSpeedRun; }
+        /// <summary>照準射程内</summary>
+        public float LockMaxRange { get => _LockMaxRange; }
+        /// <summary>通常コンボ射程内</summary>
+        public float ComboProximityRange { get => _ComboProximityRange; }
+        /// <summary>歩行最高速</summary>
+        public float LimitSpeedWalk { get => _LimitSpeedWalk; }
+        /// <summary>走行最高速</summary>
+        public float LimitSpeedRun { get => _LimitSpeedRun; }
+    }
 
+    [SerializeField, Tooltip("サブパラメータ")]
+    SubParameter _Sub = new SubParameter();
     #endregion
 
     #region メンバ
@@ -96,10 +108,9 @@ abstract public class CharacterParameter : MonoBehaviour
     [SerializeField, Tooltip("操作可否情報")]
     protected InputAcceptance _Acceptance = null;
 
-    
 
     /// <summary>攻撃範囲情報</summary>
-    protected List<AttackArea> _AttackAreas = new List<AttackArea>(10);
+    protected AttackCollision[] _AttackAreas = null; 
 
     /// <summary>最も最近受けた攻撃の情報</summary>
     protected AttackInformation _GaveAttack = null;
@@ -113,6 +124,12 @@ abstract public class CharacterParameter : MonoBehaviour
     public static IReadOnlyList<CharacterParameter> Allies => _Allies;
     /// <summary>敵キャラクターがリスト化されている</summary>
     public static IReadOnlyList<CharacterParameter> Enemies => _Enemies;
+
+    /// <summary>メインパラメータ</summary>
+    public MainParameter Main => _Main;
+    /// <summary>サブパラメータ</summary>
+    public SubParameter Sub => _Sub;
+
     /// <summary>キャラクターの目線位置</summary>
     public Transform EyePoint { get => _EyePoint; set => _EyePoint = value; }
     /// <summary>本キャラクターの時間情報</summary>
@@ -127,12 +144,14 @@ abstract public class CharacterParameter : MonoBehaviour
     public CharacterParameter GazeAt { get => _GazeAt; set => _GazeAt = value; }
     /// <summary>キャラクターの当たり判定コライダー</summary>
     public Collider HitArea { get => _HitArea; }
+
     /// <summary>キャラクターの行動状態</summary>
     public MotionState State { get => _State; }
     /// <summary>操作可否情報</summary>
     public InputAcceptance Can { get => _Acceptance; }
+
     /// <summary>攻撃範囲情報</summary>
-    public List<AttackArea> AttackAreas => _AttackAreas;
+    public AttackCollision[] AttackAreas => _AttackAreas;
     /// <summary>最も最近受けた攻撃の情報</summary>
     public AttackInformation GaveAttack { get => _GaveAttack; set => _GaveAttack = value; }
     #endregion
@@ -170,6 +189,27 @@ abstract public class CharacterParameter : MonoBehaviour
     {
         SetAcceptant();
     }
+
+    /// <summary>攻撃範囲に攻撃情報を搭載するメソッド</summary>
+    /// <param name="areaIndexes">攻撃範囲の要素番号</param>
+    public void SetAttackArea(params short[] areaIndexes)
+    {
+        for(int i = 1; i < areaIndexes.Length; i++)
+        {
+            _AttackAreas[areaIndexes[i]].gameObject.SetActive(true);
+        }
+    }
+
+    /// <summary>攻撃範囲の情報を閉じるメソッド(-1で全攻撃範囲に対して実施)</summary>
+    /// <param name="areaIndexes">攻撃範囲の要素番号</param>
+    public void CloseAttackArea(params short[] areaIndexes)
+    {
+        for (int i = 1; i < areaIndexes.Length; i++)
+        {
+            _AttackAreas[areaIndexes[i]].gameObject.SetActive(false);
+        }
+    }
+
 
     /// <summary>操作可否情報を様々なステート状態から設定する</summary>
     void SetAcceptant()

@@ -7,6 +7,7 @@ public class CommandHolder : MonoBehaviour
     const byte NUMBER_OF_ACTIVE_SKILL = 4;
 
     #region メンバ
+    [Header("所持コマンド情報")]
     [SerializeField, Tooltip("ジャンプ用コマンド")]
     CommandJumpBase _CommandJump = new CommandJumpBase();
 
@@ -22,6 +23,9 @@ public class CommandHolder : MonoBehaviour
     [SerializeField, Tooltip("コンボ情報コンポーネント")]
     CommandCombo _CommandCombo = new CommandCombo();
 
+    [Header("実行中アクティブスキルコマンド情報")]
+    [SerializeField, Tooltip("アクティブスキルコマンドのうち実行中のコマンド")]
+    CommandActiveSkillBase _Running = null;
     #endregion
 
     #region プロパティ

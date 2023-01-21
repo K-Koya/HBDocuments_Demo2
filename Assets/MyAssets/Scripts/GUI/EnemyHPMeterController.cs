@@ -6,8 +6,9 @@ using Chronos;
 
 public class EnemyHPMeterController : MonoBehaviour {
 
-    /// <summary>対象キャラクターのステータス</summary>
-    CharacterParameter _Param = default;
+    /// <summary>対象キャラクターのメインステータス</summary>
+    CharacterParameter.MainParameter _Param = null;
+
 
     /// <summary>時間軸コンポーネント</summary>
     Timeline _Tl = null;
@@ -28,7 +29,7 @@ public class EnemyHPMeterController : MonoBehaviour {
     // Use this for initialization
     void Start () 
     {
-        _Param = GetComponentInParent<CharacterParameter>();
+        _Param = GetComponentInParent<CharacterParameter>().Main;
         _Tl = GetComponentInParent<Timeline>();
     }
 	

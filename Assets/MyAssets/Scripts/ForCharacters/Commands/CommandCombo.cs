@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class CommandCombo : CommandBase
+public class CommandCombo : CommandActiveSkillBase
 {
     [SerializeField, Tooltip("コンボの手数（フィニッシュを含む）")]
     byte _NumberOfStep = 5;
@@ -11,7 +11,7 @@ public class CommandCombo : CommandBase
     /// <summary>今のコンボの手数</summary>
     byte _Step = 0;
 
-
+    
     public CommandCombo()
     {
         _Name = "通常コンボ";
@@ -24,7 +24,7 @@ public class CommandCombo : CommandBase
     /// <param name="gravityDirection">重力方向</param>
     /// <param name="reticleDirection">照準方向</param>
     /// <param name="animKind">要求するアニメーションの種類</param>
-    public void ComboGroundOrder(CharacterParameter param, Rigidbody rb, Vector3 gravityDirection, Vector3 reticleDirection, ref AnimationKind animKind)
+    public override void DoRun(CharacterParameter param, Rigidbody rb, Vector3 gravityDirection, Vector3 reticleDirection, ref AnimationKind animKind)
     {
         //規定数コンボを打ったかで分岐
         //コンボ途中
@@ -57,7 +57,7 @@ public class CommandCombo : CommandBase
                         {
                             //照準を合わせている相手との距離で分岐
                             //近い場合
-                            if (reticleDirection.sqrMagnitude < param.ComboProximityRange * param.ComboProximityRange)
+                            if (reticleDirection.sqrMagnitude < param.Sub.ComboProximityRange * param.Sub.ComboProximityRange)
                             {
                                 animKind = AnimationKind.ComboGroundFoward;
                             }
@@ -96,7 +96,7 @@ public class CommandCombo : CommandBase
     }
 
     /// <summary>コンボ手数を0にリセットする</summary>
-    public void ComboReset()
+    public void CountReset()
     {
         _Step = 1;
     }

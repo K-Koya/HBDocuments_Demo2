@@ -9,11 +9,15 @@ public class CommandActiveSkillBase : CommandBase
     [SerializeField, Tooltip("アクティブスキルコマンドの順番")]
     protected byte _Priolity = 0;
 
-    [SerializeField, Tooltip("コマンドの数値各種\nスキル:消費MPコスト\nアイテム:個数")]
+    [SerializeField, Tooltip("コマンドの数値各種\nスキル:消費MPコスト\nアイテム:個数\nCombo:コンボ手数")]
     protected byte _Count = 1;
+
+    [SerializeField, Tooltip("攻撃情報テーブル")]
+    AttackPowerColumn[] _AttackPowerTable = null;
 
     [SerializeField, Tooltip("true : コマンド施工中")]
     protected bool _IsRunning = false;
+
     #endregion
 
     public CommandActiveSkillBase()
@@ -30,6 +34,7 @@ public class CommandActiveSkillBase : CommandBase
     /// <para>コマンドの数値各種</para>
     /// <para>Skill:消費MPコスト</para>
     /// <para>Item:個数</para>
+    /// <para>Combo:コンボ手数</para>
     /// </summary>
     public byte Count { get => _Count; }
 
@@ -38,20 +43,42 @@ public class CommandActiveSkillBase : CommandBase
     #endregion
 
     /// <summary>コマンド開始</summary>
-    /// <param name="param">該当のキャラクターのパラメータ</param>
+    /// <param name="param">該当キャラクターのパラメータ</param>
     /// <param name="rb">リジッドボディ</param>
     /// <param name="gravityDirection">重力方向</param>
-    public virtual void DoRun(CharacterParameter param, Rigidbody rb, Vector3 gravityDirection)
+    /// <param name="reticleDirection">照準方向</param>
+    /// <param name="animKind">要求するアニメーションの種類</param>
+    public virtual void DoRun(CharacterParameter param, Rigidbody rb, Vector3 gravityDirection, Vector3 reticleDirection, ref AnimationKind animKind)
     {
 
     }
 
     /// <summary>コマンド実行中</summary>
-    /// <param name="param">該当のキャラクターのパラメータ</param>
+    /// <param name="param">該当キャラクターのパラメータ</param>
     /// <param name="rb">リジッドボディ</param>
     /// <param name="gravityDirection">重力方向</param>
-    public virtual void Running(CharacterParameter param, Rigidbody rb, Vector3 gravityDirection)
+    /// <param name="reticleDirection">照準方向</param>
+    /// <param name="animKind">要求するアニメーションの種類</param>
+    public virtual void Running(CharacterParameter param, Rigidbody rb, Vector3 gravityDirection, Vector3 reticleDirection, ref AnimationKind animKind)
     {
 
     }
+
+
+    /// <summary>攻撃情報を構成し攻撃範囲を指定する</summary>
+    /// <param name="ID">攻撃情報リストに対応するID</param>
+    /// <returns>攻撃情報</returns>
+    public AttackPowerColumn SetAttackArea(int ID)
+    {
+        foreach (AttackPowerColumn col in _AttackPowerTable)
+        {
+            if (col.ID == ID)
+            {
+                return col;
+            }
+        }
+
+        return null;
+    }
+
 }

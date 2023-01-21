@@ -13,7 +13,7 @@ public class DamageCollision : MonoBehaviour
         _Param = GetComponent<CharacterParameter>();
     }
 
-    private void OnTriggerEnter(Collider other)
+    void OnTriggerEnter(Collider other)
     {
         //接触した敵対するレイヤーのコライダーのうち、攻撃用コライダーに対して反応
         if (other.CompareTag(TagManager.Instance.AttackCollider))

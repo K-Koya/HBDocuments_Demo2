@@ -55,7 +55,7 @@ public class AimMovement : MonoBehaviour
         Vector3 rayhitPos = Vector3.zero;
 
         //プレイヤー位置からカメラ前方方向に地面を探索
-        if (Physics.Raycast(_Param.EyePoint.transform.position, _MainCamera.transform.forward, out rayhitGround, _Param.LockMaxRange, LayerManager.Instance.OnTheReticle))
+        if (Physics.Raycast(_Param.EyePoint.transform.position, _MainCamera.transform.forward, out rayhitGround, _Param.Sub.LockMaxRange, LayerManager.Instance.OnTheReticle))
         {
             //確認できたら該当座標を保存
             rayhitPos = rayhitGround.point;
@@ -64,11 +64,11 @@ public class AimMovement : MonoBehaviour
             _Param.GazeAt = rayhitGround.transform.GetComponent<CharacterParameter>();
             
             //照準位置までの実数距離から識別値を設定
-            if (_Distance < _Param.ComboProximityRange)
+            if (_Distance < _Param.Sub.ComboProximityRange)
             {
                 _DistanceType = DistanceType.WithinProximity;
             }
-            else if (_Distance < _Param.LockMaxRange)
+            else if (_Distance < _Param.Sub.LockMaxRange)
             {
                 _DistanceType = DistanceType.OutOfProximity;
             }
@@ -76,7 +76,7 @@ public class AimMovement : MonoBehaviour
         else
         {
             //確認できなければ、最大射程距離を参照
-            rayhitPos = _Param.EyePoint.transform.position + _MainCamera.transform.forward * _Param.LockMaxRange;
+            rayhitPos = _Param.EyePoint.transform.position + _MainCamera.transform.forward * _Param.Sub.LockMaxRange;
             //照準までの距離の識別値を射程外に
             _DistanceType = DistanceType.OutOfRange;
             //ステータスコンポーネントを破棄

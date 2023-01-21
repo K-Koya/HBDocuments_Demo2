@@ -84,9 +84,10 @@ public class AnimatorAssistant : MonoBehaviour
     }
 
     /// <summary>アニメーションイベントにて、攻撃判定を開始したい旨を受け取る</summary>
-    public void AttackCallStart(int power)
+    /// <param name="id">AttackPowerTableにアクセスしたいカラムID</param>
+    public void AttackCallStart(int id)
     {
-        _Cm.AttackCallStart(power);
+        _Cm.AttackCallStart(id);
     }
 
     /// <summary>アニメーションイベントにて、攻撃判定を終了したい旨を受け取る</summary>
