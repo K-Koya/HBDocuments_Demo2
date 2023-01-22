@@ -241,16 +241,27 @@ abstract public class CharacterMove : MonoBehaviour
     }
 
     /// <summary>アニメーションイベントにて、攻撃判定を開始したい旨を受け取る</summary>
-    /// <param name="id">AttackPowerTableにアクセスしたいカラムID</param>
+    /// <param name="id">攻撃情報テーブルにアクセスしたいカラムID</param>
     public void AttackCallStart(int id)
     {
+        AttackPowerColumn apc = _CommandHolder.Running.GetAttackArea(id);
+        AttackInformation info = new AttackInformation(apc, _Param);
 
+        for (int i = 1; i < apc.ActivateAreasIndex.Length; i++)
+        {
+            _Param.AttackAreas[apc.ActivateAreasIndex[i]].gameObject.SetActive(true);
+            _Param.AttackAreas[apc.ActivateAreasIndex[i]].AttackInfo = info;
+        }
     }
 
     /// <summary>アニメーションイベントにて、攻撃判定を終了したい旨を受け取る</summary>
     public void AttackCallEnd()
     {
-
+        foreach(AttackCollision ac in _Param.AttackAreas)
+        {
+            ac.gameObject.SetActive(false);
+            ac.AttackInfo = null;
+        }
     }
 
     #endregion

@@ -8,6 +8,7 @@ TagManager:
   - Enemy
   - OffMeshLinkJumpStep
   - OffMeshLinkJumpFar
+  - AttackCollider
   layers:
   - Default
   - TransparentFX
@@ -20,8 +21,8 @@ TagManager:
   - Player
   - Allies
   - Enemy
-  - 
-  - 
+  - AlliesDamager
+  - EnemyDamager
   - 
   - 
   - 

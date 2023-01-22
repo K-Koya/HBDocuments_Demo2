@@ -177,7 +177,7 @@ public class PlayerMove : CharacterMove
             else if (_Param.Can.ComboNormal && InputUtility.GetDownAttack)
             {
                 PlayerParameter pp = _Param as PlayerParameter;
-                _CommandHolder.Combo.DoRun(_Param, _Rb.component, GravityDirection, pp.ReticlePoint - pp.EyePoint.position, ref _AnimKind);
+                _CommandHolder.GetComboForRun().DoRun(_Param, _Rb.component, GravityDirection, pp.ReticlePoint - pp.EyePoint.position, ref _AnimKind);
                 _DoAction = true;
             }
         }

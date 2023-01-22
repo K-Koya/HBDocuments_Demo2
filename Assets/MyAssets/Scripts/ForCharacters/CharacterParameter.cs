@@ -109,7 +109,7 @@ abstract public class CharacterParameter : MonoBehaviour
     protected InputAcceptance _Acceptance = null;
 
 
-    /// <summary>攻撃範囲情報</summary>
+    [SerializeField, Tooltip("攻撃範囲情報")]
     protected AttackCollision[] _AttackAreas = null; 
 
     /// <summary>最も最近受けた攻撃の情報</summary>
@@ -189,27 +189,6 @@ abstract public class CharacterParameter : MonoBehaviour
     {
         SetAcceptant();
     }
-
-    /// <summary>攻撃範囲に攻撃情報を搭載するメソッド</summary>
-    /// <param name="areaIndexes">攻撃範囲の要素番号</param>
-    public void SetAttackArea(params short[] areaIndexes)
-    {
-        for(int i = 1; i < areaIndexes.Length; i++)
-        {
-            _AttackAreas[areaIndexes[i]].gameObject.SetActive(true);
-        }
-    }
-
-    /// <summary>攻撃範囲の情報を閉じるメソッド(-1で全攻撃範囲に対して実施)</summary>
-    /// <param name="areaIndexes">攻撃範囲の要素番号</param>
-    public void CloseAttackArea(params short[] areaIndexes)
-    {
-        for (int i = 1; i < areaIndexes.Length; i++)
-        {
-            _AttackAreas[areaIndexes[i]].gameObject.SetActive(false);
-        }
-    }
-
 
     /// <summary>操作可否情報を様々なステート状態から設定する</summary>
     void SetAcceptant()

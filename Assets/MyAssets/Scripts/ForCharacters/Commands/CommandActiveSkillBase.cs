@@ -65,10 +65,10 @@ public class CommandActiveSkillBase : CommandBase
     }
 
 
-    /// <summary>UŒ‚î•ñ‚ğ\¬‚µUŒ‚”ÍˆÍ‚ğw’è‚·‚é</summary>
+    /// <summary>UŒ‚î•ñ‚ğ\¬‚µUŒ‚”ÍˆÍ‚ğæ“¾‚·‚é</summary>
     /// <param name="ID">UŒ‚î•ñƒŠƒXƒg‚É‘Î‰‚·‚éID</param>
     /// <returns>UŒ‚î•ñ</returns>
-    public AttackPowerColumn SetAttackArea(int ID)
+    public AttackPowerColumn GetAttackArea(int ID)
     {
         foreach (AttackPowerColumn col in _AttackPowerTable)
         {

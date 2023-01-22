@@ -45,6 +45,8 @@ public class AnimatorAssistantForHuman : AnimatorAssistant
         {
             _Am.SetInteger(_PARAM_NAME_ANIMATION_KIND, (int)_Cm.AnimKind);
             _Am.SetTrigger(_PARAM_NAME_DO_ACTION);
+
+            Debug.Log($"ƒAƒNƒVƒ‡ƒ“‚ªŒÄ‚Î‚ê‚é : {_Cm.AnimKind}");
         }
         else _Am.SetInteger(_PARAM_NAME_ANIMATION_KIND, (int)AnimationKind.NoCall);
     }

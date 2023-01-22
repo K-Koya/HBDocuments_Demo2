@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(CharacterParameter))]
 public class DamageCollision : MonoBehaviour
 {
     /// <summary>このキャラクターのパラメータ</summary>
@@ -10,7 +9,7 @@ public class DamageCollision : MonoBehaviour
 
     void Start()
     {
-        _Param = GetComponent<CharacterParameter>();
+        _Param = GetComponentInParent<CharacterParameter>();
     }
 
     void OnTriggerEnter(Collider other)
@@ -26,7 +25,7 @@ public class DamageCollision : MonoBehaviour
                 {
                     _Param.GaveAttack = newGot;
 
-
+                    Debug.Log($"{_Param.name} がダメージをうけた！");
                 }
             }
         }

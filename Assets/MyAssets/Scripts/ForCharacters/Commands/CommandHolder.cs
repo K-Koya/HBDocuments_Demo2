@@ -20,11 +20,11 @@ public class CommandHolder : MonoBehaviour
     [SerializeField, Tooltip("アクティブスキルコマンドのリスト")]
     CommandActiveSkillBase[] _ActiveSkills = new CommandActiveSkillBase[NUMBER_OF_ACTIVE_SKILL];
 
-    [SerializeField, Tooltip("コンボ情報コンポーネント")]
+    [SerializeField, Tooltip("コンボコマンド")]
     CommandCombo _CommandCombo = new CommandCombo();
 
     [Header("実行中アクティブスキルコマンド情報")]
-    [SerializeField, Tooltip("アクティブスキルコマンドのうち実行中のコマンド")]
+    [SerializeField, Tooltip("アクティブスキルコマンド・コンボコマンドのうち実行中のコマンド")]
     CommandActiveSkillBase _Running = null;
     #endregion
 
@@ -37,10 +37,30 @@ public class CommandHolder : MonoBehaviour
     public CommandLongTripBase LongTrip { get => _CommandLongTrip; }
     /// <summary>アクティブスキルコマンドのリスト</summary>
     public CommandActiveSkillBase[] ActiveSkills { get => _ActiveSkills; }
-    /// <summary>コンボ情報コンポーネント</summary>
+    /// <summary>コンボコマンド</summary>
     public CommandCombo Combo { get => _CommandCombo; }
+    /// <summary>アクティブスキルコマンド・コンボコマンドのうち実行中のコマンド</summary>
+    public CommandActiveSkillBase Running { get => _Running; }
     #endregion
 
+    #region ゲッターメソッド
+    /// <summary>コンボコマンドを取得して実行状態にする</summary>
+    /// <returns>コンボコマンド</returns>
+    public CommandCombo GetComboForRun()
+    {
+        _Running = _CommandCombo;
+        return _CommandCombo;
+    }
+
+    /// <summary>アクティブスキルコマンドを取得して実行状態にする</summary>
+    /// <param name="index">スキルリストにアクセスするための添え字番号</param>
+    /// <returns>アクティブスキルコマンド</returns>
+    public CommandActiveSkillBase GetActiveSkillForRun(int index)
+    {
+        _Running = ActiveSkills[index];
+        return _Running;
+    }
+    #endregion
 
     void Start()
     {

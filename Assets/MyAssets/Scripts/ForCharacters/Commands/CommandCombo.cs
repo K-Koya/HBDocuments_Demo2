@@ -9,6 +9,7 @@ public class CommandCombo : CommandActiveSkillBase
     byte _NumberOfStep = 5;
 
     /// <summary>今のコンボの手数</summary>
+    [SerializeField]
     byte _Step = 0;
 
     
@@ -26,9 +27,12 @@ public class CommandCombo : CommandActiveSkillBase
     /// <param name="animKind">要求するアニメーションの種類</param>
     public override void DoRun(CharacterParameter param, Rigidbody rb, Vector3 gravityDirection, Vector3 reticleDirection, ref AnimationKind animKind)
     {
+        //照準方向に向き直る
+        rb.transform.forward = Vector3.ProjectOnPlane(reticleDirection, -gravityDirection);
+
         //規定数コンボを打ったかで分岐
         //コンボ途中
-        if(_Step < _NumberOfStep)
+        if (_Step < _NumberOfStep)
         {
             //走行状態かで分岐
             if (param.State.Kind == MotionState.StateKind.Run)
