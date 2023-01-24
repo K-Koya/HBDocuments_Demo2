@@ -7,6 +7,12 @@ using Chronos;
 [RequireComponent(typeof(Timeline))]
 abstract public class CharacterParameter : MonoBehaviour
 {
+    #region 定数
+    /// <summary>受けた攻撃IDの履歴をとる個数</summary>
+    public const byte NUMBER_OF_RECORD_GAVE_ATTACK_ID = 5;
+
+    #endregion
+
     #region キャラ間のアクセッサ
     /// <summary>プレイヤーキャラクターを格納</summary>
     protected static CharacterParameter _Player = null;
@@ -19,34 +25,17 @@ abstract public class CharacterParameter : MonoBehaviour
     #endregion
 
     #region メインパラメータ
-    [System.Serializable]
-    public class MainParameter
-    {
-        [SerializeField, Tooltip("最大HP")]
-        short _HPMaximum = 1000;
-
-        [SerializeField, Tooltip("現在のHP")]
-        short _HPCurrent = 1000;
-
-        [SerializeField, Tooltip("最大MP")]
-        float _MPMaximum = 10f;
-
-        [SerializeField, Tooltip("現在のMP")]
-        float _MPCurrent = 10f;
-
-        /// <summary>最大HP</summary>
-        public short HPMaximum { get => _HPMaximum; }
-        /// <summary>現在のHP</summary>
-        public short HPCurrent { get => _HPCurrent; }
-        /// <summary>最大MP</summary>
-        public float MPMaximum { get => _MPMaximum; }
-        /// <summary>現在のMP</summary>
-        public float MPCurrent { get => _MPCurrent; }
-    }
-
     [SerializeField, Tooltip("メインパラメータ")]
-    MainParameter _Main = new MainParameter();
+    protected MainParameter _Main = null;
 
+    [SerializeField, Tooltip("現在のHP")]
+    protected short _HPCurrent = 1000;
+
+    [SerializeField, Tooltip("最大MP")]
+    protected float _MPMaximum = 20f;
+
+    [SerializeField, Tooltip("現在のMP")]
+    protected float _MPCurrent = 20f;
     #endregion
 
     #region サブパラメータ
@@ -110,10 +99,10 @@ abstract public class CharacterParameter : MonoBehaviour
 
 
     [SerializeField, Tooltip("攻撃範囲情報")]
-    protected AttackCollision[] _AttackAreas = null; 
+    protected AttackCollision[] _AttackAreas = null;
 
-    /// <summary>最も最近受けた攻撃の情報</summary>
-    protected AttackInformation _GaveAttack = null;
+    /// <summary>受けた攻撃のID履歴</summary>
+    protected Stack<byte> _GaveAttackIDs = new Stack<byte>(NUMBER_OF_RECORD_GAVE_ATTACK_ID);
     #endregion
 
 
@@ -127,6 +116,12 @@ abstract public class CharacterParameter : MonoBehaviour
 
     /// <summary>メインパラメータ</summary>
     public MainParameter Main => _Main;
+    /// <summary>現在のHP</summary>
+    public short HPCurrent { get => _HPCurrent; }
+    /// <summary>最大MP</summary>
+    public float MPMaximum { get => _MPMaximum; }
+    /// <summary>現在のMP</summary>
+    public float MPCurrent { get => _MPCurrent; }
     /// <summary>サブパラメータ</summary>
     public SubParameter Sub => _Sub;
 
@@ -152,8 +147,8 @@ abstract public class CharacterParameter : MonoBehaviour
 
     /// <summary>攻撃範囲情報</summary>
     public AttackCollision[] AttackAreas => _AttackAreas;
-    /// <summary>最も最近受けた攻撃の情報</summary>
-    public AttackInformation GaveAttack { get => _GaveAttack; set => _GaveAttack = value; }
+    /// <summary>受けた攻撃のID履歴</summary>
+    public Stack<byte> GaveAttackIDs => _GaveAttackIDs;
     #endregion
 
     /// <summary>本クラスの静的メンバに自コンポーネントを登録させるメソッド</summary>
@@ -162,8 +157,10 @@ abstract public class CharacterParameter : MonoBehaviour
     /// <summary>本クラスの静的メンバから自コンポーネントを抹消するメソッド</summary>
     abstract protected void EraseStaticReference();
 
+
     void Awake()
     {
+        _Main = new MainParameter();
         _State = new MotionState();
         _Acceptance = new InputAcceptance();
 
@@ -175,13 +172,17 @@ abstract public class CharacterParameter : MonoBehaviour
         EraseStaticReference();
     }
 
-    
-
     // Start is called before the first frame update
     protected virtual void Start()
     {
         _Tl = GetComponent<Timeline>();
         _HitArea = GetComponent<Collider>();
+
+        //被攻撃履歴を初期化
+        for(int i = 0; i < NUMBER_OF_RECORD_GAVE_ATTACK_ID; i++)
+        {
+            _GaveAttackIDs.Push(byte.MaxValue);
+        }
     }
 
     // Update is called once per frame
@@ -189,6 +190,21 @@ abstract public class CharacterParameter : MonoBehaviour
     {
         SetAcceptant();
     }
+
+    /// <summary>ダメージ処理</summary>
+    /// <param name="damage">被ダメージ値</param>
+    public virtual void GaveDamage(int damage)
+    {
+        _HPCurrent -= (short)damage;
+    }
+
+    /// <summary>回復処理</summary>
+    /// <param name="ratioOfHP">最大HPに対する回復量割合</param>
+    public virtual void GaveHeal(float ratioOfHP)
+    {
+        _HPCurrent += (short)(ratioOfHP * _Main.HPMaximum);
+    }
+
 
     /// <summary>操作可否情報を様々なステート状態から設定する</summary>
     void SetAcceptant()
@@ -373,4 +389,49 @@ abstract public class CharacterParameter : MonoBehaviour
             default: break;
         }
     }
+}
+
+[System.Serializable]
+public class MainParameter
+{
+    [SerializeField, Tooltip("最大HP")]
+    short _HPMaximum = 1000;
+
+    [SerializeField, Tooltip("直接攻撃")]
+    short _Attack = 1000;
+
+    [SerializeField, Tooltip("直接防御")]
+    short _Defense = 1000;
+
+    [SerializeField, Tooltip("間接攻撃")]
+    short _Magic = 1000;
+
+    [SerializeField, Tooltip("間接防御")]
+    short _Shield = 1000;
+
+    [SerializeField, Tooltip("敏捷性")]
+    short _Rapid = 1000;
+
+    [SerializeField, Tooltip("技術力")]
+    short _Technique = 1000;
+
+    [SerializeField, Tooltip("調子")]
+    short _Luck = 1000;
+
+    /// <summary>最大HP</summary>
+    public short HPMaximum { get => _HPMaximum; }
+    /// <summary>直接攻撃</summary>
+    public short Attack { get => _Attack; }
+    /// <summary>直接防御</summary>
+    public short Defense { get => _Defense; }
+    /// <summary>間接攻撃</summary>
+    public short Magic { get => _Magic; }
+    /// <summary>間接防御</summary>
+    public short Shield { get => _Shield; }
+    /// <summary>敏捷性</summary>
+    public short Rapid { get => _Rapid; }
+    /// <summary>技術力</summary>
+    public short Technique { get => _Technique; }
+    /// <summary>調子</summary>
+    public short Luck { get => _Luck; }
 }

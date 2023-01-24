@@ -40,7 +40,7 @@ public class AnimatorAssistantForHuman : AnimatorAssistant
                 aoa.SetActive(false);
             }
         }
-        
+
         if (_Cm.DoAction)
         {
             _Am.SetInteger(_PARAM_NAME_ANIMATION_KIND, (int)_Cm.AnimKind);

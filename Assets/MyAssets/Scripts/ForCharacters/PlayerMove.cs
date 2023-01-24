@@ -131,6 +131,12 @@ public class PlayerMove : CharacterMove
 
                     _CommandHolder.LongTrip.LongTripPostProcess(_Param, _Rb.component, GravityDirection);
                     break;
+
+                //被ダメージチェック
+                case MotionState.StateKind.Hurt:
+
+
+                    break;
             }
 
 

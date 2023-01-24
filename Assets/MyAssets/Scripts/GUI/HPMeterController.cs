@@ -39,7 +39,7 @@ public class HPMeterController : MonoBehaviour
     private void SyncHPMeter()
     {
         short hpMaximum = _Param.Main.HPMaximum;
-        short hpCurrent = _Param.Main.HPCurrent;
+        short hpCurrent = _Param.HPCurrent;
         //怯み中はBlank部分を表示する
         bool doAppearBlankHP = _Param.State.Kind is MotionState.StateKind.Hurt;
 

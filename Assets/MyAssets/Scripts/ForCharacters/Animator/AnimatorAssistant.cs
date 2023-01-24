@@ -21,6 +21,9 @@ public class AnimatorAssistant : MonoBehaviour
     /// <summary>Animatorのパラメーター名 : DoAction</summary>
     protected const string _PARAM_NAME_DO_ACTION = "DoAction";
 
+    /// <summary>Animatorのパラメーター名 : DoDamage</summary>
+    protected const string _PARAM_NAME_DO_DAMAGE = "DoDamage";
+
     /// <summary>Animatorのパラメーター名 : AnimationKind</summary>
     protected const string _PARAM_NAME_ANIMATION_KIND = "AnimationKind";
 
@@ -147,4 +150,24 @@ public enum AnimationKind : ushort
     ComboAirFinish,
 
 
+}
+
+/// <summary>ダメージモーションの種類</summary>
+public enum DamageKind : byte
+{
+    /*衝撃なし*/
+    /// <summary>ノーリアクション</summary>
+    None = 0,
+
+    /*正面*/
+    /// <summary>正面から小さな衝撃</summary>
+    FrontLittle = 10,
+    /// <summary>正面から大きな衝撃</summary>
+    FrontBig = 11,
+
+    /*周囲*/
+    /// <summary>正面以外から小さな衝撃</summary>
+    SroundLittle = 20,
+    /// <summary>正面以外から大きな衝撃</summary>
+    SroundBig = 21,
 }

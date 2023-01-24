@@ -7,7 +7,7 @@ using Chronos;
 public class EnemyHPMeterController : MonoBehaviour {
 
     /// <summary>対象キャラクターのメインステータス</summary>
-    CharacterParameter.MainParameter _Param = null;
+    CharacterParameter _Param = null;
 
 
     /// <summary>時間軸コンポーネント</summary>
@@ -29,7 +29,7 @@ public class EnemyHPMeterController : MonoBehaviour {
     // Use this for initialization
     void Start () 
     {
-        _Param = GetComponentInParent<CharacterParameter>().Main;
+        _Param = GetComponentInParent<CharacterParameter>();
         _Tl = GetComponentInParent<Timeline>();
     }
 	
@@ -44,7 +44,7 @@ public class EnemyHPMeterController : MonoBehaviour {
     /// </summary>
     private void SyncHPGauge()
     {
-        short hPMaximum = _Param.HPMaximum;
+        short hPMaximum = _Param.Main.HPMaximum;
         short hPCurrent = _Param.HPCurrent;
 
         //HPの割合値を計算
