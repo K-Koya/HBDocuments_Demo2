@@ -3175,6 +3175,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1325032963011884374, guid: 4a741ef0d434c0242baa9138fa58a9a7, type: 3}
+      propertyPath: _EnemyHPCorrection
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1325032963011884378, guid: 4a741ef0d434c0242baa9138fa58a9a7, type: 3}
       propertyPath: m_Name
       value: BossDragon

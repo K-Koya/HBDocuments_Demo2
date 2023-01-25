@@ -37,23 +37,22 @@ public class EnemyParameter : CharacterParameter
 
     public override void GaveDamage(int damage)
     {
-        //HP強化倍率値が残っている
-        if(_EnemyHPCorrectionCurrent > 0)
+        //HP強化倍率値が残っていて、現HPより大きいダメージを受けた
+        if(_EnemyHPCorrectionCurrent > 0 && damage > _HPCurrent)
         {
-            if(damage > _HPCurrent)
-            {
-                //被ダメージがHP一本分よりも大きいダメージなら、その本数分だけ減らす
-                int div = damage / _HPCurrent;
-                int dam = damage - (_HPCurrent * div);
+            //被ダメージがHP一本分よりも大きいダメージなら、その本数分だけ減らす
+            int div = damage / _HPCurrent;
+            int dam = damage - (_HPCurrent * div);
 
-                _HPCurrent = (short)(Main.HPMaximum - dam);
-                _EnemyHPCorrectionCurrent -= (sbyte)div;
-            }
+            _HPCurrent = (short)(Main.HPMaximum - dam);
+            _EnemyHPCorrectionCurrent -= (sbyte)div;
         }
         else
         {
             _HPCurrent -= (short)damage;
         }
+
+
 
         //HPが0以下になった
         if (_EnemyHPCorrectionCurrent < 0 || _HPCurrent < 1)

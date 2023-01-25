@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1f68c35d995c3b4e9714f07b5d7b1f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _DamageRatioOnPart: 1
 --- !u!136 &1325032962803328478
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -104,6 +105,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1f68c35d995c3b4e9714f07b5d7b1f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _DamageRatioOnPart: 1
 --- !u!136 &1325032962808356024
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -258,9 +260,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _Main:
     _HPMaximum: 1000
-    _HPCurrent: 1000
-    _MPMaximum: 10
-    _MPCurrent: 10
+    _Attack: 1000
+    _Defense: 1000
+    _Magic: 1000
+    _Shield: 1000
+    _Rapid: 1000
+    _Technique: 1000
+    _Luck: 1000
+  _HPCurrent: 1000
+  _MPMaximum: 20
+  _MPCurrent: 20
   _Sub:
     _LockMaxRange: 30
     _ComboProximityRange: 5
@@ -282,7 +291,7 @@ MonoBehaviour:
     ComboNormal: 1
     ComboFinish: 0
   _AttackAreas: []
-  _EnemyHPCorrection: 10
+  _EnemyHPCorrection: 1
 --- !u!114 &1325032963011884370
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -383,6 +392,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1f68c35d995c3b4e9714f07b5d7b1f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _DamageRatioOnPart: 1
 --- !u!136 &1325032963930168146
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -2112,6 +2122,19 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 139696, guid: eb58e8f2831a51f45a44a261e6710cdd, type: 3}
   m_PrefabInstance: {fileID: 1325032963226242938}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1325032963216891534
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1325032963226382026}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d8f1f18b1c8aad4fa54591d286487e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _AppearOnAttack: []
 --- !u!114 &1325032963216891535
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2129,19 +2152,6 @@ MonoBehaviour:
   _globalClockKey: Enemy
   _rewindable: 0
   _recordingDuration: 30
---- !u!114 &1325032963216891534
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1325032963226382026}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7d8f1f18b1c8aad4fa54591d286487e5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _AppearOnAttack: []
 --- !u!4 &1325032963226668694 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 492012, guid: eb58e8f2831a51f45a44a261e6710cdd, type: 3}
