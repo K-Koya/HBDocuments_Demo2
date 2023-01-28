@@ -149,6 +149,9 @@ public enum AnimationKind : ushort
     /// <summary>空中フィニッシュ</summary>
     ComboAirFinish,
 
+    /* 共通技モーション */
+    /// <summary>魔法弾のようなものを発射</summary>
+    AttackMagicShoot = 2000,
 
 }
 

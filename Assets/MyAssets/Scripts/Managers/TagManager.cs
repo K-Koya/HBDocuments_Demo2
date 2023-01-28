@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class TagManager : Singleton<TagManager>
 {
+    [Header("タグ名を以下にアサイン")]
+
     #region メンバ
     [SerializeField, Tooltip("メインカメラのタグ")]
     string _MainCamera = "MainCamera";

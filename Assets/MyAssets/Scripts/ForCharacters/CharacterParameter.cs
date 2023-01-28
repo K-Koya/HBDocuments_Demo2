@@ -9,7 +9,7 @@ abstract public class CharacterParameter : MonoBehaviour
 {
     #region 定数
     /// <summary>受けた攻撃IDの履歴をとる個数</summary>
-    public const byte NUMBER_OF_RECORD_GAVE_ATTACK_ID = 5;
+    public const byte NUMBER_OF_RECORD_GAVE_ATTACK_ID = 8;
 
     #endregion
 
@@ -32,10 +32,10 @@ abstract public class CharacterParameter : MonoBehaviour
     protected short _HPCurrent = 1000;
 
     [SerializeField, Tooltip("最大MP")]
-    protected float _MPMaximum = 20f;
+    protected float _MPMaximum = 100f;
 
     [SerializeField, Tooltip("現在のMP")]
-    protected float _MPCurrent = 20f;
+    protected float _MPCurrent = 100f;
     #endregion
 
     #region サブパラメータ
@@ -102,7 +102,7 @@ abstract public class CharacterParameter : MonoBehaviour
     protected AttackCollision[] _AttackAreas = null;
 
     /// <summary>受けた攻撃のID履歴</summary>
-    protected Stack<byte> _GaveAttackIDs = new Stack<byte>(NUMBER_OF_RECORD_GAVE_ATTACK_ID);
+    protected Queue<byte> _GaveAttackIDs = new Queue<byte>(NUMBER_OF_RECORD_GAVE_ATTACK_ID);
     #endregion
 
 
@@ -148,7 +148,7 @@ abstract public class CharacterParameter : MonoBehaviour
     /// <summary>攻撃範囲情報</summary>
     public AttackCollision[] AttackAreas => _AttackAreas;
     /// <summary>受けた攻撃のID履歴</summary>
-    public Stack<byte> GaveAttackIDs => _GaveAttackIDs;
+    public Queue<byte> GaveAttackIDs => _GaveAttackIDs;
     #endregion
 
     /// <summary>本クラスの静的メンバに自コンポーネントを登録させるメソッド</summary>
@@ -181,7 +181,7 @@ abstract public class CharacterParameter : MonoBehaviour
         //被攻撃履歴を初期化
         for(int i = 0; i < NUMBER_OF_RECORD_GAVE_ATTACK_ID; i++)
         {
-            _GaveAttackIDs.Push(byte.MaxValue);
+            _GaveAttackIDs.Enqueue(byte.MaxValue);
         }
     }
 
@@ -220,6 +220,7 @@ abstract public class CharacterParameter : MonoBehaviour
                 _Acceptance.Gurad = true;
                 _Acceptance.ComboNormal = true;
                 _Acceptance.ComboFinish = false;
+                _Acceptance.Command = true;
                 _IsSyncDirection = true;
 
                 break;
@@ -231,6 +232,7 @@ abstract public class CharacterParameter : MonoBehaviour
                 _Acceptance.Gurad = true;
                 _Acceptance.ComboNormal = true;
                 _Acceptance.ComboFinish = false;
+                _Acceptance.Command = true;
                 _IsSyncDirection = true;
 
                 break;
@@ -243,6 +245,7 @@ abstract public class CharacterParameter : MonoBehaviour
                 _Acceptance.Gurad = false;
                 _Acceptance.ComboNormal = true;
                 _Acceptance.ComboFinish = false;
+                _Acceptance.Command = true;
                 _IsSyncDirection = true;
 
                 break;
@@ -258,6 +261,7 @@ abstract public class CharacterParameter : MonoBehaviour
                         _Acceptance.Gurad = false;
                         _Acceptance.ComboNormal = false;
                         _Acceptance.ComboFinish = false;
+                        _Acceptance.Command = false;
                         _IsSyncDirection = false;
                         break;
 
@@ -271,6 +275,7 @@ abstract public class CharacterParameter : MonoBehaviour
                         _Acceptance.Gurad = true;
                         _Acceptance.ComboNormal = true;
                         _Acceptance.ComboFinish = false;
+                        _Acceptance.Command = true;
                         _IsSyncDirection = true;
                         break;
 
@@ -289,6 +294,7 @@ abstract public class CharacterParameter : MonoBehaviour
                         _Acceptance.Gurad = false;
                         _Acceptance.ComboNormal = false;
                         _Acceptance.ComboFinish = false;
+                        _Acceptance.Command = false;
                         _IsSyncDirection = false;
                         break;
 
@@ -302,6 +308,7 @@ abstract public class CharacterParameter : MonoBehaviour
                         _Acceptance.Gurad = false;
                         _Acceptance.ComboNormal = true;
                         _Acceptance.ComboFinish = false;
+                        _Acceptance.Command = true;
                         _IsSyncDirection = true;
                         break;
                 }
@@ -315,6 +322,7 @@ abstract public class CharacterParameter : MonoBehaviour
                 _Acceptance.Gurad = true;
                 _Acceptance.ComboNormal = false;
                 _Acceptance.ComboFinish = false;
+                _Acceptance.Command = false;
 
                 break;
             case MotionState.StateKind.ComboNormal:
@@ -330,6 +338,7 @@ abstract public class CharacterParameter : MonoBehaviour
                         _Acceptance.Gurad = false;
                         _Acceptance.ComboNormal = true;
                         _Acceptance.ComboFinish = true;
+                        _Acceptance.Command = false;
 
                         break;
                     case MotionState.ProcessKind.EndSoon:
@@ -342,6 +351,7 @@ abstract public class CharacterParameter : MonoBehaviour
                         _Acceptance.Gurad = true;
                         _Acceptance.ComboNormal = true;
                         _Acceptance.ComboFinish = false;
+                        _Acceptance.Command = true;
 
                         break;
                     default:
@@ -352,9 +362,55 @@ abstract public class CharacterParameter : MonoBehaviour
                         _Acceptance.Gurad = false;
                         _Acceptance.ComboNormal = false;
                         _Acceptance.ComboFinish = false;
+                        _Acceptance.Command = false;
 
                         break;
                 }
+
+                break;
+            case MotionState.StateKind.AttackCommand:
+            case MotionState.StateKind.HealCommand:
+            case MotionState.StateKind.SupportCommand:
+                switch (_State.Process)
+                {
+                    case MotionState.ProcessKind.Interval:
+                        _Acceptance.Move = false;
+                        _Acceptance.Jump = false;
+                        _Acceptance.ShiftSlide = false;
+                        _Acceptance.LongTrip = false;
+                        _Acceptance.Gurad = false;
+                        _Acceptance.ComboNormal = true;
+                        _Acceptance.ComboFinish = true;
+                        _Acceptance.Command = false;
+
+                        break;
+                    case MotionState.ProcessKind.EndSoon:
+                        _State.Kind = MotionState.StateKind.Stay;
+                        _State.Process = MotionState.ProcessKind.Playing;
+                        _Acceptance.Move = true;
+                        _Acceptance.Jump = true;
+                        _Acceptance.ShiftSlide = true;
+                        _Acceptance.LongTrip = true;
+                        _Acceptance.Gurad = true;
+                        _Acceptance.ComboNormal = true;
+                        _Acceptance.ComboFinish = false;
+                        _Acceptance.Command = true;
+
+                        break;
+                    default:
+                        _Acceptance.Move = false;
+                        _Acceptance.Jump = false;
+                        _Acceptance.ShiftSlide = false;
+                        _Acceptance.LongTrip = false;
+                        _Acceptance.Gurad = false;
+                        _Acceptance.ComboNormal = false;
+                        _Acceptance.ComboFinish = false;
+                        _Acceptance.Command = true;
+
+                        break;
+                }
+
+
                 break;
             case MotionState.StateKind.Hurt:
                 switch (_State.Process)
@@ -368,6 +424,7 @@ abstract public class CharacterParameter : MonoBehaviour
                         _Acceptance.Gurad = false;
                         _Acceptance.ComboNormal = false;
                         _Acceptance.ComboFinish = false;
+                        _Acceptance.Command = false;
                         _IsSyncDirection = false;
                         break;
 
@@ -381,6 +438,7 @@ abstract public class CharacterParameter : MonoBehaviour
                         _Acceptance.Gurad = false;
                         _Acceptance.ComboNormal = true;
                         _Acceptance.ComboFinish = false;
+                        _Acceptance.Command = true;
                         _IsSyncDirection = true;
                         break;
                 }

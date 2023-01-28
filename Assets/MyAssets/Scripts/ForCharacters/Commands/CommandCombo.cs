@@ -5,11 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public class CommandCombo : CommandActiveSkillBase
 {
-    [SerializeField, Tooltip("コンボの手数（フィニッシュを含む）")]
-    byte _NumberOfStep = 5;
-
     /// <summary>今のコンボの手数</summary>
-    [SerializeField]
     byte _Step = 0;
 
     
@@ -32,7 +28,7 @@ public class CommandCombo : CommandActiveSkillBase
 
         //規定数コンボを打ったかで分岐
         //コンボ途中
-        if (_Step < _NumberOfStep)
+        if (_Step < _Count)
         {
             //走行状態かで分岐
             if (param.State.Kind == MotionState.StateKind.Run)

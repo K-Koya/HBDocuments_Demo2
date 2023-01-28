@@ -36,6 +36,12 @@ public class MotionState
         Guard,
         /// <summary>通常コンボ中の状態</summary>
         ComboNormal,
+        /// <summary>攻撃コマンドを実行状態</summary>
+        AttackCommand,
+        /// <summary>回復コマンドを実行状態</summary>
+        HealCommand,
+        /// <summary>サポートコマンドを実行状態</summary>
+        SupportCommand,
         /// <summary>ダメージを受けたりしてひるんでいる状態</summary>
         Hurt,
     }

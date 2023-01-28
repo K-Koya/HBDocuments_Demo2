@@ -8,8 +8,29 @@ public class AttackCollision : MonoBehaviour
     /// <summary>攻撃を当てた相手の被弾コライダーに受け渡す攻撃情報</summary>
     AttackInformation _AttackInfo = null;
 
+    [SerializeField, Tooltip("攻撃を当てた時に出るエフェクトのプレハブ")]
+    GameObject _HitEffectPref = null;
+
+    /// <summary>攻撃を当てた時に出るエフェクトのプール</summary>
+    GameObjectPool _HitEffects = null;
+
     /// <summary>攻撃を当てた相手の被弾コライダーに受け渡す攻撃情報</summary>
     public AttackInformation AttackInfo { get => _AttackInfo; set => _AttackInfo = value; }
+
+    void Start()
+    {
+        if (_HitEffectPref)
+        {
+            _HitEffects = new GameObjectPool(_HitEffectPref, 5);
+        }
+    }
+
+    /// <summary>DamageCollision側で呼び出す、ヒットエフェクトの発生メソッド</summary>
+    public void CallHitEffect()
+    {
+        GameObject eff = _HitEffects.Instansiate();
+        eff.transform.position = transform.position;
+    }
 }
 
 /// <summary>攻撃コライダーから被弾コライダーに受け渡す攻撃情報</summary>

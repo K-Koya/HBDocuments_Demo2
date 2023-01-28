@@ -22,4 +22,7 @@ public class InputAcceptance
 
     /// <summary>true : コンボフィニッシュを受け付ける</summary>
     public bool ComboFinish = false;
+
+    /// <summary>true : コマンド入力を受け付ける</summary>
+    public bool Command = true;
 }

@@ -7,7 +7,7 @@ public abstract class CommandBase
     [SerializeField, Tooltip("コマンド名")]
     protected string _Name = "";
 
-    [SerializeField, Tooltip("コマンド説明文"), TextArea(2, 3)]
+    [SerializeField, Tooltip("コマンド説明文"), TextArea(3, 5)]
     protected string _Explain = "";
 
     /// <summary>コマンド名</summary>
@@ -15,6 +15,10 @@ public abstract class CommandBase
 
     /// <summary>コマンド説明文</summary>
     public string Explain { get => _Explain; }
+
+
+    /// <summary>コマンド初期化処理</summary>
+    public virtual void Initialize() { }
 }
 
 /// <summary>攻撃情報リストを構成するカラム</summary>

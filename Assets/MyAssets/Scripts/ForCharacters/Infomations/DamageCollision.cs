@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class DamageCollision : MonoBehaviour
@@ -32,8 +33,8 @@ public class DamageCollision : MonoBehaviour
                 //攻撃IDが異なればダメージの判定をかける
                 if(!_Param.GaveAttackIDs.Contains(newGot.AttackInfo.AttackID))
                 {
-                    _Param.GaveAttackIDs.Pop();
-                    _Param.GaveAttackIDs.Push(newGot.AttackInfo.AttackID);
+                    _Param.GaveAttackIDs.Dequeue();
+                    _Param.GaveAttackIDs.Enqueue(newGot.AttackInfo.AttackID);
 
                     MainParameter atkParam = newGot.AttackInfo.AttackerParam;
                     int atk_min_def = atkParam.Attack - _Param.Main.Defense;
@@ -50,7 +51,11 @@ public class DamageCollision : MonoBehaviour
                         damage += DamageCalculatorParamMin1000To1000(mag_min_sld, DAMAGE_ON_MIN_1000, DAMAGE_ON_1000) * attackPower.MagicDamageRatio / 100;
                     }
 
+                    //HP減少
                     _Param.GaveDamage((int)(damage * _DamageRatioOnPart));
+
+                    //エフェクト発生
+                    newGot.CallHitEffect();
 
                     Debug.Log($"{_Param.name} が {damage} ダメージをうけた！");
                 }

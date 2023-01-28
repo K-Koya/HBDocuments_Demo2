@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class LayerManager : Singleton<LayerManager>
 {
+    [Header("以下に対応レイヤを指定")]
+
     #region メンバ
     [SerializeField, Tooltip("地面レイヤ")]
     LayerMask _Ground = default;
