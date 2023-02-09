@@ -1,0 +1,8 @@
+﻿CommandID,CommandName,Explain,MPCost,MaxInventry,NumberOfCombo
+0,EMPTY,スキルコマンドが未挿入です。,-1,-1,-1
+AttackPowerTable,,,,,
+ID,RatioForAttack,RatioForMagic,AdditionalEffectID,AdditionalEffectRatio,
+-1,-1,-1,-1,-1,
+HealPowerTable,,,,,
+ID,HealRatio,HealValue,Time,,
+-1,-1,-1,-1,,

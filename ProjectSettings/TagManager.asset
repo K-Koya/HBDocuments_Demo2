@@ -21,8 +21,8 @@ TagManager:
   - Player
   - Allies
   - Enemy
-  - AlliesDamager
-  - EnemyDamager
+  - AlliesAttacker
+  - EnemyAttacker
   - EnemyMove
   - 
   - 

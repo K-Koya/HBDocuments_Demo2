@@ -14220,7 +14220,7 @@ AnimationClip:
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
-    intParameter: 2
+    intParameter: 101
     messageOptions: 0
   - time: 0.16666667
     functionName: ProcessCallPreparation
@@ -14248,7 +14248,7 @@ AnimationClip:
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
-    intParameter: 3
+    intParameter: 200
     messageOptions: 0
   - time: 0.6666667
     functionName: ProcessCallPreparation

@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class CommandCombo : CommandActiveSkillBase
+public class CommandCombo : CommandActiveSkillBase, ICSVDataConverter
 {
+    /// <summary>情報取得対象のCSVファイルパス</summary>
+    const string LOAD_CSV_PATH = "CSV/Command/Combo.csv";
+
     /// <summary>今のコンボの手数</summary>
     byte _Step = 0;
 
-    
-    public CommandCombo()
+    public override void Initialize()
     {
-        _Name = "通常コンボ";
-        _Explain = "通常攻撃。停止時や移動時など特別な行動を起こしていないときに、通常攻撃ボタンで武器を振る。\n攻撃後に続けて振ることもでき、特定回数振ると強めの攻撃が出る。";
+        CSVToMembers(CSVIO.LoadCSV(LOAD_CSV_PATH));
     }
 
     /// <summary>コンボ攻撃を要求するメソッド</summary>
@@ -99,5 +100,21 @@ public class CommandCombo : CommandActiveSkillBase
     public void CountReset()
     {
         _Step = 1;
+    }
+
+    public List<string> MembersToCSV()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void CSVToMembers(List<string[]> csv)
+    {
+        _Name = csv[1][1];
+        _Explain = csv[1][2];
+        _Count = byte.Parse(csv[1][3]);
+        for (int i = 0; i < csv.Count; i++)
+        {
+            _AttackPowerTable[i] = new AttackPowerColumn(short.Parse(csv[4][0]), short.Parse(csv[4][1]), short.Parse(csv[4][2]));
+        }
     }
 }

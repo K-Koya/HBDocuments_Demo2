@@ -13,7 +13,7 @@ public class CommandActiveSkillBase : CommandBase
     protected byte _Count = 1;
 
     [SerializeField, Tooltip("攻撃情報テーブル")]
-    AttackPowerColumn[] _AttackPowerTable = null;
+    protected AttackPowerColumn[] _AttackPowerTable = null;
 
     [SerializeField, Tooltip("true : コマンド施工中")]
     protected bool _IsRunning = false;
@@ -60,6 +60,16 @@ public class CommandActiveSkillBase : CommandBase
     /// <param name="reticleDirection">照準方向</param>
     /// <param name="animKind">要求するアニメーションの種類</param>
     public virtual void Running(CharacterParameter param, Rigidbody rb, Vector3 gravityDirection, Vector3 reticleDirection, ref AnimationKind animKind)
+    {
+
+    }
+
+    /// <summary>コマンド終了時</summary>
+    /// <param name="param">該当キャラクターのパラメータ</param>
+    /// <param name="rb">リジッドボディ</param>
+    /// <param name="gravityDirection">重力方向</param>
+    /// <param name="animKind">要求するアニメーションの種類</param>
+    public virtual void PostProcess(CharacterParameter param, Rigidbody rb, Vector3 gravityDirection, ref AnimationKind animKind)
     {
 
     }

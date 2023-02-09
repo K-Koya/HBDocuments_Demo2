@@ -1,0 +1,6 @@
+﻿CommandID,CommandName,Explain,MPCost,MaxInventry,NumberOfCombo
+0,ジャンプターン,その場でジャンプしつつ、こちらの方向へ向き直ります。着地時に衝撃波を発生させます。,0,-1,-1
+AttackPowerTable,,,,,
+ID,RatioForAttack,RatioForMagic,AdditionalEffectID,AdditionalEffectRatio,
+0,100,0,0,-1,
+1,0,100,0,-1,

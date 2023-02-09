@@ -18,7 +18,7 @@ public class CommandShiftSlideBase : CommandBase
     public virtual void ShiftSlideOrder(CharacterParameter param, Rigidbody rb, Vector3 gravityDirection, ref AnimationKind animKind)
     {
         rb.velocity = Vector3.Project(rb.velocity, gravityDirection);
-        rb.AddForce(param.Direction * 6f, ForceMode.VelocityChange);
+        rb.AddForce(param.MoveDirection * 6f, ForceMode.VelocityChange);
         param.State.Kind = MotionState.StateKind.ShiftSlide;
         param.State.Process = MotionState.ProcessKind.Playing;
     }

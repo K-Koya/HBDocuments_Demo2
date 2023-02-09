@@ -17,7 +17,7 @@ public class CommandHolder : MonoBehaviour
     [SerializeField, Tooltip("長距離回避コマンド")]
     CommandLongTripBase _CommandLongTrip = new CommandLongTripBase();
 
-    [SerializeReference, SelectableSerializeReference, Tooltip("アクティブスキルコマンドのリスト")]
+    [SerializeField, Tooltip("アクティブスキルコマンドのリスト")]
     CommandActiveSkillBase[] _ActiveSkills = null;
 
     [SerializeField, Tooltip("コンボコマンド")]
@@ -90,5 +90,16 @@ public class CommandHolder : MonoBehaviour
         _CommandJump.Initialize();
         _CommandShiftSlide.Initialize();
         _CommandLongTrip.Initialize();
+    }
+
+    /// <summary>コードからコマンドをセットするメソッド</summary>
+    /// <param name="commands">対象のアクティブスキルコマンド</param>
+    public void SetActiveSkills(params CommandActiveSkillBase[] commands)
+    {
+        _ActiveSkills = new CommandActiveSkillBase[NUMBER_OF_ACTIVE_SKILL];
+        for(int i = 0; i < NUMBER_OF_ACTIVE_SKILL; i++)
+        {
+            _ActiveSkills[i] = commands[i];
+        }
     }
 }

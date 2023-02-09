@@ -19,6 +19,10 @@ public abstract class CommandBase
 
     /// <summary>コマンド初期化処理</summary>
     public virtual void Initialize() { }
+
+    /// <summary>何かしらオブジェクトを生成する処理</summary>
+    /// <param name="index">種類</param>
+    public virtual void ObjectCreation(int index) { }
 }
 
 /// <summary>攻撃情報リストを構成するカラム</summary>
@@ -33,18 +37,20 @@ public class AttackPowerColumn
 
     [SerializeField, Tooltip("間接攻撃の威力補正値(%)")]
     short _MagicDamageRatio = 0;
-
-    [SerializeField, Tooltip("攻撃時に使う当たり判定添え字集")]
-    short[] _ActivateAreasIndex = null;
-
+    
     /// <summary>テーブルカラムのID nこれをキーに攻撃情報をとる</summary>
     public short ID { get => _ID; }
     /// <summary>直接攻撃の威力補正値(%)</summary>
     public short DamageRatio { get => _DamageRatio; }
     /// <summary>間接攻撃の威力補正値(%)</summary>
     public short MagicDamageRatio { get => _MagicDamageRatio; }
-    /// <summary>攻撃時に使う当たり判定添え字集</summary>
-    public short[] ActivateAreasIndex { get => _ActivateAreasIndex; }
+
+    public AttackPowerColumn(short iD, short damageRatio, short magicDamageRatio)
+    {
+        _ID = iD;
+        _DamageRatio = damageRatio;
+        _MagicDamageRatio = magicDamageRatio;
+    }
 }
 
 /// <summary>回復情報リストを構成するカラム</summary>
@@ -66,4 +72,11 @@ public class HealPowerColumn
     public short HealRatioByHP { get => _HealRatioByHP; }
     /// <summary>回復に費やす時間(s)</summary>
     public byte HealTime { get => _HealTime; }
+
+    public HealPowerColumn(short iD, short healRatioByHP, byte healTime)
+    {
+        _ID = iD;
+        _HealRatioByHP = healRatioByHP;
+        _HealTime = healTime;
+    }
 }

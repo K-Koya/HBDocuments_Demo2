@@ -8,6 +8,12 @@ using UnityEditor;
 using UnityEngine.Assertions;
 #endif
 
+/*
+ * インスペクター上のアクティブコマンドリストで、プルダウンから派生したスキルを選べるようにする
+ * 
+ * TODO
+ * コードの内容を理解して、親クラスのオブジェクトもプルダウンに出せるようにする
+ */
 [AttributeUsage(AttributeTargets.Field)]
 public sealed class SelectableSerializeReferenceAttribute : PropertyAttribute
 {

@@ -1,0 +1,9 @@
+﻿Order,CharacterID,CharacterName,Speed,IsSkipable,Sentence,IsAnimationStep
+1,5,カナ,0.2,TRUE,ほっ　ほっ　ほっ　ほっ,TRUE
+2,5,カナ,1,TRUE,ふぃ～～,TRUE
+3,3,ミナヒト,0.5,TRUE,お～い！　かなっち～！,TRUE
+4,3,ミナヒト,0.5,TRUE,どう？　見つかった？,TRUE
+5,5,カナ,1,TRUE,うん、このあたりだと思うよ。,TRUE
+6,5,カナ,1,TRUE,ほんのちょっとだけど地響きもするね。,FALSE
+7,3,ミナヒト,1,TRUE,分かった。それじゃあ行こう！,TRUE
+8,5,カナ,1,TRUE,よーし！,TRUE

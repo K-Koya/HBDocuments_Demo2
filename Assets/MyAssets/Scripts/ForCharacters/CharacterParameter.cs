@@ -76,11 +76,11 @@ abstract public class CharacterParameter : MonoBehaviour
     /// <summary>当該キャラクターが持つ時間軸コンポーネント</summary>
     protected Timeline _Tl = null;
 
-    /// <summary>true : キャラクターの向きと移動方向を同期する</summary>
-    protected bool _IsSyncDirection = true;
+    /// <summary>キャラクターの向き情報</summary>
+    protected Vector3 _CharacterDirection = default;
 
-    /// <summary>キャラクター正面方向情報</summary>
-    protected Vector3 _Direction = default;
+    /// <summary>キャラクターの移動方向情報</summary>
+    protected Vector3 _MoveDirection = default;
 
     [SerializeField, Tooltip("攻撃を受ける対象のレイヤー")]
     protected LayerMask _HostilityLayer = default;
@@ -98,8 +98,16 @@ abstract public class CharacterParameter : MonoBehaviour
     protected InputAcceptance _Acceptance = null;
 
 
+    [System.Serializable]
+    public class CollidersForOneWeapon
+    {
+        [SerializeField]
+        public AttackCollision[] _AttackCollisions = null;
+    }
     [SerializeField, Tooltip("攻撃範囲情報")]
-    protected AttackCollision[] _AttackAreas = null;
+    protected CollidersForOneWeapon[] _AttackAreas = null;
+
+
 
     /// <summary>受けた攻撃のID履歴</summary>
     protected Queue<byte> _GaveAttackIDs = new Queue<byte>(NUMBER_OF_RECORD_GAVE_ATTACK_ID);
@@ -116,12 +124,14 @@ abstract public class CharacterParameter : MonoBehaviour
 
     /// <summary>メインパラメータ</summary>
     public MainParameter Main => _Main;
+    /// <summary>最大のHP</summary>
+    public virtual short HPMaximum { get => _Main.HPMaximum; }
     /// <summary>現在のHP</summary>
-    public short HPCurrent { get => _HPCurrent; }
+    public virtual short HPCurrent { get => _HPCurrent; }
     /// <summary>最大MP</summary>
-    public float MPMaximum { get => _MPMaximum; }
+    public virtual float MPMaximum { get => _MPMaximum; }
     /// <summary>現在のMP</summary>
-    public float MPCurrent { get => _MPCurrent; }
+    public virtual float MPCurrent { get => _MPCurrent; }
     /// <summary>サブパラメータ</summary>
     public SubParameter Sub => _Sub;
 
@@ -129,10 +139,10 @@ abstract public class CharacterParameter : MonoBehaviour
     public Transform EyePoint { get => _EyePoint; set => _EyePoint = value; }
     /// <summary>本キャラクターの時間情報</summary>
     public Timeline Tl { get => _Tl; }
-    /// <summary>true : キャラクターの向きと移動方向を同期する</summary>
-    public bool IsSyncDirection { get => _IsSyncDirection; set => _IsSyncDirection = value; }
-    /// <summary>キャラクター正面方向情報</summary>
-    public Vector3 Direction { get => _Direction; set => _Direction = value; }
+    /// <summary>キャラクターの向き情報</summary>
+    public Vector3 CharacterDirection { get => _CharacterDirection; set => _CharacterDirection = value; }
+    /// <summary>キャラクターの移動方向情報</summary>
+    public Vector3 MoveDirection { get => _MoveDirection; set => _MoveDirection = value; }
     /// <summary>攻撃を受ける対象のレイヤー</summary>
     public LayerMask HostilityLayer { get => _HostilityLayer; }
     /// <summary>注視している相手のパラメータ</summary>
@@ -146,7 +156,7 @@ abstract public class CharacterParameter : MonoBehaviour
     public InputAcceptance Can { get => _Acceptance; }
 
     /// <summary>攻撃範囲情報</summary>
-    public AttackCollision[] AttackAreas => _AttackAreas;
+    public CollidersForOneWeapon[] AttackAreas => _AttackAreas;
     /// <summary>受けた攻撃のID履歴</summary>
     public Queue<byte> GaveAttackIDs => _GaveAttackIDs;
     #endregion
@@ -221,7 +231,6 @@ abstract public class CharacterParameter : MonoBehaviour
                 _Acceptance.ComboNormal = true;
                 _Acceptance.ComboFinish = false;
                 _Acceptance.Command = true;
-                _IsSyncDirection = true;
 
                 break;
             case MotionState.StateKind.Run:
@@ -233,7 +242,6 @@ abstract public class CharacterParameter : MonoBehaviour
                 _Acceptance.ComboNormal = true;
                 _Acceptance.ComboFinish = false;
                 _Acceptance.Command = true;
-                _IsSyncDirection = true;
 
                 break;
             case MotionState.StateKind.JumpNoraml:
@@ -246,7 +254,6 @@ abstract public class CharacterParameter : MonoBehaviour
                 _Acceptance.ComboNormal = true;
                 _Acceptance.ComboFinish = false;
                 _Acceptance.Command = true;
-                _IsSyncDirection = true;
 
                 break;
             case MotionState.StateKind.ShiftSlide:
@@ -262,7 +269,6 @@ abstract public class CharacterParameter : MonoBehaviour
                         _Acceptance.ComboNormal = false;
                         _Acceptance.ComboFinish = false;
                         _Acceptance.Command = false;
-                        _IsSyncDirection = false;
                         break;
 
                     case MotionState.ProcessKind.EndSoon:
@@ -276,7 +282,6 @@ abstract public class CharacterParameter : MonoBehaviour
                         _Acceptance.ComboNormal = true;
                         _Acceptance.ComboFinish = false;
                         _Acceptance.Command = true;
-                        _IsSyncDirection = true;
                         break;
 
                 }
@@ -295,7 +300,6 @@ abstract public class CharacterParameter : MonoBehaviour
                         _Acceptance.ComboNormal = false;
                         _Acceptance.ComboFinish = false;
                         _Acceptance.Command = false;
-                        _IsSyncDirection = false;
                         break;
 
                     case MotionState.ProcessKind.EndSoon:
@@ -309,7 +313,6 @@ abstract public class CharacterParameter : MonoBehaviour
                         _Acceptance.ComboNormal = true;
                         _Acceptance.ComboFinish = false;
                         _Acceptance.Command = true;
-                        _IsSyncDirection = true;
                         break;
                 }
 
@@ -327,7 +330,6 @@ abstract public class CharacterParameter : MonoBehaviour
                 break;
             case MotionState.StateKind.ComboNormal:
 
-                _IsSyncDirection = true;
                 switch (_State.Process)
                 {
                     case MotionState.ProcessKind.Interval:
@@ -425,7 +427,6 @@ abstract public class CharacterParameter : MonoBehaviour
                         _Acceptance.ComboNormal = false;
                         _Acceptance.ComboFinish = false;
                         _Acceptance.Command = false;
-                        _IsSyncDirection = false;
                         break;
 
                     case MotionState.ProcessKind.EndSoon:
@@ -439,7 +440,6 @@ abstract public class CharacterParameter : MonoBehaviour
                         _Acceptance.ComboNormal = true;
                         _Acceptance.ComboFinish = false;
                         _Acceptance.Command = true;
-                        _IsSyncDirection = true;
                         break;
                 }
                 break;

@@ -13,8 +13,6 @@ public static class CSVIO
     /// <summary> 改行コード </summary>
     public const string _LINE_CODE = "END_ROW";
 
-
-
     /// <summary>
     /// リスト先頭のCSVファイル名のファイルに、以降のリストメンバを書きこむ
     /// </summary>
@@ -50,13 +48,13 @@ public static class CSVIO
     /// </summary>
     /// <param name="path"> 読みだすファイル名 </param>
     /// <returns> 読みだした文字列リストのデータ </returns>
-    public static List<string> LoadCSV(string path)
+    public static List<string[]> LoadCSV(string path)
     {
         //csvファイル用変数
         TextAsset csvFile = Resources.Load(path) as TextAsset;
-        
+
         //データ格納用文字列
-        List<string> datam = new List<string>();
+        List<string[]> datam = new List<string[]>();
 
         try
         {
@@ -70,8 +68,7 @@ public static class CSVIO
                     string[] readed = reader.ReadLine().Split(',');
 
                     //リストに格納
-                    datam.AddRange(readed);
-                    datam.Add(_LINE_CODE);
+                    datam.Add(readed);
                 }
             }
 
@@ -98,5 +95,5 @@ public interface ICSVDataConverter
 
     /// <summary> 渡されたリストからメンバ変数へ投げ込む </summary>
     /// <param name="csv"> CSVファイルから渡されたであろうデータ群 </param>
-    public void CSVToMembers(List<string> csv);
+    public void CSVToMembers(List<string[]> csv);
 }

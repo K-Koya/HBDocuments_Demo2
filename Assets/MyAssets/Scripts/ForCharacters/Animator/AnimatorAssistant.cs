@@ -86,6 +86,13 @@ public class AnimatorAssistant : MonoBehaviour
         _Cm.ProcessCallEndSoon();
     }
 
+    /// <summary>実行中コマンドの打ち出したいオブジェクトをアクティブ化する</summary>
+    /// <param name="index">種類</param>
+    public void CommandObjectShootCall(int index)
+    {
+        _Cm.CommandObjectShootCall(index);
+    }
+
     /// <summary>アニメーションイベントにて、攻撃判定を開始したい旨を受け取る</summary>
     /// <param name="id">AttackPowerTableにアクセスしたいカラムID</param>
     public void AttackCallStart(int id)
@@ -123,7 +130,7 @@ public enum AnimationKind : ushort
     GuardAirFoward,
     GuardAirBack,
 
-    UseItemSpray = 500,
+    UseItemSpray = 300,
     UseItemFood,
     UseItemDrink,
 
@@ -152,7 +159,10 @@ public enum AnimationKind : ushort
     /* 共通技モーション */
     /// <summary>魔法弾のようなものを発射</summary>
     AttackMagicShoot = 2000,
-
+    /// <summary>レーザーなどをその場から照射</summary>
+    AttackLaserShoot = 2001,
+    /// <summary>レーザーなどをその場でスイングしつつ照射</summary>
+    AttackLaserShootSwing = 2002,
 }
 
 /// <summary>ダメージモーションの種類</summary>

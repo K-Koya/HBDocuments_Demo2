@@ -4,12 +4,20 @@ using UnityEngine;
 
 public class EnemyParameter : CharacterParameter
 {
+
     [Header("à»â∫ Enemy êÍóp")]
     [SerializeField, Tooltip("ã≠ìGóp:HPã≠âªî{ó¶")]
     sbyte _EnemyHPCorrection = 0;
 
     /// <summary>HPã≠âªî{ó¶ÇÃåªç›íl</summary>
     sbyte _EnemyHPCorrectionCurrent = 0;
+
+
+    /// <summary>ç≈ëÂÇÃHP</summary>
+    public override short HPMaximum { get => (short)(_Main.HPMaximum * _EnemyHPCorrection); }
+    /// <summary>åªç›ÇÃHP</summary>
+    public override short HPCurrent { get => (short)(_HPCurrent + _Main.HPMaximum * _EnemyHPCorrectionCurrent); }
+
 
     protected override void EraseStaticReference()
     {

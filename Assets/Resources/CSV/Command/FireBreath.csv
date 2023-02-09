@@ -1,0 +1,5 @@
+﻿CommandID,CommandName,Explain,MPCost,MaxInventry,NumberOfCombo
+0,ファイアブレス,口から炎を吐き、左右を往復するように炎を浴びせかけます。,50,-1,-1
+AttackPowerTable,,,,,
+ID,RatioForAttack,RatioForMagic,AdditionalEffectID,AdditionalEffectRatio,
+0,0,30,1,100,

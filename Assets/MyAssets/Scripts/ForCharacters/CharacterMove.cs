@@ -43,10 +43,13 @@ abstract public class CharacterMove : MonoBehaviour
     protected Vector3 _ForceOfBrake = Vector3.zero;
 
     /// <summary>移動用メソッド</summary>
-    protected System.Action Move = null;
+    protected System.Action Movement = null;
 
     /// <summary>各種行動用メソッド</summary>
     protected System.Action Act = null;
+
+    /// <summary>被ダメージメソッド</summary>
+    protected System.Action Damaged = null;
 
     /// <summary>コマンドを格納するコンポーネント</summary>
     protected CommandHolder _CommandHolder = null;
@@ -75,7 +78,7 @@ abstract public class CharacterMove : MonoBehaviour
     /// <summary>ジャンプ直後フラグ</summary>
     public bool JumpFlag { get => _JumpFlag; }
     /// <summary>移動方向</summary>
-    public Vector3 MoveDirection { get => _Param.Direction; }
+    public Vector3 MoveDirection { get => _Param.MoveDirection; }
     /// <summary>利用するアニメーションの種類</summary>
     public AnimationKind AnimKind { get => _AnimKind; }
     #endregion
@@ -90,7 +93,8 @@ abstract public class CharacterMove : MonoBehaviour
 
         _CommandHolder = GetComponentInChildren<CommandHolder>();
 
-        _Rb = _Param.Tl.rigidbody;
+        Timeline tl = GetComponent<Timeline>();
+        _Rb = tl.rigidbody;
         _Rb.useGravity = false;
     }
 
@@ -104,7 +108,7 @@ abstract public class CharacterMove : MonoBehaviour
         _Speed = VelocityOnPlane.magnitude;
 
         //操作
-        Move?.Invoke();
+        Movement?.Invoke();
         Act?.Invoke();
 
         //臨戦態勢
@@ -120,20 +124,14 @@ abstract public class CharacterMove : MonoBehaviour
             //移動力がかかっている
             if (_MoveInputRate > 0f)
             {
-                Vector3 moveDirection = _Param.Direction;
-
                 //回転する
-                if (_Param.IsSyncDirection) 
-                {
-                    CharacterRotation(_Param.Direction, -GravityDirection, 360f);
-                    moveDirection = transform.forward;
-                }
+                CharacterRotation(_Param.CharacterDirection, -GravityDirection, 360f);
 
                 //力をかける
-                _Rb.AddForce(moveDirection * _MoveInputRate * _MovePower, ForceMode.Acceleration);
+                _Rb.AddForce(_Param.MoveDirection * _MoveInputRate * _MovePower, ForceMode.Acceleration);
 
                 //速度(向き)を、入力方向へ設定
-                _Rb.velocity = Quaternion.FromToRotation(Vector3.ProjectOnPlane(_Rb.velocity, -GravityDirection), moveDirection) * _Rb.velocity;
+                _Rb.velocity = Quaternion.FromToRotation(Vector3.ProjectOnPlane(_Rb.velocity, -GravityDirection), _Param.MoveDirection) * _Rb.velocity;
 
                 //重力をかける
                 _Rb.AddForce(GravityDirection * 2f, ForceMode.Acceleration);
@@ -157,10 +155,10 @@ abstract public class CharacterMove : MonoBehaviour
             if (_MoveInputRate > 0f)
             {
                 //回転する
-                if (_Param.IsSyncDirection) CharacterRotation(_Param.Direction, -GravityDirection, 90f);
+                CharacterRotation(_Param.CharacterDirection, -GravityDirection, 90f);
 
                 //力をかける
-                _Rb.AddForce(_Param.Direction * _MoveInputRate * _MovePower, ForceMode.Acceleration);
+                _Rb.AddForce(_Param.MoveDirection * _MoveInputRate * _MovePower, ForceMode.Acceleration);
             }
 
             //重力をかける
@@ -204,6 +202,7 @@ abstract public class CharacterMove : MonoBehaviour
         }
     }
 
+
     #region アニメーションイベント
 
     /// <summary>アニメーションイベントにて、アニメーション遷移におけるフリーズ回避のため、待機状態にする</summary>
@@ -240,27 +239,40 @@ abstract public class CharacterMove : MonoBehaviour
         _CommandHolder.Combo.CountReset();
     }
 
+    /// <summary>アニメーションイベントにて、実行中コマンドの打ち出したいオブジェクトをアクティブ化する</summary>
+    /// <param name="index">種類</param>
+    public void CommandObjectShootCall(int index)
+    {
+        _CommandHolder.Running?.ObjectCreation(index);
+    }
+
     /// <summary>アニメーションイベントにて、攻撃判定を開始したい旨を受け取る</summary>
     /// <param name="id">攻撃情報テーブルにアクセスしたいカラムID</param>
-    public void AttackCallStart(int id)
+    public void AttackCallStart(int twoIds)
     {
-        AttackPowerColumn apc = _CommandHolder.Running.GetAttackArea(id);
+        int attackInfoID = twoIds / 100;
+        int attackAreaID = twoIds % 100;
+
+        AttackPowerColumn apc = _CommandHolder.Running.GetAttackArea(attackInfoID);
         AttackInformation info = new AttackInformation(apc, _Param.Main);
 
-        for (int i = 0; i < apc.ActivateAreasIndex.Length; i++)
+        foreach(AttackCollision atkArea in _Param.AttackAreas[attackAreaID]._AttackCollisions)
         {
-            _Param.AttackAreas[apc.ActivateAreasIndex[i]].gameObject.SetActive(true);
-            _Param.AttackAreas[apc.ActivateAreasIndex[i]].AttackInfo = info;
+            atkArea.gameObject.SetActive(true);
+            atkArea.AttackInfo = info;
         }
     }
 
     /// <summary>アニメーションイベントにて、攻撃判定を終了したい旨を受け取る</summary>
     public void AttackCallEnd()
     {
-        foreach(AttackCollision ac in _Param.AttackAreas)
+        foreach(var atkAreas in _Param.AttackAreas)
         {
-            ac.gameObject.SetActive(false);
-            ac.AttackInfo = null;
+            foreach(AttackCollision ac in atkAreas._AttackCollisions)
+            {
+                ac.gameObject.SetActive(false);
+                ac.AttackInfo = null;
+            }
         }
     }
 

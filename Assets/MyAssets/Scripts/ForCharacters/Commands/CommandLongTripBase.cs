@@ -16,7 +16,7 @@ public class CommandLongTripBase : CommandBase
     /// <param name="rb">リジッドボディ</param>
     public virtual void LongTripOrder(CharacterParameter param, Rigidbody rb, ref AnimationKind animKind)
     {
-        rb.AddForce(param.Direction * 8f, ForceMode.VelocityChange);
+        rb.AddForce(param.MoveDirection * 8f, ForceMode.VelocityChange);
         param.State.Kind = MotionState.StateKind.LongTrip;
         param.State.Process = MotionState.ProcessKind.Playing;
     }

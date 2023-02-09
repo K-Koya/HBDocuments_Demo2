@@ -2152,9 +2152,12 @@ MonoBehaviour:
     Gurad: 1
     ComboNormal: 1
     ComboFinish: 0
+    Command: 1
   _AttackAreas:
-  - {fileID: 9063025638661196966}
-  - {fileID: 5188678129695918801}
+  - _AttackCollisions:
+    - {fileID: 9063025638661196966}
+  - _AttackCollisions:
+    - {fileID: 5188678129695918801}
 --- !u!114 &5390001580564868219
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3096,21 +3099,13 @@ MonoBehaviour:
     - _ID: 0
       _DamageRatio: 25
       _MagicDamageRatio: 0
-      _ActivateAreasIndex: 0000
-    - _ID: 1
-      _DamageRatio: 25
-      _MagicDamageRatio: 0
-      _ActivateAreasIndex: 0100
     - _ID: 2
       _DamageRatio: 50
       _MagicDamageRatio: 0
-      _ActivateAreasIndex: 0100
     - _ID: 3
       _DamageRatio: 100
       _MagicDamageRatio: 0
-      _ActivateAreasIndex: 0000
     _IsRunning: 0
-    _Step: 0
   _Running:
     _Name: EMPTY
     _Explain: "\u30B9\u30AD\u30EB\u30B3\u30DE\u30F3\u30C9\u304C\u672A\u633F\u5165\u3067\u3059\u3002"
@@ -3475,7 +3470,7 @@ GameObject:
   - component: {fileID: 3429903952835270492}
   - component: {fileID: 524874611580469151}
   - component: {fileID: 4762968385438287658}
-  m_Layer: 11
+  m_Layer: 8
   m_Name: Damager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3776,6 +3771,10 @@ PrefabInstance:
     serializedVersion: 2
     m_TransformParent: {fileID: 2723446668632706869}
     m_Modifications:
+    - target: {fileID: 5229837372199736468, guid: b6ee3fa30b9088246aa227219138d352, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
     - target: {fileID: 8231159433229081932, guid: b6ee3fa30b9088246aa227219138d352, type: 3}
       propertyPath: m_Name
       value: KanaSword
@@ -3856,6 +3855,10 @@ PrefabInstance:
     serializedVersion: 2
     m_TransformParent: {fileID: 8800621335714922715}
     m_Modifications:
+    - target: {fileID: 5229837372199736468, guid: b6ee3fa30b9088246aa227219138d352, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
     - target: {fileID: 8231159433229081932, guid: b6ee3fa30b9088246aa227219138d352, type: 3}
       propertyPath: m_Name
       value: KanaSword

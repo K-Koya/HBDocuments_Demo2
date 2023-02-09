@@ -14,7 +14,7 @@ public class PlayerMove : CharacterMove
         base.Start();
 
         _MainCameraTransform = Camera.main.transform;
-        Move = MoveByPlayer;
+        Movement = MoveByPlayer;
         Act = ActByPlayer;
     }
 
@@ -44,20 +44,21 @@ public class PlayerMove : CharacterMove
         //移動入力
         if (_Param.Can.Move)
         {
-            _Param.Direction = CalculateMoveDirection(InputUtility.GetMoveDirection);
+            _Param.MoveDirection = CalculateMoveDirection(InputUtility.GetMoveDirection);
+            _Param.CharacterDirection = _Param.MoveDirection;
         }
         else
         {
-            _Param.Direction = Vector3.zero;
+            _Param.MoveDirection = Vector3.zero;
         }
 
         //入力があれば移動力の処理
-        if (_Param.Direction.sqrMagnitude > 0)
+        if (_Param.MoveDirection.sqrMagnitude > 0)
         {
             //移動入力の大きさを取得
-            _MoveInputRate = _Param.Direction.magnitude;
+            _MoveInputRate = _Param.MoveDirection.magnitude;
             //移動方向を取得
-            _Param.Direction *= 1 / _MoveInputRate;
+            _Param.MoveDirection *= 1 / _MoveInputRate;
             //移動力指定
             _MovePower = _Param.Sub.LimitSpeedRun;
         }
@@ -65,7 +66,7 @@ public class PlayerMove : CharacterMove
         {
             _MovePower = 0f;
             _MoveInputRate = 0f;
-            _Param.Direction = Vector3.zero;
+            _Param.MoveDirection = Vector3.zero;
         }
 
         //重力方向以外で移動量成分があった場合、ブレーキ量を計算する
@@ -82,7 +83,6 @@ public class PlayerMove : CharacterMove
         _JumpFlag = false;
         _DoAction = false;
 
-
         //接地時
         if (IsGround)
         {
@@ -94,9 +94,9 @@ public class PlayerMove : CharacterMove
                 case MotionState.StateKind.Run:
 
                     //移動入力がある
-                    if(_Param.Direction.sqrMagnitude > 0)
+                    if (_Param.MoveDirection.sqrMagnitude > 0)
                     {
-                        if(_Speed > _Param.Sub.LimitSpeedWalk)
+                        if (_Speed > _Param.Sub.LimitSpeedWalk)
                         {
                             _Param.State.Kind = MotionState.StateKind.Run;
                         }
@@ -140,12 +140,11 @@ public class PlayerMove : CharacterMove
             }
 
 
-
             //短距離回避処理
             if (_Param.Can.ShiftSlide && InputUtility.GetDodge && InputUtility.GetMoveDown)
             {
                 _MovePower = 0f;
-                _Param.Direction = CalculateMoveDirection(InputUtility.GetMoveDirection).normalized;
+                _Param.MoveDirection = CalculateMoveDirection(InputUtility.GetMoveDirection).normalized;
 
                 float fowardCheck = Vector3.Dot(transform.forward, MoveDirection);
                 float rightCheck = Vector3.Dot(transform.right, MoveDirection);
@@ -168,7 +167,7 @@ public class PlayerMove : CharacterMove
             {
                 _MovePower = 0f;
                 _AnimKind = AnimationKind.LongTrip;
-                _Param.Direction = CalculateMoveDirection(InputUtility.GetMoveDirection).normalized;
+                _Param.MoveDirection = CalculateMoveDirection(InputUtility.GetMoveDirection).normalized;
                 _CommandHolder.LongTrip.LongTripOrder(_Param, _Rb.component, ref _AnimKind);
                 _DoAction = true;
             }
