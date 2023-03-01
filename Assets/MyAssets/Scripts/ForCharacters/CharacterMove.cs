@@ -113,6 +113,8 @@ abstract public class CharacterMove : MonoBehaviour
 
         //臨戦態勢
         SetArmedTimer();
+
+
     }
 
     void FixedUpdate()
@@ -125,7 +127,7 @@ abstract public class CharacterMove : MonoBehaviour
             if (_MoveInputRate > 0f)
             {
                 //回転する
-                CharacterRotation(_Param.CharacterDirection, -GravityDirection, 360f);
+                CharacterRotation(_Param.CharacterDirection, -GravityDirection, 720f);
 
                 //力をかける
                 _Rb.AddForce(_Param.MoveDirection * _MoveInputRate * _MovePower, ForceMode.Acceleration);
@@ -191,7 +193,7 @@ abstract public class CharacterMove : MonoBehaviour
     /// <summary>臨戦態勢をチェック</summary>
     void SetArmedTimer()
     {
-        if(State == MotionState.StateKind.ComboNormal)
+        if(State is MotionState.StateKind.ComboNormal or MotionState.StateKind.AttackCommand)
         {
             _ArmedTimer = 10f;
         }
@@ -237,21 +239,38 @@ abstract public class CharacterMove : MonoBehaviour
 
         //コンボ手数をリセットする
         _CommandHolder.Combo.CountReset();
+
+        //コマンドの後処理
+        _CommandHolder.GetActiveSkillForPostProcess()?.PostProcess(_Param, _Rb.component, GravityDirection, ref _AnimKind);
     }
 
-    /// <summary>アニメーションイベントにて、実行中コマンドの打ち出したいオブジェクトをアクティブ化する</summary>
-    /// <param name="index">種類</param>
-    public void CommandObjectShootCall(int index)
+    /// <summary>アニメーションイベントにて、追加実行する指示を出す</summary>
+    public void RunningCall()
     {
-        _CommandHolder.Running?.ObjectCreation(index);
+        _CommandHolder.Running?.Running(_Param, null, GravityDirection, Vector3.zero, ref _AnimKind);
     }
 
-    /// <summary>アニメーションイベントにて、攻撃判定を開始したい旨を受け取る</summary>
-    /// <param name="id">攻撃情報テーブルにアクセスしたいカラムID</param>
+    /// <summary>アニメーションイベントにて、実行中コマンドの打ち出したいオブジェクトを攻撃情報と射出元を指定しアクティブ化する</summary>
+    /// <param name="twoIds">上2桁:攻撃情報テーブルにアクセスしたいカラムID 下2桁:攻撃範囲情報にアクセスしたいカラムID</param>
+    public void CommandObjectShootCall(int twoIds)
+    {
+        int attackInfoID = twoIds / 100;
+        int attackAreaID = twoIds % 100;
+
+        AttackPowerColumn apc = _CommandHolder.Running.GetAttackArea(attackInfoID);
+        AttackInformation info = new AttackInformation(apc, _Param.Main);
+
+        _CommandHolder.Running?.ObjectCreation(_Param, info, _Param.EmitPoints[attackAreaID].position);
+    }
+
+    /// <summary>アニメーションイベントにて、攻撃判定を開始したい旨を、攻撃情報と攻撃範囲とともに受け取る</summary>
+    /// <param name="twoIds">上2桁:攻撃情報テーブルにアクセスしたいカラムID 下2桁:攻撃範囲情報にアクセスしたいカラムID</param>
     public void AttackCallStart(int twoIds)
     {
         int attackInfoID = twoIds / 100;
         int attackAreaID = twoIds % 100;
+
+        Debug.Log($"{_CommandHolder.Running} {attackInfoID} {attackAreaID}");
 
         AttackPowerColumn apc = _CommandHolder.Running.GetAttackArea(attackInfoID);
         AttackInformation info = new AttackInformation(apc, _Param.Main);

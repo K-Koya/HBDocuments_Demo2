@@ -5,7 +5,7 @@ using UnityEngine;
 public class CommandFireBreath : CommandActiveSkillBase, ICSVDataConverter
 {
     /// <summary>情報取得対象のCSVファイルパス</summary>
-    const string LOAD_CSV_PATH = "CSV/Command/FireShot.csv";
+    const string LOAD_CSV_PATH = "CSV/Command/FireShot";
 
     [SerializeField, Tooltip("火炎放射オブジェクト")]
     GameObject _FireBreathPref = null;
@@ -13,7 +13,13 @@ public class CommandFireBreath : CommandActiveSkillBase, ICSVDataConverter
     /// <summary>火炎放射オブジェクトのプール</summary>
     GameObjectPool _FireBreathes = null;
 
-    public override void Initialize()
+    public CommandFireBreath()
+    {
+        _Name = "ファイアブレス";
+        _Kind = CommandKind.Attack;
+    }
+
+    public override void Initialize(CharacterParameter param)
     {
         CSVToMembers(CSVIO.LoadCSV(LOAD_CSV_PATH));
 
@@ -31,7 +37,7 @@ public class CommandFireBreath : CommandActiveSkillBase, ICSVDataConverter
     /// <param name="animKind">要求するアニメーションの種類</param>
     public override void DoRun(CharacterParameter param, Rigidbody rb, Vector3 gravityDirection, Vector3 reticleDirection, ref AnimationKind animKind)
     {
-        animKind = AnimationKind.AttackMagicShoot;
+        animKind = AnimationKind.AttackLaserShootSwing;
         
 
         param.State.Kind = MotionState.StateKind.AttackCommand;
@@ -48,9 +54,10 @@ public class CommandFireBreath : CommandActiveSkillBase, ICSVDataConverter
         _Name = csv[1][1];
         _Explain = csv[1][2];
         _Count = byte.Parse(csv[1][3]);
-        for (int i = 0; i < csv.Count; i++)
+        _AttackPowerTable = new AttackPowerColumn[csv.Count - 4];
+        for (int i = 4; i < csv.Count; i++)
         {
-            _AttackPowerTable[i] = new AttackPowerColumn(short.Parse(csv[4][0]), short.Parse(csv[4][1]), short.Parse(csv[4][2]));
+            _AttackPowerTable[i - 4] = new AttackPowerColumn(short.Parse(csv[i][0]), short.Parse(csv[i][1]), short.Parse(csv[i][2]));
         }
     }
 }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Chronos;
+using System;
 
 [RequireComponent(typeof(Animator))]
 public class AnimatorAssistant : MonoBehaviour
@@ -37,6 +38,15 @@ public class AnimatorAssistant : MonoBehaviour
     [SerializeField, Tooltip("戦闘時だけ出現させるオブジェクト")]
     protected GameObject[] _AppearOnAttack = null;
 
+    [SerializeField, Tooltip("アニメーション中に出すエフェクトのプレハブ")]
+    protected GameObject[] _EffectPrefs = null;
+
+    /// <summary>エフェクト集</summary>
+    protected GameObjectPool[] _Effects = null;
+
+    [SerializeField, Tooltip("エフェクトを出す座標")]
+    protected Transform[] _EffectEmitPoints = null;
+
 
     // Start is called before the first frame update
     protected virtual void Start()
@@ -51,6 +61,12 @@ public class AnimatorAssistant : MonoBehaviour
         if (!_Am)
         {
             _Am = GetComponent<Animator>();
+        }
+
+        if(_EffectPrefs != null && _EffectPrefs.Length > 0)
+        {
+            _Effects = new GameObjectPool[_EffectPrefs.Length];
+            _Effects = Array.ConvertAll(_EffectPrefs, eff => new GameObjectPool(eff, 2));
         }
     }
 
@@ -86,18 +102,30 @@ public class AnimatorAssistant : MonoBehaviour
         _Cm.ProcessCallEndSoon();
     }
 
-    /// <summary>実行中コマンドの打ち出したいオブジェクトをアクティブ化する</summary>
-    /// <param name="index">種類</param>
-    public void CommandObjectShootCall(int index)
+    /// <summary>アニメーションイベントにて、エフェクトを発生させる命令を受ける</summary>
+    /// <param name="twoIds">上2桁:エフェクトの配列番号 下2桁:射出位置の配列番号</param>
+    public void EmitEffect(int twoIds)
     {
-        _Cm.CommandObjectShootCall(index);
+        int effectIndex = twoIds / 100;
+        int emitIndex = twoIds % 100;
+
+        GameObject obj = _Effects[effectIndex].Instansiate();
+        obj.transform.position = _EffectEmitPoints[emitIndex].position;
+        obj.transform.rotation = _EffectEmitPoints[emitIndex].rotation;
+    }
+
+    /// <summary>実行中コマンドの打ち出したいオブジェクトをアクティブ化する</summary>
+    /// <param name="twoIds">上2桁:攻撃情報テーブルにアクセスしたいカラムID 下2桁:攻撃範囲情報にアクセスしたいカラムID</param>
+    public void CommandObjectShootCall(int twoIds)
+    {
+        _Cm.CommandObjectShootCall(twoIds);
     }
 
     /// <summary>アニメーションイベントにて、攻撃判定を開始したい旨を受け取る</summary>
-    /// <param name="id">AttackPowerTableにアクセスしたいカラムID</param>
-    public void AttackCallStart(int id)
+    /// <param name="twoIds">上2桁:攻撃情報テーブルにアクセスしたいカラムID 下2桁:攻撃範囲情報にアクセスしたいカラムID</param>
+    public void AttackCallStart(int twoIds)
     {
-        _Cm.AttackCallStart(id);
+        _Cm.AttackCallStart(twoIds);
     }
 
     /// <summary>アニメーションイベントにて、攻撃判定を終了したい旨を受け取る</summary>
@@ -106,6 +134,11 @@ public class AnimatorAssistant : MonoBehaviour
         _Cm.AttackCallEnd();
     }
 
+    /// <summary>アニメーションイベントにて、追加実行する指示を出す</summary>
+    public void RunningCall()
+    {
+        _Cm.RunningCall();
+    }
     #endregion
 }
 
@@ -129,10 +162,6 @@ public enum AnimationKind : ushort
     GuardGroundBack,
     GuardAirFoward,
     GuardAirBack,
-
-    UseItemSpray = 300,
-    UseItemFood,
-    UseItemDrink,
 
     /* 通常コンボ */
     /// <summary>地上前方近距離</summary>
@@ -163,6 +192,23 @@ public enum AnimationKind : ushort
     AttackLaserShoot = 2001,
     /// <summary>レーザーなどをその場でスイングしつつ照射</summary>
     AttackLaserShootSwing = 2002,
+
+    /// <summary>ラウンドスラッシュ動作</summary>
+    AttackRoundSlash = 3000,
+    /// <summary>ブレードシュート動作</summary>
+    AttackBladeShoot = 3001,
+
+
+    /*コマンドモーション*/
+    /// <summary>スプレーのアイテムを使う動作</summary>
+    UseItemSpray = 30000,
+    /// <summary>食べるアイテムを使う動作</summary>
+    UseItemFood,
+    /// <summary>飲むアイテムを使う動作</summary>
+    UseItemDrink,
+
+    /// <summary>自分を補助するスキルを発動</summary>
+    SupportPowerUp = 50000,
 }
 
 /// <summary>ダメージモーションの種類</summary>

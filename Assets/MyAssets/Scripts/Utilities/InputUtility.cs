@@ -44,6 +44,9 @@ public class InputUtility : Singleton<InputUtility>
 
     [SerializeField, Tooltip("InputActionにおける、決定ボタン入力名")]
     string _ButtonNameDecide = "Decide";
+
+    [SerializeField, Tooltip("InputActionにおける、アクティブスキルコマンドの入力名")]
+    string _ButtonNameSkillCommand = "SkillCommand";
     #endregion
     /*
     #region コントローラー振動用メンバ
@@ -110,6 +113,9 @@ public class InputUtility : Singleton<InputUtility>
 
     /// <summary> 決定ボタンの入力状況 </summary>
     static InputAction _DecideAction = default;
+
+    /// <summary> アクティブスキルコマンド4つの入力状況 </summary>
+    static InputAction[] _SkillCommandActions = default;
     #endregion
 
     #region プロパティ
@@ -153,6 +159,22 @@ public class InputUtility : Singleton<InputUtility>
     static public bool GetDodge { get => _DodgeAction.IsPressed(); }
     /// <summary> 決定ボタン押下直後 </summary>
     static public bool GetDownDecide { get => _DecideAction.triggered; }
+    /// <summary> 1番目のアクティブスキルコマンドボタン押下直後 </summary>
+    static public bool GetSkillCommand1 { get => _SkillCommandActions[0].IsPressed(); }
+    /// <summary> 1番目のアクティブスキルコマンドボタン押下中 </summary>
+    static public bool GetDownSkillCommand1 { get => _SkillCommandActions[0].triggered; }
+    /// <summary> 2番目のアクティブスキルコマンドボタン押下直後 </summary>
+    static public bool GetSkillCommand2 { get => _SkillCommandActions[1].IsPressed(); }
+    /// <summary> 2番目のアクティブスキルコマンドボタン押下中 </summary>
+    static public bool GetDownSkillCommand2 { get => _SkillCommandActions[1].triggered; }
+    /// <summary> 3番目のアクティブスキルコマンドボタン押下直後 </summary>
+    static public bool GetSkillCommand3 { get => _SkillCommandActions[2].IsPressed(); }
+    /// <summary> 3番目のアクティブスキルコマンドボタン押下中 </summary>
+    static public bool GetDownSkillCommand3 { get => _SkillCommandActions[2].triggered; }
+    /// <summary> 4番目のアクティブスキルコマンドボタン押下直後 </summary>
+    static public bool GetSkillCommand4 { get => _SkillCommandActions[3].IsPressed(); }
+    /// <summary> 4番目のアクティブスキルコマンドボタン押下中 </summary>
+    static public bool GetDownSkillCommand4 { get => _SkillCommandActions[3].triggered; }
     #endregion
 
     // Start is called before the first frame update
@@ -172,6 +194,12 @@ public class InputUtility : Singleton<InputUtility>
         _GuardAction = actionMap[_ButtonNameGuard];
         _DodgeAction = actionMap[_ButtonNameDodge];
         _DecideAction = actionMap[_ButtonNameDecide];
+
+        _SkillCommandActions = new InputAction[4];
+        for (int i = 0; i < _SkillCommandActions.Length; i++)
+        {
+            _SkillCommandActions[i] = actionMap[$"{_ButtonNameSkillCommand}{i + 1}"];
+        }
     }
     /*
         void OnDestroy()

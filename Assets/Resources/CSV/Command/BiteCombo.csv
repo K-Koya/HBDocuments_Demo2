@@ -1,5 +1,5 @@
 ﻿CommandID,CommandName,Explain,MPCost,MaxInventry,NumberOfCombo
-0,噛みつき飛び込み,２連続でかみついた後、ジャンプして飛び込み攻撃を行う。,0,-1,-1
+1001,噛みつき飛び込み,２連続でかみついた後、ジャンプして飛び込み攻撃を行う。,0,-1,-1
 AttackPowerTable,,,,,
 ID,RatioForAttack,RatioForMagic,AdditionalEffectID,AdditionalEffectRatio,
 0,50,0,0,-1,

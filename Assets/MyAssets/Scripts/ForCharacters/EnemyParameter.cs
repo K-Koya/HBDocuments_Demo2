@@ -41,6 +41,24 @@ public class EnemyParameter : CharacterParameter
     protected override void Update()
     {
         base.Update();
+
+        //Æ€•ûŒü‚Ì’²®
+        if (_GazeAt)
+        {
+            Vector3 direction = Vector3.Normalize(_GazeAt.transform.position - _EyePoint.transform.position);
+            if (Vector3.Dot(_EyePoint.transform.forward, direction) > 0f)
+            {
+                _ReticlePoint = _GazeAt.EyePoint.transform.position;
+            }
+            else
+            {
+                _ReticlePoint = _EyePoint.transform.position + _EyePoint.transform.forward * Sub.LockMaxRange;
+            }
+        }
+        else
+        {
+            _ReticlePoint = _EyePoint.transform.position + _EyePoint.transform.forward * Sub.LockMaxRange;
+        }
     }
 
     public override void GaveDamage(int damage)

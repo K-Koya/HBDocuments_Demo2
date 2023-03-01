@@ -4,8 +4,11 @@ using UnityEngine;
 
 public class ParticleDisabler : MonoBehaviour
 {
+    [SerializeField, Tooltip("パーティクルエフェクトの大本の親オブジェクト")]
+    GameObject _ParticleParent = null;
+
     private void OnParticleSystemStopped()
     {
-        transform.parent.gameObject.SetActive(false);
+        _ParticleParent?.gameObject.SetActive(false);
     }
 }

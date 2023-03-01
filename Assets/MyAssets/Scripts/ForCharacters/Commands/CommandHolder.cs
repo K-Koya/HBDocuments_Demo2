@@ -1,4 +1,5 @@
 using System;
+using UnityEditor.Hardware;
 using UnityEngine;
 
 public class CommandHolder : MonoBehaviour
@@ -9,23 +10,26 @@ public class CommandHolder : MonoBehaviour
     #region メンバ
     [Header("所持コマンド情報")]
     [SerializeField, Tooltip("ジャンプ用コマンド")]
-    CommandJumpBase _CommandJump = new CommandJumpBase();
+    CommandJumpBase _CommandJump = null;
 
     [SerializeField, Tooltip("短距離回避コマンド")]
-    CommandShiftSlideBase _CommandShiftSlide = new CommandShiftSlideBase();
+    CommandShiftSlideBase _CommandShiftSlide = null;
 
     [SerializeField, Tooltip("長距離回避コマンド")]
-    CommandLongTripBase _CommandLongTrip = new CommandLongTripBase();
+    CommandLongTripBase _CommandLongTrip = null;
 
-    [SerializeField, Tooltip("アクティブスキルコマンドのリスト")]
+    [SerializeReference, SelectableSerializeReference, Tooltip("アクティブスキルコマンドのリスト")]
     CommandActiveSkillBase[] _ActiveSkills = null;
 
     [SerializeField, Tooltip("コンボコマンド")]
-    CommandCombo _CommandCombo = new CommandCombo();
+    CommandCombo _CommandCombo = null;
 
     [Header("実行中アクティブスキルコマンド情報")]
     [SerializeField, Tooltip("アクティブスキルコマンド・コンボコマンドのうち実行中のコマンド")]
     CommandActiveSkillBase _Running = null;
+
+    /// <summary>ひとつ前の実行中のコマンド</summary>
+    CommandActiveSkillBase _BeforeRunning = null;
     #endregion
 
     #region プロパティ
@@ -60,10 +64,23 @@ public class CommandHolder : MonoBehaviour
         _Running = ActiveSkills[index];
         return _Running;
     }
+
+    /// <summary>アクティブスキルコマンドを取得して実行破棄する</summary>
+    /// <returns>アクティブスキルコマンド</returns>
+    public CommandActiveSkillBase GetActiveSkillForPostProcess()
+    {
+        CommandActiveSkillBase cashe = _Running;
+        _Running = null;
+        return cashe;
+    }
+
     #endregion
 
     void Start()
     {
+        CharacterParameter param = GetComponentInParent<CharacterParameter>();
+        CharacterMove cm = GetComponentInParent<CharacterMove>();
+
         //各種コマンドはnullを許容しない
         if (_CommandJump is null) 
             _CommandJump = new CommandJumpBase();
@@ -83,13 +100,13 @@ public class CommandHolder : MonoBehaviour
                 _ActiveSkills[i] = new CommandActiveSkillBase();
 
             //各スキルコマンドを初期化実行
-            _ActiveSkills[i].Initialize();
+            _ActiveSkills[i].Initialize(param);
         }
 
         //各種コマンドを初期化実行
-        _CommandJump.Initialize();
-        _CommandShiftSlide.Initialize();
-        _CommandLongTrip.Initialize();
+        _CommandJump.Initialize(param);
+        _CommandShiftSlide.Initialize(param);
+        _CommandLongTrip.Initialize(param);
     }
 
     /// <summary>コードからコマンドをセットするメソッド</summary>
@@ -101,5 +118,37 @@ public class CommandHolder : MonoBehaviour
         {
             _ActiveSkills[i] = commands[i];
         }
+    }
+
+    CommandActiveSkillBase ActiveSkillSelector(int id)
+    {
+        CommandActiveSkillBase returnal = null;
+
+        switch (id)
+        {
+            case 1:
+                returnal = new CommandFireShot();
+                break;
+            case 2:
+                returnal = new CommandFreezeShot();
+                break;
+            case 3:
+
+                break;
+            case 4:
+
+                break;
+
+
+            case 500:
+
+                break;
+
+            case 900:
+
+                break;
+        }
+
+        return returnal;
     }
 }

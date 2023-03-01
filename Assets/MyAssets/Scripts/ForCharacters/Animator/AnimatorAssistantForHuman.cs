@@ -20,6 +20,8 @@ public class AnimatorAssistantForHuman : AnimatorAssistant
     // Update is called once per frame
     void Update()
     {
+        _Am.ResetTrigger(_PARAM_NAME_DO_ACTION);
+
         if (_Cm.JumpFlag) _Am.SetTrigger(_PARAM_NAME_DO_JUMP);
         _Am.SetFloat(_PARAM_NAME_SPEED, _Cm.Speed);
         _Am.SetBool(_PARAM_NAME_IS_GROUND, _Cm.IsGround);

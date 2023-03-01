@@ -1,5 +1,5 @@
 ﻿CommandID,CommandName,Explain,MPCost,MaxInventry,NumberOfCombo
-0,通常コンボ（カナ）,"通常攻撃。停止時や移動時など特別な行動を起こしていないときに、通常攻撃ボタンで武器を振る。
+5,通常コンボ（カナ）,"通常攻撃。停止時や移動時など特別な行動を起こしていないときに、通常攻撃ボタンで武器を振る。
 攻撃後に続けて振ることもでき、特定回数振ると強めの攻撃が出る。",-1,-1,5
 AttackPowerTable,,,,,
 ID,RatioForAttack,RatioForMagic,AdditionalEffectID,AdditionalEffectRatio,

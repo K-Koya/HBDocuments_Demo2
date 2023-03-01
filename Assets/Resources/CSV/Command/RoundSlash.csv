@@ -1,0 +1,6 @@
+﻿CommandID,CommandName,Explain,MPCost,MaxInventry,NumberOfCombo
+4,ラウンドスラッシュ,その場で武器を腰元にまわしつつ身構えてから、周囲のやや広い範囲に回転攻撃を仕掛けます。,20,-1,-1
+AttackPowerTable,,,,,
+ID,RatioForAttack,RatioForMagic,AdditionalEffectID,AdditionalEffectRatio,
+0,100,0,-1,-1,
+1,50,0,-1,-1,

@@ -5,15 +5,22 @@ using UnityEngine;
 [System.Serializable]
 public class CommandCombo : CommandActiveSkillBase, ICSVDataConverter
 {
-    /// <summary>情報取得対象のCSVファイルパス</summary>
-    const string LOAD_CSV_PATH = "CSV/Command/Combo.csv";
+    /// <summary>情報取得対象のCSVファイルパス一部</summary>
+    const string LOAD_CSV_PATH = "CSV/Command/Combo/";
 
     /// <summary>今のコンボの手数</summary>
     byte _Step = 0;
 
-    public override void Initialize()
+    /// <summary>コンストラクタ</summary>
+    public CommandCombo()
     {
-        CSVToMembers(CSVIO.LoadCSV(LOAD_CSV_PATH));
+        _Name = "通常コンボ";
+        _Kind = CommandKind.Combo;
+    }
+
+    public override void Initialize(CharacterParameter param)
+    {
+        CSVToMembers(CSVIO.LoadCSV(LOAD_CSV_PATH + param.NameAlphabet));
     }
 
     /// <summary>コンボ攻撃を要求するメソッド</summary>
@@ -26,6 +33,7 @@ public class CommandCombo : CommandActiveSkillBase, ICSVDataConverter
     {
         //照準方向に向き直る
         rb.transform.forward = Vector3.ProjectOnPlane(reticleDirection, -gravityDirection);
+        Vector3 reticleNorm = Vector3.Normalize(reticleDirection);
 
         //規定数コンボを打ったかで分岐
         //コンボ途中
@@ -35,6 +43,9 @@ public class CommandCombo : CommandActiveSkillBase, ICSVDataConverter
             if (param.State.Kind == MotionState.StateKind.Run)
             {
                 animKind = AnimationKind.ComboGroundFowardFar;
+
+                //攻撃方向へ前進
+                rb.AddForce(reticleNorm, ForceMode.Impulse);
             }
             else
             { 
@@ -46,39 +57,56 @@ public class CommandCombo : CommandActiveSkillBase, ICSVDataConverter
                     //いない場合
                     if (param.GazeAt is null)
                     {
-                        animKind = AnimationKind.ComboGroundFoward;
+                        animKind = AnimationKind.ComboGroundWide;
+
+                        //攻撃方向へ前進
+                        rb.AddForce(reticleNorm, ForceMode.Impulse);
                     }
                     //いる場合
                     else
                     {
-                        Vector3 reticleNorm = Vector3.Normalize(reticleDirection);
                         //キャラクターの鉛直方向と照準方向の位置関係で分岐
                         //水平に近い
-                        if (Vector3.Dot(param.transform.up, reticleNorm) > 0.5f)
+                        if (Vector3.Dot(param.transform.up, reticleNorm) > 0.75f)
                         {
                             //照準を合わせている相手との距離で分岐
                             //近い場合
                             if (reticleDirection.sqrMagnitude < param.Sub.ComboProximityRange * param.Sub.ComboProximityRange)
                             {
                                 animKind = AnimationKind.ComboGroundFoward;
+
+                                //攻撃方向へ前進
+                                rb.AddForce(reticleNorm, ForceMode.Impulse);
                             }
                             //遠い場合
                             else
                             {
                                 animKind = AnimationKind.ComboGroundFowardFar;
+
+                                //攻撃方向へ前進
+                                rb.AddForce(reticleNorm * 2f, ForceMode.Impulse);
                             }
                         }
                         //鉛直に近い
                         else
                         {
-                            animKind = AnimationKind.ComboAirWide;
+                            animKind = AnimationKind.ComboGroundFoward;
+
+                            //攻撃方向へ前進
+                            rb.AddForce(reticleNorm, ForceMode.Impulse);
                         }
+
+                        //攻撃方向へ前進
+                        rb.AddForce(reticleNorm, ForceMode.Impulse);
                     }
                 }
                 //後方の場合
                 else
                 {
-                    animKind = AnimationKind.ComboGroundBack;
+                    animKind = AnimationKind.ComboGroundWide;
+
+                    //攻撃方向へ前進
+                    rb.AddForce(reticleNorm, ForceMode.Impulse);
                 }
             }
 
@@ -90,6 +118,9 @@ public class CommandCombo : CommandActiveSkillBase, ICSVDataConverter
         {
             animKind = AnimationKind.ComboGroundFinish;
             _Step = 1;
+
+            //攻撃方向へ前進
+            rb.AddForce(reticleNorm * 2f, ForceMode.Impulse);
         }
 
         param.State.Kind = MotionState.StateKind.ComboNormal;
@@ -111,10 +142,11 @@ public class CommandCombo : CommandActiveSkillBase, ICSVDataConverter
     {
         _Name = csv[1][1];
         _Explain = csv[1][2];
-        _Count = byte.Parse(csv[1][3]);
-        for (int i = 0; i < csv.Count; i++)
+        _Count = byte.Parse(csv[1][5]);
+        _AttackPowerTable = new AttackPowerColumn[csv.Count - 4];
+        for (int i = 4; i < csv.Count; i++)
         {
-            _AttackPowerTable[i] = new AttackPowerColumn(short.Parse(csv[4][0]), short.Parse(csv[4][1]), short.Parse(csv[4][2]));
+            _AttackPowerTable[i - 4] = new AttackPowerColumn(short.Parse(csv[i][0]), short.Parse(csv[i][1]), short.Parse(csv[i][2]));
         }
     }
 }

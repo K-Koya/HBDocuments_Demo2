@@ -4,15 +4,6 @@ using UnityEngine;
 
 public class PlayerParameter : CharacterParameter
 {
-    #region メンバ
-    /// <summary>照準器の位置</summary>
-    Vector3 _ReticlePoint = Vector3.zero;
-    #endregion
-
-    #region プロパティ
-    public Vector3 ReticlePoint { get => _ReticlePoint; set => _ReticlePoint = value; }
-    #endregion
-
     protected override void EraseStaticReference()
     {
         _Player = null;

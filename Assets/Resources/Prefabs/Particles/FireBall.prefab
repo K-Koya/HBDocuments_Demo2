@@ -10,9 +10,12 @@ GameObject:
   m_Component:
   - component: {fileID: 1677472940495060033}
   - component: {fileID: 1784531205}
+  - component: {fileID: 3534964799296424180}
+  - component: {fileID: 6927119350120150893}
+  - component: {fileID: 2054036957913932035}
   m_Layer: 0
   m_Name: FireBall
-  m_TagString: Untagged
+  m_TagString: AttackCollider
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -47,6 +50,50 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.25
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &3534964799296424180
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1677472940495060038}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b40e2a66cc9d1f54389e0e5e87897c30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _HitEffectPref: {fileID: 0}
+--- !u!114 &6927119350120150893
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1677472940495060038}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92b948f3c2eb0c541a56e5d09d1a6ebe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _EffectOnFrying: {fileID: 4572711455934630089}
+  _EffectOnExplode: {fileID: 5449706112400325197}
+  _LifeTime: 10
+--- !u!54 &2054036957913932035
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1677472940495060038}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &4571935578139530753
 GameObject:
   m_ObjectHideFlags: 0
@@ -9723,7 +9770,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4575363572506723641
 Transform:
   m_ObjectHideFlags: 0
@@ -14583,7 +14630,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5452701968009121109
 Transform:
   m_ObjectHideFlags: 0
@@ -14650,7 +14697,7 @@ ParticleSystem:
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 0
-  looping: 1
+  looping: 0
   prewarm: 0
   playOnAwake: 1
   useUnscaledTime: 0
@@ -19497,6 +19544,7 @@ GameObject:
   - component: {fileID: 5455100437318415241}
   - component: {fileID: 5288617673060521863}
   - component: {fileID: 5288957790131202021}
+  - component: {fileID: 3969738131855104263}
   m_Layer: 0
   m_Name: Spark
   m_TagString: Untagged
@@ -19529,12 +19577,12 @@ ParticleSystem:
   serializedVersion: 8
   lengthInSec: 2
   simulationSpeed: 1
-  stopAction: 0
+  stopAction: 3
   cullingMode: 1
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 0
-  looping: 1
+  looping: 0
   prewarm: 0
   playOnAwake: 1
   useUnscaledTime: 0
@@ -24370,6 +24418,19 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &3969738131855104263
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5450302493835431575}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: faccb619fa8a24c4e84719b71bb9ba96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _ParticleParent: {fileID: 1677472940495060038}
 --- !u!1 &5451208038091540213
 GameObject:
   m_ObjectHideFlags: 0
@@ -24418,7 +24479,7 @@ ParticleSystem:
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 0
-  looping: 1
+  looping: 0
   prewarm: 0
   playOnAwake: 1
   useUnscaledTime: 0

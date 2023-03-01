@@ -1,23 +1,29 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class CommandBiteCombo : CommandActiveSkillBase, ICSVDataConverter
 {
-    /// <summary>î•ñæ“¾‘ÎÛ‚ÌCSVƒtƒ@ƒCƒ‹ƒpƒX</summary>
-    const string LOAD_CSV_PATH = "CSV/Command/BiteCombo.csv";
+    /// <summary>æƒ…å ±å–å¾—å¯¾è±¡ã®CSVãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹</summary>
+    const string LOAD_CSV_PATH = "CSV/Command/BiteCombo";
 
-    public override void Initialize()
+    public CommandBiteCombo()
+    {
+        _Name = "åš™ã¿ã¤ãã‚³ãƒ³ãƒœ";
+        _Kind = CommandKind.Attack;
+    }
+
+    public override void Initialize(CharacterParameter param)
     {
         CSVToMembers(CSVIO.LoadCSV(LOAD_CSV_PATH));
     }
 
-    /// <summary>ƒRƒ“ƒ{UŒ‚‚ğ—v‹‚·‚éƒƒ\ƒbƒh</summary>
-    /// <param name="param">ŠY“–ƒLƒƒƒ‰ƒNƒ^[‚Ìƒpƒ‰ƒ[ƒ^</param>
-    /// <param name="rb">ƒŠƒWƒbƒhƒ{ƒfƒB</param>
-    /// <param name="gravityDirection">d—Í•ûŒü</param>
-    /// <param name="reticleDirection">Æ€•ûŒü</param>
-    /// <param name="animKind">—v‹‚·‚éƒAƒjƒ[ƒVƒ‡ƒ“‚Ìí—Ş</param>
+    /// <summary>ã‚³ãƒ³ãƒœæ”»æ’ƒã‚’è¦æ±‚ã™ã‚‹ãƒ¡ã‚½ãƒƒãƒ‰</summary>
+    /// <param name="param">è©²å½“ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿</param>
+    /// <param name="rb">ãƒªã‚¸ãƒƒãƒ‰ãƒœãƒ‡ã‚£</param>
+    /// <param name="gravityDirection">é‡åŠ›æ–¹å‘</param>
+    /// <param name="reticleDirection">ç…§æº–æ–¹å‘</param>
+    /// <param name="animKind">è¦æ±‚ã™ã‚‹ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®ç¨®é¡</param>
     public override void DoRun(CharacterParameter param, Rigidbody rb, Vector3 gravityDirection, Vector3 reticleDirection, ref AnimationKind animKind)
     {
         animKind = AnimationKind.ComboGroundFoward;
@@ -36,9 +42,10 @@ public class CommandBiteCombo : CommandActiveSkillBase, ICSVDataConverter
         _Name = csv[1][1];
         _Explain= csv[1][2];
         _Count = byte.Parse(csv[1][3]);
-        for(int i = 0; i < csv.Count; i++)
+        _AttackPowerTable = new AttackPowerColumn[csv.Count - 4];
+        for (int i = 4; i < csv.Count; i++)
         {
-            _AttackPowerTable[i] = new AttackPowerColumn(short.Parse(csv[4][0]), short.Parse(csv[4][1]), short.Parse(csv[4][2]));
+            _AttackPowerTable[i - 4] = new AttackPowerColumn(short.Parse(csv[i][0]), short.Parse(csv[i][1]), short.Parse(csv[i][2]));
         }
     }
 }

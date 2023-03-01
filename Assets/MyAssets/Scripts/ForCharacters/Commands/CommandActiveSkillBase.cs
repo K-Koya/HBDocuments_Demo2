@@ -18,12 +18,34 @@ public class CommandActiveSkillBase : CommandBase
     [SerializeField, Tooltip("true : コマンド施工中")]
     protected bool _IsRunning = false;
 
+    protected enum CommandKind
+    {
+        /// <summary>未挿入</summary>
+        Blank = 0,
+        /// <summary>回復以外のサポートコマンド</summary>
+        Support, 
+        /// <summary>通常コンボコマンド</summary>
+        Combo,
+        /// <summary>アタックコマンド</summary>
+        Attack,
+        /// <summary>回復以外のアイテムコマンド</summary>
+        Item,
+        /// <summary>回復サポートコマンド</summary>
+        SupportHeal,
+        /// <summary>回復アイテムコマンド</summary>
+        ItemHeal,
+    }
+    /// <summary>コマンドの種類</summary>
+    protected CommandKind _Kind = CommandKind.Blank;
+
     #endregion
 
     public CommandActiveSkillBase()
     {
         _Name = "EMPTY";
         _Explain = "スキルコマンドが未挿入です。";
+
+        _Kind = CommandKind.Blank;
     }
 
     #region プロパティ
@@ -74,6 +96,14 @@ public class CommandActiveSkillBase : CommandBase
 
     }
 
+    /// <summary>何かしらオブジェクトを生成する処理</summary>
+    /// <param name="param">自キャラクターのメインパラメータ</param>
+    /// <param name="info">攻撃情報</param>
+    /// <param name="emitPoint">射出座標</param>
+    public virtual void ObjectCreation(CharacterParameter param, AttackInformation info, Vector3 emitPoint)
+    {
+
+    }
 
     /// <summary>攻撃情報を構成し攻撃範囲を取得する</summary>
     /// <param name="ID">攻撃情報リストに対応するID</param>
@@ -90,5 +120,4 @@ public class CommandActiveSkillBase : CommandBase
 
         return null;
     }
-
 }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using Chronos;
-using Newtonsoft.Json.Converters;
 
 [RequireComponent(typeof(NavMeshAgent))]
 public class ComputerMove : CharacterMove

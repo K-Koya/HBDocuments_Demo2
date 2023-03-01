@@ -49,8 +49,8 @@ public class TagManager : Singleton<TagManager>
 
 public static partial class ForRegisterExtensionMethods
 {
-    public static bool CompareTags(this GameObject gameObject, params string[] tags)
+    public static bool CompareTags(this MonoBehaviour mb, params string[] tags)
     {
-        return tags.Count(tag => gameObject.CompareTag(tag)) > 0;
+        return tags.Count(tag => mb.CompareTag(tag)) > 0;
     }
 } 

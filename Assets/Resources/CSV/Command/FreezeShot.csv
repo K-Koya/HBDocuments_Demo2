@@ -1,0 +1,6 @@
+﻿CommandID,CommandName,Explain,MPCost,MaxInventry,NumberOfCombo
+2,フリーズショット,氷結弾を照準方向へ放ちます。追加入力で5発まで放てますが、放ち終えるまで無防備になります。,15,-1,-1
+AttackPowerTable,,,,,
+ID,RatioForAttack,RatioForMagic,AdditionalEffectID,AdditionalEffectRatio,
+0,0,50,1,20,
+1,0,20,1,20,

@@ -7,6 +7,11 @@ public class LayerManager : Singleton<LayerManager>
     [Header("以下に対応レイヤを指定")]
 
     #region メンバ
+    [SerializeField, Tooltip("敵の攻撃用レイヤ名")]
+    string _NameEnemyAttacker = "EnemyAttacker";
+    [SerializeField, Tooltip("プレイヤーおよび味方の攻撃用レイヤ名")]
+    string _NameAlliesAttacker = "AlliesAttacker";
+
     [SerializeField, Tooltip("地面レイヤ")]
     LayerMask _Ground = default;
     [SerializeField, Tooltip("カメラがすり抜ける地面レイヤ")]
@@ -20,6 +25,11 @@ public class LayerManager : Singleton<LayerManager>
     #endregion
 
     #region プロパティ
+    /// <summary>敵の攻撃用レイヤ名</summary>
+    public string NameEnemyAttacker { get => _NameEnemyAttacker; }
+    /// <summary>プレイヤーおよび味方の攻撃用レイヤ名</summary>
+    public string NameAlliesAttacker { get => _NameAlliesAttacker; }
+
     /// <summary>地面レイヤ</summary>
     public LayerMask Ground { get => _Ground | _SeeThroughGround; }
     /// <summary>カメラがすり抜ける地面レイヤ</summary>

@@ -185,6 +185,38 @@ public class PlayerMove : CharacterMove
                 _CommandHolder.GetComboForRun().DoRun(_Param, _Rb.component, GravityDirection, pp.ReticlePoint - pp.EyePoint.position, ref _AnimKind);
                 _DoAction = true;
             }
+            //コマンド実行処理
+            else if (_Param.Can.Command)
+            {
+                int index = -1;
+                if(InputUtility.GetDownSkillCommand1)
+                {
+                    index = 0;
+                }
+                else if(InputUtility.GetDownSkillCommand2) 
+                {
+                    index = 1;
+                }
+                else if(InputUtility.GetDownSkillCommand3)
+                {
+                    index = 2;
+                }
+                else if(InputUtility.GetDownSkillCommand4)
+                {
+                    index = 3;
+                }
+
+                if(index > -1)
+                {
+                    PlayerParameter pp = _Param as PlayerParameter;
+                    _CommandHolder.GetActiveSkillForRun(index).DoRun(_Param, _Rb.component, GravityDirection, pp.ReticlePoint - pp.EyePoint.position, ref _AnimKind);
+                    _DoAction = true;
+
+                    Debug.Log($"コマンド名 : {_CommandHolder.Running.Name}");
+                    Debug.Log($"アクション予約 : {_AnimKind}");
+                }               
+            }
+
         }
         //空中時
         else

@@ -24,17 +24,12 @@ public class AIDragon : ComputerMove
     {
         base.Start();
 
-        _CommandHolder.SetActiveSkills(new CommandFireShot()
-                                        , new CommandBiteCombo()
-                                        , new CommandJumpTurn()
-                                        , new CommandFireBreath());
-
         GetCondition = GetConditionOnBattleOneTarget;
         Think = ThinkOnBattleOneTarget;
         Act = KeepPoint;
 
         _Param.State.Kind = MotionState.StateKind.Stay;
-        _Param.State.Process = MotionState.ProcessKind.EndSoon;
+        _Param.State.Process = MotionState.ProcessKind.Playing;
 
         _MoveTimeLimit= 0;
         _MoveTime = 0;
@@ -105,7 +100,7 @@ public class AIDragon : ComputerMove
             case MotionState.StateKind.FallNoraml:
             case MotionState.StateKind.JumpNoraml:
 
-                _CommandHolder.Jump.LandingProcess(_Param);
+                if (IsGround) _CommandHolder.Jump.LandingProcess(_Param);
                 break;
 
             //回避時の移動力チェック
@@ -118,12 +113,6 @@ public class AIDragon : ComputerMove
                 _CommandHolder.LongTrip.LongTripPostProcess(_Param, _Rb.component, GravityDirection);
                 break;
 
-            //攻撃コマンドの実施後チェック
-            case MotionState.StateKind.AttackCommand:
-
-                _CommandHolder.Running.PostProcess(_Param, _Rb.component, GravityDirection, ref _AnimKind);
-                break;
-
             //被ダメージチェック
             case MotionState.StateKind.Hurt:
 
@@ -131,62 +120,74 @@ public class AIDragon : ComputerMove
                 break;
         }
 
-        //行動時間を計測
-        if (_MoveTime > 0f)
+        //次の行動を決定
+        if (Act is null)
         {
-            _MoveTime -= Time.deltaTime;
-            if (_MoveTime < 0f)
+            _MoveTime = 0f;
+            _IsInitialized = true;
+            _WasMove = !_WasMove;
+            //強力な行動
+            if (_RatioOfPowerfullAttack > Random.value * 100)
             {
-                _MoveTime = 0f;
-            }
-        }
-        else
-        {
-            //次の行動を決定
-            if (_Param.State.Process == MotionState.ProcessKind.EndSoon)
-            {
-                _IsInitialized = true;
-                Act = null;
-                _WasMove = !_WasMove;
-                //強力な行動
-                if (_RatioOfPowerfullAttack > Random.value * 100)
+                //超至近距離
+                if (_RatioOfNearExcess < Random.value * 100)
                 {
-                    //超至近距離
-                    if (_RatioOfNearExcess > Random.value * 100)
-                    {
-                        Act = _WasMove ? JumpTurn : Backwards;
-                    }
-                    //近距離
-                    else if (_RatioOfNearMovement > Random.value * 100)
-                    {
-                        Act = _WasMove ? BiteCombo : Wandering;
-                    }
-                    //遠距離
-                    else
-                    {
-                        Act = _WasMove ? FireShot : Approach;
-                    }
+                    Act = _WasMove ? JumpTurn : Backwards;
                 }
-                //普通寄りの行動
+                //近距離
+                else if (_RatioOfNearMovement < Random.value * 100)
+                {
+                    Act = _WasMove ? BiteCombo : Wandering;
+                }
+                //遠距離
                 else
                 {
-                    //超至近距離
-                    if (_RatioOfNearExcess > Random.value * 100)
-                    {
-                        Act = _WasMove ? JumpTurn : RunAway;
-                    }
-                    //近距離
-                    else if (_RatioOfNearMovement > Random.value * 100)
-                    {
-                        Act = _WasMove ? BiteCombo : Backwards;
-                    }
-                    //遠距離
-                    else
-                    {
-                        Act = _WasMove ? FireShot : Approach;
-                    }
+                    Act = _WasMove ? FireShot : Approach;
                 }
             }
+            //普通寄りの行動
+            else
+            {
+                float rand = Random.value;
+                if(rand < 0.3f)
+                {
+                    Act = BiteCombo;
+                }
+                else if(rand < 0.6f)
+                {
+                    Act = JumpTurn;
+                }
+                else if(rand < 0.9f)
+                {
+                    Act = FireShot;                }
+                else
+                {
+                    Act = KeepPoint;
+                }
+
+                /*
+                //超至近距離
+                if (_RatioOfNearExcess < Random.value * 100)
+                {
+                    Act = _WasMove ? JumpTurn : RunAway;
+                }
+                //近距離
+                else if (_RatioOfNearMovement < Random.value * 100)
+                {
+                    Act = _WasMove ? FireShot : Backwards;
+                }
+                //遠距離
+                else
+                {
+                    Act = _WasMove ? FireShot : Approach;
+                }
+                */
+            }
+        }
+        //行動時間を計測
+        else
+        {
+            _MoveTime -= Time.deltaTime;
         }
     }
 
@@ -209,7 +210,7 @@ public class AIDragon : ComputerMove
         //時間切れで終了処理
         if (_MoveTime <= 0f)
         {
-            _Param.State.Process = MotionState.ProcessKind.EndSoon;
+            Act = null;
         }
     }
 
@@ -231,7 +232,7 @@ public class AIDragon : ComputerMove
         //目的地に到着するか時間切れで終了処理
         if (IsCloseDestination || _MoveTime <= 0f)
         {
-            _Param.State.Process = MotionState.ProcessKind.EndSoon;
+            Act = null;
         }
     }
 
@@ -253,7 +254,7 @@ public class AIDragon : ComputerMove
         //目的地に到着するか時間切れで終了処理
         if (IsCloseDestination || _MoveTime <= 0f)
         {
-            _Param.State.Process = MotionState.ProcessKind.EndSoon;
+            Act = null;
         }
     }
 
@@ -275,7 +276,7 @@ public class AIDragon : ComputerMove
         //目的地に到着するか時間切れで終了処理
         if (IsCloseDestination || _MoveTime <= 0f)
         {
-            _Param.State.Process = MotionState.ProcessKind.EndSoon;
+            Act = null;
         }
     }
 
@@ -300,7 +301,7 @@ public class AIDragon : ComputerMove
         //時間切れで終了処理
         if (_MoveTime <= 0f)
         {
-            _Param.State.Process = MotionState.ProcessKind.EndSoon;
+            Act = null;
         }
     }
     #endregion
@@ -317,16 +318,16 @@ public class AIDragon : ComputerMove
             _CommandHolder.GetActiveSkillForRun(1).DoRun(_Param, _Rb.component, GravityDirection, dir, ref _AnimKind);
             Destination = null;
             _DoAction = true;
-            _MoveTime = 20f;
+            _MoveTime = 8f;
             _IsInitialized = false;
         }
 
-        CharacterRotation(dir, -GravityDirection, 90f);
+        CharacterRotation(dir, -GravityDirection, 10f);
 
         //時間切れでコンボ入力
         if (_MoveTime <= 0f)
         {
-            _Param.State.Process = MotionState.ProcessKind.EndSoon;
+            Act = null;
         }
     }
 
@@ -350,7 +351,7 @@ public class AIDragon : ComputerMove
         //時間切れで終了処理
         if (_MoveTime <= 0f)
         {
-            _Param.State.Process = MotionState.ProcessKind.EndSoon;
+            Act = null;
         }
     }
 
@@ -365,7 +366,7 @@ public class AIDragon : ComputerMove
             _CommandHolder.GetActiveSkillForRun(0).DoRun(_Param, _Rb.component, GravityDirection, dir, ref _AnimKind);
             _DoAction = true;
             Destination = null;
-            _MoveTime = 20f;
+            _MoveTime = 4f;
             _IsInitialized = false;
         }
 
@@ -373,19 +374,17 @@ public class AIDragon : ComputerMove
         if(_Param.State.Process == MotionState.ProcessKind.Interval)
         {
             //相手が遠くなら追加で実行
-            if(_RatioOfNearExcess / 100f > Random.value)
+            if(_RatioOfNearExcess / 100f < Random.value)
             {
                 _CommandHolder.GetActiveSkillForRun(0).DoRun(_Param, _Rb.component, GravityDirection, dir, ref _AnimKind);
                 _DoAction = true;
             }
         }
 
-        CharacterRotation(dir, -GravityDirection, 90f);
-
         //時間切れで終了処理
         if (_MoveTime <= 0f)
         {
-            _Param.State.Process = MotionState.ProcessKind.EndSoon;
+            Act = null;
         }
     }
 

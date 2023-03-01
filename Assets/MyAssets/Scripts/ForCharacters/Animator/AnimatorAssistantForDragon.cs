@@ -10,7 +10,7 @@ public class AnimatorAssistantForDragon : AnimatorAssistant
         if (_Cm.JumpFlag) _Am.SetTrigger(_PARAM_NAME_DO_JUMP);
         _Am.SetFloat(_PARAM_NAME_SPEED, _Cm.Speed);
 
-        if (_Cm.DoAction)
+        if (_Cm.DoAction && _Cm.AnimKind != AnimationKind.NoCall)
         {
             _Am.SetInteger(_PARAM_NAME_ANIMATION_KIND, (int)_Cm.AnimKind);
             _Am.SetTrigger(_PARAM_NAME_DO_ACTION);

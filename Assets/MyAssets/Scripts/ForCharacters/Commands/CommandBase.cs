@@ -16,13 +16,9 @@ public abstract class CommandBase
     /// <summary>コマンド説明文</summary>
     public string Explain { get => _Explain; }
 
-
     /// <summary>コマンド初期化処理</summary>
-    public virtual void Initialize() { }
-
-    /// <summary>何かしらオブジェクトを生成する処理</summary>
-    /// <param name="index">種類</param>
-    public virtual void ObjectCreation(int index) { }
+    /// <param name="param"></param>
+    public virtual void Initialize(CharacterParameter param) { }
 }
 
 /// <summary>攻撃情報リストを構成するカラム</summary>
@@ -38,7 +34,7 @@ public class AttackPowerColumn
     [SerializeField, Tooltip("間接攻撃の威力補正値(%)")]
     short _MagicDamageRatio = 0;
     
-    /// <summary>テーブルカラムのID nこれをキーに攻撃情報をとる</summary>
+    /// <summary>テーブルカラムのID これをキーに攻撃情報をとる</summary>
     public short ID { get => _ID; }
     /// <summary>直接攻撃の威力補正値(%)</summary>
     public short DamageRatio { get => _DamageRatio; }

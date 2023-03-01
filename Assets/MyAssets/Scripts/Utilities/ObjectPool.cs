@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 using System.Linq;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 /// <summary>オブジェクトプール</summary>
 /// <typeparam name="T">プールする値の種類</typeparam>
@@ -92,6 +93,79 @@ public class GameObjectPool : ObjectPool<GameObject>
             {
                 val.SetActive(true);
                 obj = val;
+                break;
+            }
+        }
+
+        return obj;
+    }
+
+    /// <summary>オブジェクトを非アクティブにする</summary>
+    /// <param name="obj">非アクティブにしたいオブジェクト</param>
+    public void Destroy(GameObject obj)
+    {
+        obj.SetActive(false);
+    }
+}
+
+public class AttackObjectPool : ObjectPool<AttackCollision>
+{
+    /// <summary>UnityのGameObjectのプール</summary>
+    /// <param name="prefPath">プールするオブジェクトのプレハブパス</param>
+    /// <param name="isEnemies">true : 敵のオブジェクトである</param>
+    /// <param name="length">プールするオブジェクトの数</param>
+    public AttackObjectPool(string prefPath, bool isEnemies, uint? length = null)
+    {
+        if (length != null) _Length = (uint)length;
+        _Values = new AttackCollision[_Length];
+
+        for (int i = 0; i < _Values.Length; i++)
+        {
+            GameObject clone = UnityEngine.Object.Instantiate((GameObject)Resources.Load(prefPath));
+            _Values[i] = clone.GetComponent<AttackCollision>();
+
+            if (isEnemies)
+            {
+                clone.layer = LayerMask.NameToLayer(LayerManager.Instance.NameEnemyAttacker);
+            }
+            else
+            {
+                clone.layer = LayerMask.NameToLayer(LayerManager.Instance.NameAlliesAttacker);
+            }
+            clone.SetActive(false);
+        }
+    }
+
+    /// <summary>オブジェクトプールしたGameObjectを全てDestroyして解放する</summary>
+    public void PoolDelete()
+    {
+        for (int i = 0; i < _Values.Length; i++)
+        {
+            UnityEngine.Object.Destroy(_Values[i]);
+            _Values[i] = null;
+        }
+    }
+
+    /// <summary>プールからオブジェクトをアクティブにする</summary>
+    /// <returns>アクティブにできた場合はそのオブジェクトを返す</returns>
+    public AttackCollision Create(AttackInformation info, Vector3 direction, float speed)
+    {
+        AttackCollision obj = null;
+        foreach (AttackCollision val in _Values)
+        {
+            if (val is not null && !val.gameObject.activeSelf)
+            {
+                obj = val;
+                val.AttackInfo = info;
+
+                ObjectShot shotObj = null;
+                if (val.TryGetComponent(out shotObj))
+                {
+                    shotObj.Create(direction, speed);
+                }
+
+                val.gameObject.SetActive(true);
+
                 break;
             }
         }

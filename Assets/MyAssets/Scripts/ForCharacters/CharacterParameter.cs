@@ -25,6 +25,12 @@ abstract public class CharacterParameter : MonoBehaviour
     #endregion
 
     #region メインパラメータ
+    [SerializeField, Tooltip("キャラクター名：アルファベット表記（CSVファイルロードに利用）")]
+    protected string _NameAlphabet = "name";
+
+    [SerializeField, Tooltip("キャラクター名：カタカナ")]
+    protected string _Name = "名前";
+
     [SerializeField, Tooltip("メインパラメータ")]
     protected MainParameter _Main = null;
 
@@ -73,6 +79,9 @@ abstract public class CharacterParameter : MonoBehaviour
     [SerializeField, Tooltip("キャラクターの目線位置")]
     protected Transform _EyePoint = null;
 
+    /// <summary>照準器の位置</summary>
+    protected Vector3 _ReticlePoint = Vector3.zero;
+
     /// <summary>当該キャラクターが持つ時間軸コンポーネント</summary>
     protected Timeline _Tl = null;
 
@@ -98,6 +107,9 @@ abstract public class CharacterParameter : MonoBehaviour
     protected InputAcceptance _Acceptance = null;
 
 
+    [SerializeField, Tooltip("オブジェクトの射出位置情報")]
+    protected Transform[] _EmitPoints = null;
+
     [System.Serializable]
     public class CollidersForOneWeapon
     {
@@ -106,7 +118,6 @@ abstract public class CharacterParameter : MonoBehaviour
     }
     [SerializeField, Tooltip("攻撃範囲情報")]
     protected CollidersForOneWeapon[] _AttackAreas = null;
-
 
 
     /// <summary>受けた攻撃のID履歴</summary>
@@ -122,21 +133,27 @@ abstract public class CharacterParameter : MonoBehaviour
     /// <summary>敵キャラクターがリスト化されている</summary>
     public static IReadOnlyList<CharacterParameter> Enemies => _Enemies;
 
+    /// <summary>キャラクター名：アルファベット表記</summary>
+    public string NameAlphabet => _NameAlphabet;
+    /// <summary>キャラクター名：カタカナ</summary>
+    public string Name => _Name;
     /// <summary>メインパラメータ</summary>
     public MainParameter Main => _Main;
     /// <summary>最大のHP</summary>
-    public virtual short HPMaximum { get => _Main.HPMaximum; }
+    public virtual short HPMaximum => _Main.HPMaximum;
     /// <summary>現在のHP</summary>
-    public virtual short HPCurrent { get => _HPCurrent; }
+    public virtual short HPCurrent => _HPCurrent;
     /// <summary>最大MP</summary>
-    public virtual float MPMaximum { get => _MPMaximum; }
+    public virtual float MPMaximum => _MPMaximum;
     /// <summary>現在のMP</summary>
-    public virtual float MPCurrent { get => _MPCurrent; }
+    public virtual float MPCurrent => _MPCurrent;
     /// <summary>サブパラメータ</summary>
     public SubParameter Sub => _Sub;
 
     /// <summary>キャラクターの目線位置</summary>
     public Transform EyePoint { get => _EyePoint; set => _EyePoint = value; }
+    /// <summary>照準器の位置</summary>
+    public Vector3 ReticlePoint { get => _ReticlePoint; set => _ReticlePoint = value; }
     /// <summary>本キャラクターの時間情報</summary>
     public Timeline Tl { get => _Tl; }
     /// <summary>キャラクターの向き情報</summary>
@@ -155,6 +172,8 @@ abstract public class CharacterParameter : MonoBehaviour
     /// <summary>操作可否情報</summary>
     public InputAcceptance Can { get => _Acceptance; }
 
+    /// <summary>オブジェクトの射出位置情報</summary>
+    public Transform[] EmitPoints => _EmitPoints;
     /// <summary>攻撃範囲情報</summary>
     public CollidersForOneWeapon[] AttackAreas => _AttackAreas;
     /// <summary>受けた攻撃のID履歴</summary>
@@ -212,7 +231,13 @@ abstract public class CharacterParameter : MonoBehaviour
     /// <param name="ratioOfHP">最大HPに対する回復量割合</param>
     public virtual void GaveHeal(float ratioOfHP)
     {
-        _HPCurrent += (short)(ratioOfHP * _Main.HPMaximum);
+        short recover = (short)(ratioOfHP * _Main.HPMaximum);
+        _HPCurrent = recover;
+        _HPCurrent = _HPCurrent > _Main.HPMaximum ? _Main.HPMaximum : recover;
+        Debug.Log($"{_Name}に、HPを{recover}回復する効果");
+
+        GameObject eff = EffectManager.Instance.HealEffects.Instansiate();
+        eff.transform.position = _EyePoint.position;
     }
 
 
@@ -381,9 +406,9 @@ abstract public class CharacterParameter : MonoBehaviour
                         _Acceptance.ShiftSlide = false;
                         _Acceptance.LongTrip = false;
                         _Acceptance.Gurad = false;
-                        _Acceptance.ComboNormal = true;
-                        _Acceptance.ComboFinish = true;
-                        _Acceptance.Command = false;
+                        _Acceptance.ComboNormal = false;
+                        _Acceptance.ComboFinish = false;
+                        _Acceptance.Command = true;
 
                         break;
                     case MotionState.ProcessKind.EndSoon:
@@ -407,7 +432,7 @@ abstract public class CharacterParameter : MonoBehaviour
                         _Acceptance.Gurad = false;
                         _Acceptance.ComboNormal = false;
                         _Acceptance.ComboFinish = false;
-                        _Acceptance.Command = true;
+                        _Acceptance.Command = false;
 
                         break;
                 }

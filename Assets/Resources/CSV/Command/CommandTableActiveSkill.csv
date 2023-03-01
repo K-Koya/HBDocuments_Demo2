@@ -1,0 +1,13 @@
+﻿ID,CSVPath
+1,CSV/Command/FireShot
+2,CSV/Command/FreezeShot
+3,CSV/Command/BradeShoot
+4,CSV/Command/RoundSlash
+,
+500,CSV/Command/Regenation
+,
+900,CSV/Command/HealSpray
+,
+1001,CSV/Command/BiteCombo
+1002,CSV/Command/JumpTurn
+1003,CSV/Command/FireBreath

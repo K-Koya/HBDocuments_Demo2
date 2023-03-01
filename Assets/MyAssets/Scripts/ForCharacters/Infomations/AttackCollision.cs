@@ -28,8 +28,11 @@ public class AttackCollision : MonoBehaviour
     /// <summary>DamageCollision側で呼び出す、ヒットエフェクトの発生メソッド</summary>
     public void CallHitEffect()
     {
-        GameObject eff = _HitEffects.Instansiate();
-        eff.transform.position = transform.position;
+        if (_HitEffects is not null)
+        {
+            GameObject eff = _HitEffects.Instansiate();
+            eff.transform.position = transform.position;
+        }
     }
 }
 

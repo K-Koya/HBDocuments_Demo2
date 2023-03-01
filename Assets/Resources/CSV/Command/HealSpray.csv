@@ -1,0 +1,5 @@
+﻿CommandID,CommandName,Explain,MPCost,MaxInventry,NumberOfCombo
+900,回復スプレー,自分にスプレーを吹きかけ、最大HPの12.5%を回復します。,-1,8,-1
+HealPowerTable,,,,,
+ID,HealRatio,HealValue,Time,,
+0,0.125,-1,0,,
