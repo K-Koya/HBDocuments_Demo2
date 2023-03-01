@@ -19,7 +19,7 @@ public class CommandFireBreath : CommandActiveSkillBase, ICSVDataConverter
         _Kind = CommandKind.Attack;
     }
 
-    public override void Initialize(CharacterParameter param)
+    public override void Initialize(int layer)
     {
         CSVToMembers(CSVIO.LoadCSV(LOAD_CSV_PATH));
 

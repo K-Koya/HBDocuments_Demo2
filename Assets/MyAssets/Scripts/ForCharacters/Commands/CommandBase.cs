@@ -18,7 +18,7 @@ public abstract class CommandBase
 
     /// <summary>コマンド初期化処理</summary>
     /// <param name="param"></param>
-    public virtual void Initialize(CharacterParameter param) { }
+    public virtual void Initialize(int layer) { }
 }
 
 /// <summary>攻撃情報リストを構成するカラム</summary>

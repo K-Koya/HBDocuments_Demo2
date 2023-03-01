@@ -18,12 +18,11 @@ public class CommandJumpTurn : CommandActiveSkillBase, ICSVDataConverter
         _Name = "ジャンプターン";
     }
 
-    public override void Initialize(CharacterParameter param)
+    public override void Initialize(int layer)
     {
         CSVToMembers(CSVIO.LoadCSV(LOAD_CSV_PATH));
 
-        bool isEnemy = param.gameObject.layer == LayerManager.Instance.Enemy;
-        _Shockwave = new AttackObjectPool(LOAD_PREF_PATH, isEnemy, 1);
+        _Shockwave = new AttackObjectPool(LOAD_PREF_PATH, layer, 1);
     }
 
     /// <summary>衝撃波発射メソッド</summary>

@@ -232,8 +232,8 @@ abstract public class CharacterParameter : MonoBehaviour
     public virtual void GaveHeal(float ratioOfHP)
     {
         short recover = (short)(ratioOfHP * _Main.HPMaximum);
-        _HPCurrent = recover;
-        _HPCurrent = _HPCurrent > _Main.HPMaximum ? _Main.HPMaximum : recover;
+        _HPCurrent += recover;
+        _HPCurrent = _HPCurrent > _Main.HPMaximum ? _Main.HPMaximum : _HPCurrent;
         Debug.Log($"{_Name}‚ÉAHP‚ğ{recover}‰ñ•œ‚·‚éŒø‰Ê");
 
         GameObject eff = EffectManager.Instance.HealEffects.Instansiate();

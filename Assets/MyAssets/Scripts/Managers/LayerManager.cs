@@ -7,6 +7,8 @@ public class LayerManager : Singleton<LayerManager>
     [Header("以下に対応レイヤを指定")]
 
     #region メンバ
+    [SerializeField, Tooltip("敵レイヤ名")]
+    string _NameEnemy = "Enemy";
     [SerializeField, Tooltip("敵の攻撃用レイヤ名")]
     string _NameEnemyAttacker = "EnemyAttacker";
     [SerializeField, Tooltip("プレイヤーおよび味方の攻撃用レイヤ名")]
@@ -25,6 +27,8 @@ public class LayerManager : Singleton<LayerManager>
     #endregion
 
     #region プロパティ
+    /// <summary>敵レイヤ名</summary>
+    public string NameEnemy { get => _NameEnemy; }
     /// <summary>敵の攻撃用レイヤ名</summary>
     public string NameEnemyAttacker { get => _NameEnemyAttacker; }
     /// <summary>プレイヤーおよび味方の攻撃用レイヤ名</summary>

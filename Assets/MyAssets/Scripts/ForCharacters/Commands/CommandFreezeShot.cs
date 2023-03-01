@@ -24,12 +24,11 @@ public class CommandFreezeShot : CommandActiveSkillBase, ICSVDataConverter
         _Name = "フリーズショット";
     }
 
-    public override void Initialize(CharacterParameter param)
+    public override void Initialize(int layer)
     {
         CSVToMembers(CSVIO.LoadCSV(LOAD_CSV_PATH));
 
-        bool isEnemy = param.gameObject.layer == LayerManager.Instance.Enemy;
-        _FreezeBalls = new AttackObjectPool(LOAD_PREF_PATH, isEnemy, 10);
+        _FreezeBalls = new AttackObjectPool(LOAD_PREF_PATH, layer, 10);
 
         _Step = 0;
     }

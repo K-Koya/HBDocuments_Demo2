@@ -114,7 +114,7 @@ public class AttackObjectPool : ObjectPool<AttackCollision>
     /// <param name="prefPath">プールするオブジェクトのプレハブパス</param>
     /// <param name="isEnemies">true : 敵のオブジェクトである</param>
     /// <param name="length">プールするオブジェクトの数</param>
-    public AttackObjectPool(string prefPath, bool isEnemies, uint? length = null)
+    public AttackObjectPool(string prefPath, int layer, uint? length = null)
     {
         if (length != null) _Length = (uint)length;
         _Values = new AttackCollision[_Length];
@@ -124,14 +124,7 @@ public class AttackObjectPool : ObjectPool<AttackCollision>
             GameObject clone = UnityEngine.Object.Instantiate((GameObject)Resources.Load(prefPath));
             _Values[i] = clone.GetComponent<AttackCollision>();
 
-            if (isEnemies)
-            {
-                clone.layer = LayerMask.NameToLayer(LayerManager.Instance.NameEnemyAttacker);
-            }
-            else
-            {
-                clone.layer = LayerMask.NameToLayer(LayerManager.Instance.NameAlliesAttacker);
-            }
+            clone.layer = layer;
             clone.SetActive(false);
         }
     }

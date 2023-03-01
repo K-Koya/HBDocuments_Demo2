@@ -18,9 +18,9 @@ public class CommandCombo : CommandActiveSkillBase, ICSVDataConverter
         _Kind = CommandKind.Combo;
     }
 
-    public override void Initialize(CharacterParameter param)
+    public override void Initialize(int layer)
     {
-        CSVToMembers(CSVIO.LoadCSV(LOAD_CSV_PATH + param.NameAlphabet));
+        CSVToMembers(CSVIO.LoadCSV(LOAD_CSV_PATH));
     }
 
     /// <summary>コンボ攻撃を要求するメソッド</summary>
@@ -65,6 +65,7 @@ public class CommandCombo : CommandActiveSkillBase, ICSVDataConverter
                     //いる場合
                     else
                     {
+                        /*TODO
                         //キャラクターの鉛直方向と照準方向の位置関係で分岐
                         //水平に近い
                         if (Vector3.Dot(param.transform.up, reticleNorm) > 0.75f)
@@ -94,6 +95,25 @@ public class CommandCombo : CommandActiveSkillBase, ICSVDataConverter
 
                             //攻撃方向へ前進
                             rb.AddForce(reticleNorm, ForceMode.Impulse);
+                        }
+                        */
+
+                        //照準を合わせている相手との距離で分岐
+                        //近い場合
+                        if (reticleDirection.sqrMagnitude < param.Sub.ComboProximityRange * param.Sub.ComboProximityRange)
+                        {
+                            animKind = AnimationKind.ComboGroundFoward;
+
+                            //攻撃方向へ前進
+                            rb.AddForce(reticleNorm, ForceMode.Impulse);
+                        }
+                        //遠い場合
+                        else
+                        {
+                            animKind = AnimationKind.ComboGroundFowardFar;
+
+                            //攻撃方向へ前進
+                            rb.AddForce(reticleNorm * 2f, ForceMode.Impulse);
                         }
 
                         //攻撃方向へ前進

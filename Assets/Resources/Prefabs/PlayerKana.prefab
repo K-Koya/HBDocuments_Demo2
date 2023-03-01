@@ -3091,10 +3091,10 @@ MonoBehaviour:
     - _ID: 0
       _DamageRatio: 25
       _MagicDamageRatio: 0
-    - _ID: 2
+    - _ID: 1
       _DamageRatio: 50
       _MagicDamageRatio: 0
-    - _ID: 3
+    - _ID: 2
       _DamageRatio: 100
       _MagicDamageRatio: 0
     _IsRunning: 0

@@ -24,12 +24,11 @@ public class CommandFireShot : CommandActiveSkillBase, ICSVDataConverter
         _Name = "ファイアショット";
     }
 
-    public override void Initialize(CharacterParameter param)
+    public override void Initialize(int layer)
     {
         CSVToMembers(CSVIO.LoadCSV(LOAD_CSV_PATH));
 
-        bool isEnemy = param.gameObject.layer == LayerManager.Instance.Enemy;
-        _FireBalls = new AttackObjectPool(LOAD_PREF_PATH, isEnemy, 10);
+        _FireBalls = new AttackObjectPool(LOAD_PREF_PATH, layer, 10);
 
         _Step = 0;
     }

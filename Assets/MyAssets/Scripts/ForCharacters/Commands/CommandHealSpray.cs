@@ -19,7 +19,7 @@ public class CommandHealSpray : CommandActiveSkillBase, ICSVDataConverter
         _Name = "‰ñ•œƒXƒvƒŒ[";
     }
 
-    public override void Initialize(CharacterParameter param)
+    public override void Initialize(int layer)
     {
         CSVToMembers(CSVIO.LoadCSV(LOAD_CSV_PATH));
     }

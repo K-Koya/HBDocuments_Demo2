@@ -81,6 +81,10 @@ public class CommandHolder : MonoBehaviour
         CharacterParameter param = GetComponentInParent<CharacterParameter>();
         CharacterMove cm = GetComponentInParent<CharacterMove>();
 
+        int layerSet = gameObject.layer == LayerMask.NameToLayer(LayerManager.Instance.NameEnemy)
+                        ? LayerMask.NameToLayer(LayerManager.Instance.NameEnemyAttacker)
+                        : LayerMask.NameToLayer(LayerManager.Instance.NameAlliesAttacker);
+
         //各種コマンドはnullを許容しない
         if (_CommandJump is null) 
             _CommandJump = new CommandJumpBase();
@@ -100,13 +104,13 @@ public class CommandHolder : MonoBehaviour
                 _ActiveSkills[i] = new CommandActiveSkillBase();
 
             //各スキルコマンドを初期化実行
-            _ActiveSkills[i].Initialize(param);
+            _ActiveSkills[i].Initialize(layerSet);
         }
 
         //各種コマンドを初期化実行
-        _CommandJump.Initialize(param);
-        _CommandShiftSlide.Initialize(param);
-        _CommandLongTrip.Initialize(param);
+        _CommandJump.Initialize(layerSet);
+        _CommandShiftSlide.Initialize(layerSet);
+        _CommandLongTrip.Initialize(layerSet);
     }
 
     /// <summary>コードからコマンドをセットするメソッド</summary>

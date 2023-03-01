@@ -18,12 +18,11 @@ public class CommandRoundSlash : CommandActiveSkillBase, ICSVDataConverter
         _Name = "ラウンドスラッシュ";
     }
 
-    public override void Initialize(CharacterParameter param)
+    public override void Initialize(int layer)
     {
         CSVToMembers(CSVIO.LoadCSV(LOAD_CSV_PATH));
 
-        bool isEnemy = param.gameObject.layer == LayerManager.Instance.Enemy;
-        _RoundSlashEdge = new AttackObjectPool(LOAD_PREF_PATH, isEnemy, 2);
+        _RoundSlashEdge = new AttackObjectPool(LOAD_PREF_PATH, layer, 2);
     }
 
     /// <summary>回転斬撃メソッド</summary>

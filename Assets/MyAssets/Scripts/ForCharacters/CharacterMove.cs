@@ -270,8 +270,6 @@ abstract public class CharacterMove : MonoBehaviour
         int attackInfoID = twoIds / 100;
         int attackAreaID = twoIds % 100;
 
-        Debug.Log($"{_CommandHolder.Running} {attackInfoID} {attackAreaID}");
-
         AttackPowerColumn apc = _CommandHolder.Running.GetAttackArea(attackInfoID);
         AttackInformation info = new AttackInformation(apc, _Param.Main);
 
