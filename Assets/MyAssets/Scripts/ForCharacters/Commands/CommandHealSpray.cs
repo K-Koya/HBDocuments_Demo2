@@ -17,6 +17,7 @@ public class CommandHealSpray : CommandActiveSkillBase, ICSVDataConverter
     public CommandHealSpray()
     {
         _Name = "‰ñ•œƒXƒvƒŒ[";
+        _Kind = CommandKind.ItemHeal;
     }
 
     public override void Initialize(int layer)

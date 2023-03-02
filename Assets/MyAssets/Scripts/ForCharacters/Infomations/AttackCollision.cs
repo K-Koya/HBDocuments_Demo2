@@ -26,12 +26,12 @@ public class AttackCollision : MonoBehaviour
     }
 
     /// <summary>DamageCollision側で呼び出す、ヒットエフェクトの発生メソッド</summary>
-    public void CallHitEffect()
+    public void CallHitEffect(Vector3 emitPoint)
     {
         if (_HitEffects is not null)
         {
             GameObject eff = _HitEffects.Instansiate();
-            eff.transform.position = transform.position;
+            eff.transform.position = emitPoint;
         }
     }
 }

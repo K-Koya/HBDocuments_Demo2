@@ -18,7 +18,7 @@ public class CommandActiveSkillBase : CommandBase
     [SerializeField, Tooltip("true : コマンド施工中")]
     protected bool _IsRunning = false;
 
-    protected enum CommandKind
+    public enum CommandKind
     {
         /// <summary>未挿入</summary>
         Blank = 0,
@@ -37,6 +37,9 @@ public class CommandActiveSkillBase : CommandBase
     }
     /// <summary>コマンドの種類</summary>
     protected CommandKind _Kind = CommandKind.Blank;
+
+    /// <summary>コマンドの種類</summary>
+    public CommandKind Kind { get => _Kind; }
 
     #endregion
 

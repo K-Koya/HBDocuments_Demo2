@@ -110,8 +110,11 @@ public class AnimatorAssistant : MonoBehaviour
         int emitIndex = twoIds % 100;
 
         GameObject obj = _Effects[effectIndex].Instansiate();
-        obj.transform.position = _EffectEmitPoints[emitIndex].position;
-        obj.transform.rotation = _EffectEmitPoints[emitIndex].rotation;
+        if (obj)
+        {
+            obj.transform.position = _EffectEmitPoints[emitIndex].position;
+            obj.transform.rotation = _EffectEmitPoints[emitIndex].rotation;
+        }
     }
 
     /// <summary>実行中コマンドの打ち出したいオブジェクトをアクティブ化する</summary>

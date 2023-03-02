@@ -21,6 +21,9 @@ public class HPMeterController : MonoBehaviour
     /// <summary>HPの余白表示のためのHP値保管</summary>
     float _BeforeHPRatio = 0.0f;
 
+    /// <summary>HPの余白表示の時間</summary>
+    float _BlankTimer = 1.1f; 
+
 
     // Use this for initialization
     void Start () 
@@ -40,8 +43,17 @@ public class HPMeterController : MonoBehaviour
     {
         short hpMaximum = _Param.Main.HPMaximum;
         short hpCurrent = _Param.HPCurrent;
-        //怯み中はBlank部分を表示する
-        bool doAppearBlankHP = _Param.State.Kind is MotionState.StateKind.Hurt;
+
+        //Blank部分を表示する
+        bool doAppearBlankHP = _BlankTimer < 1f;
+        if (doAppearBlankHP)
+        {
+            _BlankTimer += Time.deltaTime;
+        }
+        else
+        {
+            _BlankTimer = 1f;
+        }
 
         //HPの割合値を計算
         float hpRatio = hpCurrent / (float)hpMaximum;
@@ -62,7 +74,7 @@ public class HPMeterController : MonoBehaviour
         //HPの余白表示が表示されている状態で、余白部分を減らすフラグが立っていれば減少処理
         if (_BeforeHPRatio > hpRatio)
         {
-            if (doAppearBlankHP) _BeforeHPRatio = Mathf.Clamp(_BeforeHPRatio - _Tl.deltaTime, hpRatio, hpMaximum);
+            if (!doAppearBlankHP) _BeforeHPRatio = Mathf.Clamp(_BeforeHPRatio - _Tl.deltaTime, hpRatio, hpMaximum);
         }
         else
         {

@@ -55,7 +55,7 @@ public class DamageCollision : MonoBehaviour
                     _Param.GaveDamage((int)(damage * _DamageRatioOnPart));
 
                     //エフェクト発生
-                    newGot.CallHitEffect();
+                    newGot.CallHitEffect(other.ClosestPoint(transform.position));
 
                     Debug.Log($"{_Param.name} が {damage} ダメージをうけた！");
                 }

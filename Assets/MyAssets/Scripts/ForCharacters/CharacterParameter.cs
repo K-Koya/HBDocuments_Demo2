@@ -189,7 +189,6 @@ abstract public class CharacterParameter : MonoBehaviour
 
     void Awake()
     {
-        _Main = new MainParameter();
         _State = new MotionState();
         _Acceptance = new InputAcceptance();
 

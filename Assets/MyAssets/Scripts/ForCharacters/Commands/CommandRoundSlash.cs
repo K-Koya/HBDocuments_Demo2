@@ -16,6 +16,7 @@ public class CommandRoundSlash : CommandActiveSkillBase, ICSVDataConverter
     public CommandRoundSlash()
     {
         _Name = "ラウンドスラッシュ";
+        _Kind = CommandKind.Attack;
     }
 
     public override void Initialize(int layer)

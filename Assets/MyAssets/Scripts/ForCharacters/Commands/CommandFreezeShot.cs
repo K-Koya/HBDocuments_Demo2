@@ -22,6 +22,7 @@ public class CommandFreezeShot : CommandActiveSkillBase, ICSVDataConverter
     public CommandFreezeShot()
     {
         _Name = "フリーズショット";
+        _Kind = CommandKind.Attack;
     }
 
     public override void Initialize(int layer)
@@ -60,7 +61,7 @@ public class CommandFreezeShot : CommandActiveSkillBase, ICSVDataConverter
     public override void ObjectCreation(CharacterParameter param, AttackInformation info, Vector3 emitPoint)
     {
         Vector3 direction = Vector3.Normalize(param.ReticlePoint - emitPoint);
-        AttackCollision ac = _FreezeBalls.Create(info, direction, 0.1f);
+        AttackCollision ac = _FreezeBalls.Create(info, direction, 10f);
         ac.transform.position = emitPoint;
     }
 

@@ -2044,7 +2044,7 @@ Transform:
   - {fileID: 4493129034321292445}
   - {fileID: 3429903952835270492}
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5390001580564868210
 MonoBehaviour:
@@ -2123,15 +2123,15 @@ MonoBehaviour:
   _NameAlphabet: Kana
   _Name: "\u30AB\u30CA"
   _Main:
-    _HPMaximum: 1000
-    _Attack: 1000
-    _Defense: 1000
-    _Magic: 1000
-    _Shield: 1000
-    _Rapid: 1000
-    _Technique: 1000
-    _Luck: 1000
-  _HPCurrent: 1000
+    _HPMaximum: 500
+    _Attack: 1300
+    _Defense: 550
+    _Magic: 1350
+    _Shield: 600
+    _Rapid: 1500
+    _Technique: 1300
+    _Luck: 900
+  _HPCurrent: 500
   _MPMaximum: 100
   _MPCurrent: 100
   _Sub:
@@ -2618,7 +2618,7 @@ GameObject:
   - component: {fileID: 849044565158110882}
   - component: {fileID: 4015735489622665494}
   - component: {fileID: 8038707052260751458}
-  - component: {fileID: 18826051}
+  - component: {fileID: 18826056}
   m_Layer: 0
   m_Name: Kana
   m_TagString: Untagged
@@ -2704,7 +2704,7 @@ MonoBehaviour:
   _globalClockKey: Player
   _rewindable: 0
   _recordingDuration: 30
---- !u!114 &18826051
+--- !u!114 &18826056
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2836,11 +2836,11 @@ MonoBehaviour:
     autoRotation: 0
     spaceType: 0
     parent: {fileID: 0}
-    position: {x: 2.99631, y: 0.65430146, z: 1.6337011}
+    position: {x: 3.6611838, y: 0.5712229, z: 1.5903931}
     rotation: {x: 0, y: 0, z: 0, w: 1}
     headWeight: 1
     eyesWeight: 0
-    swivelRotation: -4.833313
+    swivelRotation: -9.135666
     swivelPosition: {x: 0, y: 0, z: 0}
     parentPath: 
   - enable: 0
@@ -2848,11 +2848,11 @@ MonoBehaviour:
     autoRotation: 0
     spaceType: 0
     parent: {fileID: 0}
-    position: {x: 2.775062, y: 0.6317227, z: 0.64314866}
-    rotation: {x: -0.00941448, y: 0.93416524, z: -0.010999289, w: -0.35654697}
+    position: {x: 3.2991905, y: 0.5957853, z: 0.77815783}
+    rotation: {x: 0.011782239, y: -0.99940366, z: -0.021943968, w: 0.023917496}
     headWeight: 1
     eyesWeight: 0
-    swivelRotation: 60.70247
+    swivelRotation: 90
     swivelPosition: {x: 0, y: 0, z: 0}
     parentPath: 
   - enable: 0
@@ -2860,8 +2860,8 @@ MonoBehaviour:
     autoRotation: 0
     spaceType: 0
     parent: {fileID: 0}
-    position: {x: 3.2729032, y: 1.0313132, z: 0.83488506}
-    rotation: {x: -0.8599762, y: -0.06316215, z: -0.3556531, w: 0.36050305}
+    position: {x: 3.252008, y: 0.642556, z: 0.4935441}
+    rotation: {x: 0.23573764, y: 0.8133464, z: -0.028348448, w: 0.53112316}
     headWeight: 1
     eyesWeight: 0
     swivelRotation: -90
@@ -2872,11 +2872,11 @@ MonoBehaviour:
     autoRotation: 0
     spaceType: 0
     parent: {fileID: 0}
-    position: {x: 2.9364123, y: 0.075366884, z: 0.8102894}
-    rotation: {x: -0.004680134, y: 0.26027834, z: 0.054254193, w: 0.96399677}
+    position: {x: 2.9536996, y: 0.054308794, z: 0.59262085}
+    rotation: {x: -0.019608103, y: 0.013691226, z: 0.051893454, w: 0.99836624}
     headWeight: 1
     eyesWeight: 0
-    swivelRotation: -31.756836
+    swivelRotation: -6.0874634
     swivelPosition: {x: 0, y: 0, z: 0}
     parentPath: 
   - enable: 0
@@ -2884,16 +2884,16 @@ MonoBehaviour:
     autoRotation: 0
     spaceType: 0
     parent: {fileID: 0}
-    position: {x: 3.07472, y: 0.07118469, z: 0.46363622}
-    rotation: {x: -0.03059726, y: 0.29521465, z: -0.034805004, w: 0.9543064}
+    position: {x: 3.1101658, y: 0.055343047, z: 0.5484842}
+    rotation: {x: -0.02253146, y: 0.008673923, z: -0.038747102, w: 0.99895734}
     headWeight: 1
     eyesWeight: 0
-    swivelRotation: -30.176086
+    swivelRotation: 2.8917542
     swivelPosition: {x: 0, y: 0, z: 0}
     parentPath: 
   originalIkData: []
   selectionData: []
-  lastSelectAnimationClip: {fileID: 7400000, guid: 9be6bf7d7d549854d883c2350fe8932d, type: 2}
+  lastSelectAnimationClip: {fileID: -1678946955522051210, guid: a24c2bac91027b947835d5137c5427b0, type: 3}
   handPoseList: []
   blendShapeList: []
 --- !u!1 &6230622647700795437
@@ -3036,7 +3036,7 @@ GameObject:
   - component: {fileID: 3556824694276390118}
   m_Layer: 8
   m_Name: CommandHolder
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3385,7 +3385,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7973125204888829216}
-  m_LocalRotation: {x: 0.0449411, y: -0.10684884, z: 0.0098924255, w: 0.9932099}
+  m_LocalRotation: {x: 0.04494109, y: -0.10684884, z: 0.009892423, w: 0.9932099}
   m_LocalPosition: {x: -0.09177922, y: 0.000000007450581, z: 9.312722e-10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

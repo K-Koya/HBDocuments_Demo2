@@ -24,7 +24,9 @@ public class ObjectShot : MonoBehaviour
 
     void Update()
     {
-        if(_Time  < 0f)
+        transform.position += _Direction * _Speed * Time.deltaTime;
+
+        if (_Time < 0f)
         {
             if(_Time  > -100f)
             {
@@ -35,14 +37,6 @@ public class ObjectShot : MonoBehaviour
         else
         {
             _Time -= Time.deltaTime;
-        }
-    }
-
-    void FixedUpdate()
-    {
-        if(_Time > 0f)
-        {
-            transform.position += _Direction * _Speed;
         }
     }
 

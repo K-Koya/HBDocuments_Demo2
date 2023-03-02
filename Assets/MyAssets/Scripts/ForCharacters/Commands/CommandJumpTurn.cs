@@ -16,6 +16,7 @@ public class CommandJumpTurn : CommandActiveSkillBase, ICSVDataConverter
     public CommandJumpTurn()
     {
         _Name = "ジャンプターン";
+        _Kind = CommandKind.Attack;
     }
 
     public override void Initialize(int layer)
