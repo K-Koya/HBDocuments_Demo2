@@ -373,7 +373,7 @@ MonoBehaviour:
     _Rapid: 600
     _Technique: 500
     _Luck: 500
-  _HPCurrent: 6500
+  _HPCurrent: 2500
   _MPMaximum: 100
   _MPCurrent: 100
   _Sub:

@@ -80,7 +80,7 @@ public class CommandFreezeShot : CommandActiveSkillBase, ICSVDataConverter
     {
         _Name = csv[1][1];
         _Explain = csv[1][2];
-        _Step = byte.Parse(csv[1][3]);
+        _Count = byte.Parse(csv[1][3]);
         _AttackPowerTable = new AttackPowerColumn[csv.Count - 4];
         for (int i = 4; i < csv.Count; i++)
         {
