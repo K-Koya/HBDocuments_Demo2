@@ -65,9 +65,24 @@ public class GameObjectPool : ObjectPool<GameObject>
         if (length != null) _Length = (uint)length;
         _Values = new GameObject[_Length];
 
-        for(int i = 0; i < _Values.Length; i++)
+        for (int i = 0; i < _Values.Length; i++)
         {
             _Values[i] = UnityEngine.Object.Instantiate(pref);
+            _Values[i].SetActive(false);
+        }
+    }
+
+    /// <summary>UnityのGameObjectのプール</summary>
+    /// <param name="pref">プールするオブジェクトのプレハブパス</param>
+    /// <param name="length">オブジェクト数</param>
+    public GameObjectPool(string prefPath, uint? length = null)
+    {
+        if (length != null) _Length = (uint)length;
+        _Values = new GameObject[_Length];
+
+        for(int i = 0; i < _Values.Length; i++)
+        {
+            _Values[i] = UnityEngine.Object.Instantiate((GameObject)Resources.Load(prefPath));
             _Values[i].SetActive(false);
         }
     }
@@ -110,6 +125,25 @@ public class GameObjectPool : ObjectPool<GameObject>
 
 public class AttackObjectPool : ObjectPool<AttackCollision>
 {
+    /// <summary>UnityのGameObjectのプール</summary>
+    /// <param name="pref">プールするオブジェクトのプレハブ</param>
+    /// <param name="isEnemies">true : 敵のオブジェクトである</param>
+    /// <param name="length">プールするオブジェクトの数</param>
+    public AttackObjectPool(GameObject pref, int layer, uint? length = null)
+    {
+        if (length != null) _Length = (uint)length;
+        _Values = new AttackCollision[_Length];
+
+        for (int i = 0; i < _Values.Length; i++)
+        {
+            GameObject clone = UnityEngine.Object.Instantiate(pref);
+            _Values[i] = clone.GetComponent<AttackCollision>();
+
+            clone.layer = layer;
+            clone.SetActive(false);
+        }
+    }
+
     /// <summary>UnityのGameObjectのプール</summary>
     /// <param name="prefPath">プールするオブジェクトのプレハブパス</param>
     /// <param name="isEnemies">true : 敵のオブジェクトである</param>

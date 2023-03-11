@@ -2,15 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class CommandShiftSlideBase : CommandBase
+public class MotionShiftSlideBase
 {
-    public CommandShiftSlideBase()
-    {
-        _Name = "シフトスライド";
-        _Explain = "短距離の回避手段。地に足つけて立ち止まり、回避ボタンを押しながら移動すると、同じ方向を向きながら前後左右に体をはらう。";
-    }
-
     /// <summary>短距離回避（シフトスライド）処理</summary>
     /// <param name="param">該当キャラクターのパラメータ</param>
     /// <param name="rb">リジッドボディ</param>

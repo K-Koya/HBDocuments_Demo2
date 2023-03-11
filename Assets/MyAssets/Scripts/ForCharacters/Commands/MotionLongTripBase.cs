@@ -2,15 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class CommandLongTripBase : CommandBase
+public class MotionLongTripBase
 {
-    public CommandLongTripBase()
-    {
-        _Name = "ロングトリップ";
-        _Explain = "長距離の回避手段。地に足つけて走っているときに回避ボタンを押すと、走っていた方向に滑るように高速移動をする。";
-    }
-
     /// <summary>長距離回避（ロングトリップ）処理</summary>
     /// <param name="param">該当キャラクターのパラメータ</param>
     /// <param name="rb">リジッドボディ</param>

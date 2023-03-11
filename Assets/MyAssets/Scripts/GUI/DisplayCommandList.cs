@@ -29,7 +29,7 @@ public class DisplayCommandList : MonoBehaviour
     TMP_Text[] _ListCounter = null;
 
     /// <summary>プレイヤーの所持コマンド</summary>
-    CommandActiveSkillBase[] _Commands = null;
+    CommandBase[] _Commands = null;
 
     // Start is called before the first frame update
     void Start()
@@ -61,34 +61,34 @@ public class DisplayCommandList : MonoBehaviour
         {
             switch (_Commands[i].Kind)
             {
-                case CommandActiveSkillBase.CommandKind.Attack:
+                case CommandKind.Attack:
                     _ListBackground[i].color = _BackgroundAttack;
-                    _ListCounter[i].text = UNIT_FOR_COST;
+                    _ListCounter[i].text = $"{UNIT_FOR_COST}{_Commands[i].MPCost}";
                     break;
 
-                case CommandActiveSkillBase.CommandKind.Support:
+                case CommandKind.Support:
                     _ListBackground[i].color = _BackgroundSupport;
-                    _ListCounter[i].text = UNIT_FOR_COST;
+                    _ListCounter[i].text = $"{UNIT_FOR_COST}{_Commands[i].MPCost}";
                     break;
 
-                case CommandActiveSkillBase.CommandKind.Item:
+                case CommandKind.Item:
                     _ListBackground[i].color = _BackgroundItem;
-                    _ListCounter[i].text = UNIT_FOR_COUNT;
+                    _ListCounter[i].text = $"{UNIT_FOR_COUNT}{_Commands[i].CurrentInventory}";
                     break;
 
-                case CommandActiveSkillBase.CommandKind.ItemHeal:
+                case CommandKind.ItemHeal:
                     _ListBackground[i].color = _BackgroundItem;
-                    _ListCounter[i].text = UNIT_FOR_COUNT;
+                    _ListCounter[i].text = $"{UNIT_FOR_COUNT}{_Commands[i].CurrentInventory}";
                     break;
 
-                case CommandActiveSkillBase.CommandKind.SupportHeal:
+                case CommandKind.SupportHeal:
                     _ListBackground[i].color = _BackgroundSupport;
-                    _ListCounter[i].text = UNIT_FOR_COST;
+                    _ListCounter[i].text = $"{UNIT_FOR_COST}{_Commands[i].MPCost}";
                     break;
+
             }
 
             _ListCommandName[i].text = _Commands[i].Name;
-            _ListCounter[i].text += _Commands[i].Count.ToString();
         }
     }
 
@@ -99,34 +99,34 @@ public class DisplayCommandList : MonoBehaviour
         {
             switch (_Commands[i].Kind)
             {
-                case CommandActiveSkillBase.CommandKind.Attack:
+                case CommandKind.Attack:
                     _ListBackground[i].color = _BackgroundAttack;
-                    _ListCounter[i].text = UNIT_FOR_COST;
+                    _ListCounter[i].text = $"{UNIT_FOR_COST}{_Commands[i].MPCost}";
                     break;
 
-                case CommandActiveSkillBase.CommandKind.Support:
+                case CommandKind.Support:
                     _ListBackground[i].color = _BackgroundSupport;
-                    _ListCounter[i].text = UNIT_FOR_COST;
+                    _ListCounter[i].text = $"{UNIT_FOR_COST}{_Commands[i].MPCost}";
                     break;
 
-                case CommandActiveSkillBase.CommandKind.Item:
+                case CommandKind.Item:
                     _ListBackground[i].color = _BackgroundItem;
-                    _ListCounter[i].text = UNIT_FOR_COUNT;
+                    _ListCounter[i].text = $"{UNIT_FOR_COUNT}{_Commands[i].CurrentInventory}";
                     break;
 
-                case CommandActiveSkillBase.CommandKind.ItemHeal:
+                case CommandKind.ItemHeal:
                     _ListBackground[i].color = _BackgroundItem;
-                    _ListCounter[i].text = UNIT_FOR_COUNT;
+                    _ListCounter[i].text = $"{UNIT_FOR_COUNT}{_Commands[i].CurrentInventory}";
                     break;
 
-                case CommandActiveSkillBase.CommandKind.SupportHeal:
+                case CommandKind.SupportHeal:
                     _ListBackground[i].color = _BackgroundSupport;
-                    _ListCounter[i].text = UNIT_FOR_COST;
+                    _ListCounter[i].text = $"{UNIT_FOR_COST}{_Commands[i].MPCost}";
                     break;
+
             }
 
             _ListCommandName[i].text = _Commands[i].Name;
-            _ListCounter[i].text += _Commands[i].Count.ToString();
         }
     }
 }

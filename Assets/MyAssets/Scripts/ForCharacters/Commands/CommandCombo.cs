@@ -2,19 +2,44 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class CommandCombo : CommandActiveSkillBase, ICSVDataConverter
+public class CommandCombo : CommandBase, ICSVDataConverter
 {
-    /// <summary>情報取得対象のCSVファイルパス一部</summary>
-    const string LOAD_CSV_PATH = "CSV/Command/Combo/";
+    /// <summary>情報取得対象のCSVファイルパス</summary>
+    const string LOAD_CSV_PATH = "CSV/Command/Combo";
+
+    /// <summary>コマンドID</summary>
+    static ushort _Id = 0;
+
+    /// <summary>コマンド名</summary>
+    static string _Name = null;
+
+    /// <summary>コマンド説明</summary>
+    static string _Explain = null;
+
+    /// <summary>コマンドの種類</summary>
+    static CommandKind _Kind = CommandKind.Attack;
+
+    /// <summary>攻撃情報テーブル</summary>
+    static AttackPowerColumn[] _AttackPowerTable = null;
+
+    /// <summary>コンボ手数</summary>
+    byte _Count = 0;
 
     /// <summary>今のコンボの手数</summary>
     byte _Step = 0;
 
+
+
+    public override ushort Id => _Id;
+    public override string Name => _Name;
+    public override string Explain => _Explain;
+    public override CommandKind Kind => _Kind;
+    protected override AttackPowerColumn[] AttackPowerTable => _AttackPowerTable;
+
+
     /// <summary>コンストラクタ</summary>
     public CommandCombo()
     {
-        _Name = "通常コンボ";
         _Kind = CommandKind.Combo;
     }
 

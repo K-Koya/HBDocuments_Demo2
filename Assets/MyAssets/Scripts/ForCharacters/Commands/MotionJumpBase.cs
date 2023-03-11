@@ -2,15 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class CommandJumpBase : CommandBase
+public class MotionJumpBase
 {
-    public CommandJumpBase()
-    {
-        _Name = "ジャンプ";
-        _Explain = "通常のジャンプ。地に足がついているときにジャンプボタンを押すと、飛び上がる。押す長さで高さが変わる。";
-    }
-
     /// <summary>ジャンプ処理</summary>
     /// <param name="param">該当キャラクターのパラメータ</param>
     /// <param name="rb">リジッドボディ</param>
