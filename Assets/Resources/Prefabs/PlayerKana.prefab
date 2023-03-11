@@ -3068,21 +3068,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d7c46ac90017fb4aac6973f9c14699e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _ComboCount: 5
   _ActiveSkillsId: 01000000020000000400000084030000
-  _ActiveSkills:
-  - rid: -2
-  - rid: -2
-  - rid: -2
-  - rid: -2
-  _CommandCombo:
-    _Priolity: 0
-  _Running:
-    _Priolity: 0
-  references:
-    version: 2
-    RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
 --- !u!1 &7259248277726529866
 GameObject:
   m_ObjectHideFlags: 0

@@ -7,15 +7,6 @@ public class CommandCombo : CommandBase, ICSVDataConverter
     /// <summary>情報取得対象のCSVファイルパス</summary>
     const string LOAD_CSV_PATH = "CSV/Command/Combo";
 
-    /// <summary>コマンドID</summary>
-    static ushort _Id = 0;
-
-    /// <summary>コマンド名</summary>
-    static string _Name = null;
-
-    /// <summary>コマンド説明</summary>
-    static string _Explain = null;
-
     /// <summary>コマンドの種類</summary>
     static CommandKind _Kind = CommandKind.Attack;
 
@@ -29,10 +20,7 @@ public class CommandCombo : CommandBase, ICSVDataConverter
     byte _Step = 0;
 
 
-
-    public override ushort Id => _Id;
-    public override string Name => _Name;
-    public override string Explain => _Explain;
+    public byte Count { get => _Count; set => _Count = value; }
     public override CommandKind Kind => _Kind;
     protected override AttackPowerColumn[] AttackPowerTable => _AttackPowerTable;
 
@@ -43,9 +31,15 @@ public class CommandCombo : CommandBase, ICSVDataConverter
         _Kind = CommandKind.Combo;
     }
 
-    public override void Initialize(int layer)
+    public override ushort LoadData()
     {
         CSVToMembers(CSVIO.LoadCSV(LOAD_CSV_PATH));
+        return 0;
+    }
+
+    public override void Initialize(int layer)
+    {
+
     }
 
     /// <summary>コンボ攻撃を要求するメソッド</summary>
@@ -185,12 +179,10 @@ public class CommandCombo : CommandBase, ICSVDataConverter
 
     public void CSVToMembers(List<string[]> csv)
     {
-        _Name = csv[1][1];
-        _Explain = csv[1][2];
-        _Count = byte.Parse(csv[1][5]);
         _AttackPowerTable = new AttackPowerColumn[csv.Count - 4];
-        for (int i = 4; i < csv.Count; i++)
+        for (int i = 5; i < csv.Count; i++)
         {
+            Debug.Log($"{csv[i][0]} {csv[i][1]} {csv[i][2]}");
             _AttackPowerTable[i - 4] = new AttackPowerColumn(short.Parse(csv[i][0]), short.Parse(csv[i][1]), short.Parse(csv[i][2]));
         }
     }

@@ -10,6 +10,10 @@ public class CommandDictionary : Singleton<CommandDictionary>
     /// <summary>コンボ情報の保管庫</summary>
     CommandCombo _Combo = null;
 
+
+    /// <summary>コンボコマンド複製</summary>
+    public CommandCombo CloneCombo => _Combo.Clone() as CommandCombo;
+
     protected override void Awake()
     {
         //シーンをまたいで利用する
@@ -56,6 +60,9 @@ public class CommandDictionary : Singleton<CommandDictionary>
         
     }
 
+    /// <summary>コマンド複製</summary>
+    /// <param name="id">コマンドのID</param>
+    /// <returns>複製物</returns>
     public CommandBase CloneCommand(ushort id)
     {
         CommandBase command = _Commands[id];

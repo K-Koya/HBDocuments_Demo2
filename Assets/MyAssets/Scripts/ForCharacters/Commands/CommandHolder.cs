@@ -8,27 +8,28 @@ public class CommandHolder : MonoBehaviour
     const byte NUMBER_OF_ACTIVE_SKILL = 4;
 
     #region メンバ
+    [SerializeField, Tooltip("コンボ手数")]
+    byte _ComboCount = 5;
+
     [SerializeField, Tooltip("アクティブスキルコマンドのID")]
     int[] _ActiveSkillsId = null;
 
-    [Header("所持コマンド情報")]
-    [SerializeField, Tooltip("ジャンプ用コマンド")]
+    /// <summary>ジャンプ用コマンド</summary>
     MotionJumpBase _CommandJump = null;
 
-    [SerializeField, Tooltip("短距離回避コマンド")]
+    /// <summary>短距離回避コマンド</summary>
     MotionShiftSlideBase _CommandShiftSlide = null;
 
-    [SerializeField, Tooltip("長距離回避コマンド")]
+    /// <summary>長距離回避コマンド</summary>
     MotionLongTripBase _CommandLongTrip = null;
 
-    [SerializeReference, SelectableSerializeReference, Tooltip("アクティブスキルコマンドのリスト")]
+    /// <summary>アクティブスキルコマンドのリスト</summary>
     CommandBase[] _ActiveSkills = null;
 
-    [SerializeField, Tooltip("コンボコマンド")]
+    /// <summary>コンボコマンド</summary>
     CommandCombo _CommandCombo = null;
 
-    [Header("実行中アクティブスキルコマンド情報")]
-    [SerializeField, Tooltip("アクティブスキルコマンド・コンボコマンドのうち実行中のコマンド")]
+    /// <summary>コンボコマンドのうち実行中のコマンド</summary>
     CommandBase _Running = null;
 
     /// <summary>ひとつ前の実行中のコマンド</summary>
@@ -95,9 +96,6 @@ public class CommandHolder : MonoBehaviour
             _CommandShiftSlide = new MotionShiftSlideBase();
         if (_CommandLongTrip is null) 
             _CommandLongTrip = new MotionLongTripBase();
-        if(_CommandCombo is null)
-            _CommandCombo = new CommandCombo();
-
 
         //アクティブスキルコマンドは上限数に収め、nullを許容しない
         _ActiveSkills = new CommandBase[NUMBER_OF_ACTIVE_SKILL];
@@ -113,6 +111,11 @@ public class CommandHolder : MonoBehaviour
             //各スキルコマンドを初期化実行
             _ActiveSkills[i].Initialize(layerSet);
         }
+
+        //全コマンド格納庫から取得
+        _CommandCombo = CommandDictionary.Instance.CloneCombo;
+        _CommandCombo.Count = _ComboCount;
+        _CommandCombo.Initialize(layerSet);
     }
 
     void Update()
