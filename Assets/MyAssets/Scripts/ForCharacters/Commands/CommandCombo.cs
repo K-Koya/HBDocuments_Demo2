@@ -182,8 +182,7 @@ public class CommandCombo : CommandBase, ICSVDataConverter
         _AttackPowerTable = new AttackPowerColumn[csv.Count - 4];
         for (int i = 5; i < csv.Count; i++)
         {
-            Debug.Log($"{csv[i][0]} {csv[i][1]} {csv[i][2]}");
-            _AttackPowerTable[i - 4] = new AttackPowerColumn(short.Parse(csv[i][0]), short.Parse(csv[i][1]), short.Parse(csv[i][2]));
+            _AttackPowerTable[i - 5] = new AttackPowerColumn(short.Parse(csv[i][0]), short.Parse(csv[i][1]), short.Parse(csv[i][2]));
         }
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class CommandBase
@@ -27,7 +28,7 @@ public class CommandBase
     public virtual byte CurrentInventory { get => 0; }
 
     /// <summary>最大のアイテムの所持数</summary>
-    public virtual byte MaxInventory { get => 0; }
+    public virtual byte MaxInventry { get => 0; }
 
     /// <summary>コマンド種別</summary>
     public virtual CommandKind Kind { get => CommandKind.Blank; }

@@ -536,7 +536,7 @@ GameObject:
   - component: {fileID: 1325032964377019696}
   m_Layer: 10
   m_Name: CommandHolder
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -568,21 +568,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d7c46ac90017fb4aac6973f9c14699e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _ComboCount: 0
   _ActiveSkillsId: 01000000e9030000ea03000000000000
-  _ActiveSkills:
-  - rid: -2
-  - rid: -2
-  - rid: -2
-  - rid: -2
-  _CommandCombo:
-    _Priolity: 0
-  _Running:
-    _Priolity: 0
-  references:
-    version: 2
-    RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
 --- !u!1 &1689911163906211391
 GameObject:
   m_ObjectHideFlags: 0

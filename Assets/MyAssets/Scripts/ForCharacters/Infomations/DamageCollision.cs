@@ -31,7 +31,7 @@ public class DamageCollision : MonoBehaviour
             if (other.TryGetComponent(out newGot))
             {
                 //UŒ‚ID‚ªˆÙ‚È‚ê‚Îƒ_ƒ[ƒW‚Ì”»’è‚ğ‚©‚¯‚é
-                if(!_Param.GaveAttackIDs.Contains(newGot.AttackInfo.AttackID))
+                if (newGot.AttackInfo != null && !_Param.GaveAttackIDs.Contains(newGot.AttackInfo.AttackID))
                 {
                     _Param.GaveAttackIDs.Dequeue();
                     _Param.GaveAttackIDs.Enqueue(newGot.AttackInfo.AttackID);

@@ -1,5 +1,6 @@
 using System;
-using UnityEditor.Hardware;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class CommandHolder : MonoBehaviour
@@ -106,7 +107,16 @@ public class CommandHolder : MonoBehaviour
         for(int i = 0; i < NUMBER_OF_ACTIVE_SKILL; i++)
         {
             //全コマンド格納庫から取得
-            _ActiveSkills[i] = CommandDictionary.Instance.CloneCommand((ushort)_ActiveSkillsId[i]);
+            if (gameObject.CompareTag(TagManager.Instance.Player))
+            {
+                IReadOnlyList<ushort> list = SaveDataManager.Instance.GetDeckedCommand(param.NameAlphabet);
+                _ActiveSkills[i] = CommandDictionary.Instance.CloneCommand(list[i]);
+            }
+            else
+            {
+                _ActiveSkills[i] = CommandDictionary.Instance.CloneCommand((ushort)_ActiveSkillsId[i]);
+            }
+            
 
             //各スキルコマンドを初期化実行
             _ActiveSkills[i].Initialize(layerSet);

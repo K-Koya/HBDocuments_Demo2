@@ -13,9 +13,7 @@ public static class CSVIO
     /// <summary> 改行コード </summary>
     public const string _LINE_CODE = "END_ROW";
 
-    /// <summary>
-    /// リスト先頭のCSVファイル名のファイルに、以降のリストメンバを書きこむ
-    /// </summary>
+    /// <summary>リスト先頭のCSVファイル名のファイルに、以降のリストメンバを書きこむ</summary>
     /// <param name="datam"> 先頭のみ書き込み先のCSVファイル名で、以降はメンバ変数のリスト型 </param>
     public static void SaveCSV(List<string> datam)
     {
@@ -43,9 +41,7 @@ public static class CSVIO
         }
     }
 
-    /// <summary>
-    /// 引数のファイル名のCSVファイルから、文字列のリストとして受け取る
-    /// </summary>
+    /// <summary>引数のファイル名のCSVファイルから、文字列のリストとして受け取る</summary>
     /// <param name="path"> 読みだすファイル名 </param>
     /// <returns> 読みだした文字列リストのデータ </returns>
     public static List<string[]> LoadCSV(string path)
@@ -84,9 +80,7 @@ public static class CSVIO
     }
 }
 
-/// <summary>
-/// CSV用のデータに持ちデータを相互変換させる機能を持たせるインターフェース
-/// </summary>
+/// <summary>CSV用のデータに持ちデータを相互変換させる機能を持たせるインターフェース</summary>
 public interface ICSVDataConverter
 {
     /// <summary> 自身のメンバ変数をstring型のListにして返す </summary>

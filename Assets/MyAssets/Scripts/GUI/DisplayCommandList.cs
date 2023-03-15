@@ -85,7 +85,9 @@ public class DisplayCommandList : MonoBehaviour
                     _ListBackground[i].color = _BackgroundSupport;
                     _ListCounter[i].text = $"{UNIT_FOR_COST}{_Commands[i].MPCost}";
                     break;
-
+                default:
+                    _ListCounter[i].text = "";
+                    break;
             }
 
             _ListCommandName[i].text = _Commands[i].Name;
@@ -123,7 +125,9 @@ public class DisplayCommandList : MonoBehaviour
                     _ListBackground[i].color = _BackgroundSupport;
                     _ListCounter[i].text = $"{UNIT_FOR_COST}{_Commands[i].MPCost}";
                     break;
-
+                default:
+                    _ListCounter[i].text = "";
+                    break;
             }
 
             _ListCommandName[i].text = _Commands[i].Name;

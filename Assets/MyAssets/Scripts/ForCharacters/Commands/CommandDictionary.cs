@@ -10,6 +10,8 @@ public class CommandDictionary : Singleton<CommandDictionary>
     /// <summary>コンボ情報の保管庫</summary>
     CommandCombo _Combo = null;
 
+    /// <summary>アクティブスキルコマンドの保管庫</summary>
+    public IReadOnlyDictionary<ushort, CommandBase> Commands => _Commands;
 
     /// <summary>コンボコマンド複製</summary>
     public CommandCombo CloneCombo => _Combo.Clone() as CommandCombo;

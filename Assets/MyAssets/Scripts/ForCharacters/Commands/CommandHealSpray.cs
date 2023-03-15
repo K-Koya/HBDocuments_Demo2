@@ -40,7 +40,7 @@ public class CommandHealSpray : CommandBase, ICSVDataConverter
     public override string Name => _Name;
     public override string Explain => _Explain;
     public override CommandKind Kind => _Kind;
-    public override byte MaxInventory => _MaxInventory;
+    public override byte MaxInventry => _MaxInventory;
     public override byte CurrentInventory => _CurrentInventory;
 
 
@@ -91,7 +91,7 @@ public class CommandHealSpray : CommandBase, ICSVDataConverter
         _Id = ushort.Parse(csv[1][0]);
         _Name = csv[1][1];
         _Explain = csv[1][2];
-        _CurrentInventory = byte.Parse(csv[1][4]);
+        _MaxInventory = byte.Parse(csv[1][4]);
         _HealRatio = float.Parse(csv[4][1]);
     }
 }
