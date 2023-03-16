@@ -434,7 +434,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 51709849}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 590125144}
+        m_TargetAssemblyTypeName: DeckEditColumn, Assembly-CSharp
+        m_MethodName: OnPush
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &51709852
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -849,7 +861,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 140027954}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 408127393}
+        m_TargetAssemblyTypeName: DeckEditColumn, Assembly-CSharp
+        m_MethodName: OnPush
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &140027957
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1938,7 +1962,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 559153979}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 785800818}
+        m_TargetAssemblyTypeName: DeckEditColumn, Assembly-CSharp
+        m_MethodName: OnPush
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &559153982
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2144,7 +2180,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 687043063}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 12258185}
+        m_TargetAssemblyTypeName: DeckEditColumn, Assembly-CSharp
+        m_MethodName: OnPush
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &687043066
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4898,6 +4946,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 1262613684}
+        m_TargetAssemblyTypeName: DeckEditList, Assembly-CSharp
+        m_MethodName: Confirm
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 1008942367}
         m_TargetAssemblyTypeName: SceneManager, Assembly-CSharp
         m_MethodName: ChangeScene

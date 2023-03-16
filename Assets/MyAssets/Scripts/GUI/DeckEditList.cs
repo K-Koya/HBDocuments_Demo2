@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -52,11 +54,15 @@ public class DeckEditList : MonoBehaviour
     TMP_Text _PickUpCommandExplain = null;
 
 
-    /// <summary>デッキ登録中のコマンド</summary>
-    CommandBase[] _Commands = null;
+    /// <summary>デッキ登録中のコマンドID</summary>
+    List<ushort> _CommandIDs = null;
 
-    /// <summary>デッキ登録可能なコマンド</summary>
-    CommandBase[] _UnlockedCommands = null;
+
+    /// <summary>デッキ登録中のコマンドカラムのうち、押されたカラムの要素番号</summary>
+    int _PushedIndexOnDeckList = -1;
+
+    /// <summary>開放済みコマンドのカラムのうち、押されたカラムのコマンドID</summary>
+    int _PushedIdOnUnlockedList = -1;
 
 
     // Start is called before the first frame update
@@ -64,66 +70,123 @@ public class DeckEditList : MonoBehaviour
     {
         //装備済みコマンドリスト構成
         IReadOnlyList<ushort> ids = SaveDataManager.Instance.GetDeckedCommand("Kana"/*TODO*/);
-        _Commands = new CommandBase[ids.Count];
-        for (int i = 0; i < _Commands.Length; i++)
+        _CommandIDs = new List<ushort>();
+        for (int i = 0; i < ids.Count; i++)
         {
-            _Commands[i] = CommandDictionary.Instance.Commands[ids[i]];
-            BuildListColumn(_Commands[i], _DeckCommandColumns[i]);
+            _CommandIDs.Add(ids[i]);
+            CommandBase command = CommandDictionary.Instance.Commands[ids[i]];
+            BuildListColumn(command, _DeckCommandColumns[i], DeckReplaceTo);
         }
 
         //装備可能コマンドリスト構成
         ids = SaveDataManager.Instance.GetUnlockedCommand("Kana"/*TODO*/);
-        _UnlockedCommands = new CommandBase[ids.Count];
         _UnlockedCommandColumns = new DeckEditColumn[ids.Count];
-        for (int i = 0; i < _UnlockedCommands.Length; i++)
+        for (int i = 0; i < ids.Count; i++)
         {
-            _UnlockedCommands[i] = CommandDictionary.Instance.Commands[ids[i]];
+            CommandBase command = CommandDictionary.Instance.Commands[ids[i]];
             GameObject obj = Instantiate(_UnlockedColumnPref);
             obj.transform.SetParent(_UnlockedListArea.transform);
             _UnlockedCommandColumns[i] = obj.GetComponent<DeckEditColumn>();
-            BuildListColumn(_UnlockedCommands[i], _UnlockedCommandColumns[i]);
+            BuildListColumn(command, _UnlockedCommandColumns[i], DeckReplaceFrom);
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 
     /// <summary>コマンドリストのカラムの表示を設定</summary>
     /// <param name="command">コマンドデータ</param>
     /// <param name="column">カラム制御</param>
-    /// <param name="name">名前</param>
-    void BuildListColumn(CommandBase command, DeckEditColumn column)
+    /// <param name="onPushMethod">カラム押下時の実行メソッド</param>
+    void BuildListColumn(CommandBase command, DeckEditColumn column, System.Action<ushort> onPushMethod)
     {
         switch (command.Kind)
         {
             case CommandKind.Attack:
-                column.CreateColumn(command.Id, command.Name, _BackgroundAttack, PickUpExplain);
+                column.CreateColumn(command.Id, command.Name, _BackgroundAttack, PickUpExplain, onPushMethod);
                 break;
             case CommandKind.Support:
-                column.CreateColumn(command.Id, command.Name, _BackgroundSupport, PickUpExplain);
+                column.CreateColumn(command.Id, command.Name, _BackgroundSupport, PickUpExplain, onPushMethod);
                 break;
             case CommandKind.Item:
-                column.CreateColumn(command.Id, command.Name, _BackgroundItem, PickUpExplain);
+                column.CreateColumn(command.Id, command.Name, _BackgroundItem, PickUpExplain, onPushMethod);
                 break;
             case CommandKind.SupportHeal:
-                column.CreateColumn(command.Id, command.Name, _BackgroundSupport, PickUpExplain);
+                column.CreateColumn(command.Id, command.Name, _BackgroundSupport, PickUpExplain, onPushMethod);
                 break;
             case CommandKind.ItemHeal:
-                column.CreateColumn(command.Id, command.Name, _BackgroundItem, PickUpExplain);
+                column.CreateColumn(command.Id, command.Name, _BackgroundItem, PickUpExplain, onPushMethod);
                 break;
             case CommandKind.Passive:
-                column.CreateColumn(command.Id, command.Name, _BackgroundItem, PickUpExplain);
+                column.CreateColumn(command.Id, command.Name, _BackgroundItem, PickUpExplain, onPushMethod);
                 break;
-            default: break;
+            default:
+                column.CreateColumn(command.Id, command.Name, Color.white, PickUpExplain, onPushMethod);
+                break;
+        }
+    }
+
+    /// <summary>開放済みコマンドリスト向けのデッキ変更指示</summary>
+    /// <param name="id">コマンドのID</param>
+    void DeckReplaceFrom(ushort id)
+    {
+        if(_PushedIdOnUnlockedList > -1)
+        {
+            _PushedIdOnUnlockedList = -1;
+            _PushedIndexOnDeckList = -1;
+        }
+        else if(_PushedIndexOnDeckList > -1)
+        {
+            _CommandIDs[_PushedIndexOnDeckList] = id;
+            CommandBase command = CommandDictionary.Instance.Commands[_CommandIDs[_PushedIndexOnDeckList]];
+            BuildListColumn(command, _DeckCommandColumns[_PushedIndexOnDeckList], DeckReplaceTo);
+
+            _PushedIdOnUnlockedList = -1;
+            _PushedIndexOnDeckList = -1;
+        }
+        else
+        {
+            _PushedIdOnUnlockedList = id;
+            _PushedIndexOnDeckList = -1;
+        }
+    }
+
+    /// <summary>デッキ選択済みリスト向けのデッキ変更指示</summary>
+    /// <param name="id">コマンドのID</param>
+    void DeckReplaceTo(ushort id)
+    {
+        int index = _CommandIDs.IndexOf(id);
+
+        if (_PushedIndexOnDeckList > -1)
+        {
+            ushort cache = _CommandIDs[_PushedIndexOnDeckList];
+            _CommandIDs[_PushedIndexOnDeckList] = _CommandIDs[index];
+            _CommandIDs[index] = cache;
+
+            CommandBase command = CommandDictionary.Instance.Commands[_CommandIDs[_PushedIndexOnDeckList]];
+            BuildListColumn(command, _DeckCommandColumns[_PushedIndexOnDeckList], DeckReplaceTo);
+            command = CommandDictionary.Instance.Commands[_CommandIDs[index]];
+            BuildListColumn(command, _DeckCommandColumns[index], DeckReplaceTo);
+
+            _PushedIdOnUnlockedList = -1;
+            _PushedIndexOnDeckList = -1;
+        }
+        else if (_PushedIdOnUnlockedList > -1)
+        {            
+            _CommandIDs[index] = (ushort)_PushedIdOnUnlockedList;
+            CommandBase command = CommandDictionary.Instance.Commands[_CommandIDs[index]];
+            BuildListColumn(command, _DeckCommandColumns[index], DeckReplaceTo);
+
+            _PushedIdOnUnlockedList = -1;
+            _PushedIndexOnDeckList = -1;
+        }
+        else
+        {
+            _PushedIndexOnDeckList = index;
+            _PushedIdOnUnlockedList = -1;
         }
     }
 
     /// <summary>説明欄に情報を表示する</summary>
     /// <param name="id">コマンドID</param>
-    public void PickUpExplain(ushort id)
+    void PickUpExplain(ushort id)
     {
         CommandBase command = CommandDictionary.Instance.Commands[id];
 
@@ -160,9 +223,19 @@ public class DeckEditList : MonoBehaviour
                 _PickUpCommandUnit.text = "";
                 _PickUpCommandCount.text = "";
                 break;
-            default: break;
+            default:
+                Array.ForEach(_PickUpBackgrounds, bg => bg.color = Color.white);
+                _PickUpCommandUnit.text = "";
+                _PickUpCommandCount.text = "";
+                break;
         }
 
         _PickUpCommandExplain.text = command.Explain;
+    }
+
+    /// <summary>確定して反映</summary>
+    public void Confirm()
+    {
+        SaveDataManager.Instance.SetDeckedCommand("Kana"/*TODO*/, _CommandIDs);
     }
 }
