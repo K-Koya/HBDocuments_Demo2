@@ -16,6 +16,8 @@ public class MotionJumpBase
         param.State.Process = MotionState.ProcessKind.Playing;
     }
 
+
+
     /// <summary>ジャンプ後の空中処理</summary>
     /// <param name="param">該当キャラクターのパラメータ</param>
     /// <param name="rb">リジッドボディ</param>

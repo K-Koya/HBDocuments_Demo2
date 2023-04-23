@@ -130,10 +130,10 @@ abstract public class CharacterMove : MonoBehaviour
                 CharacterRotation(_Param.CharacterDirection, -GravityDirection, 720f);
 
                 //—Í‚ğ‚©‚¯‚é
-                _Rb.AddForce(_Param.MoveDirection * _MoveInputRate * _MovePower, ForceMode.Acceleration);
+                _Rb.AddForce(transform.forward * _MoveInputRate * _MovePower, ForceMode.Acceleration);
 
                 //‘¬“x(Œü‚«)‚ğA“ü—Í•ûŒü‚Öİ’è
-                _Rb.velocity = Quaternion.FromToRotation(Vector3.ProjectOnPlane(_Rb.velocity, -GravityDirection), _Param.MoveDirection) * _Rb.velocity;
+                _Rb.velocity = Quaternion.FromToRotation(Vector3.ProjectOnPlane(_Rb.velocity, -GravityDirection), transform.forward) * _Rb.velocity;
 
                 //d—Í‚ğ‚©‚¯‚é
                 _Rb.AddForce(GravityDirection * 2f, ForceMode.Acceleration);
