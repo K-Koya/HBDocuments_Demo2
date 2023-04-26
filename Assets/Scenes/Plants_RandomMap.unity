@@ -1015,7 +1015,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fb53fff26c99a6428558ae189f3a169, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _MapSize: {x: 10, y: 15}
+  _MapSize: {x: 15, y: 15}
   _Unit: 10
   _CommonFloor: {fileID: 8318677690160863254, guid: aefa72aa6d1cc6d4ab422d4c20c03211, type: 3}
   _StraightRoad: {fileID: 1374511181659535715, guid: 6dfadfe0ae9fe1b4ea41427553722a1f, type: 3}

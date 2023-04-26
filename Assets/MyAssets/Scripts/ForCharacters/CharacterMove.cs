@@ -261,7 +261,6 @@ abstract public class CharacterMove : MonoBehaviour
         AttackInformation info = new AttackInformation(apc, _Param.Main);
 
         _CommandHolder.Running?.ObjectCreation(_Param, info, _Param.EmitPoints[attackAreaID].position);
-        Debug.Log(_Param.EmitPoints[attackAreaID].position);
     }
 
     /// <summary>アニメーションイベントにて、攻撃判定を開始したい旨を、攻撃情報と攻撃範囲とともに受け取る</summary>
