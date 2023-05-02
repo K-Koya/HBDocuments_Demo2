@@ -50,5 +50,8 @@ EditorBuildSettings:
   - enabled: 0
     path: 
     guid: 00000000000000000000000000000000
+  - enabled: 1
+    path: Assets/Scenes/Plants_RandomMap.unity
+    guid: 149be5c9cd1222c4e91ff426b316ee24
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 65867d97c6eba7b4d88af4d4e1a460f0, type: 2}
