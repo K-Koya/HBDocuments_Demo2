@@ -1,9 +1,7 @@
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using static MapRandomizer;
-using static UnityEngine.UI.CanvasScaler;
 
 public class MapRandomizer : MonoBehaviour
 {
@@ -12,6 +10,12 @@ public class MapRandomizer : MonoBehaviour
 
     [SerializeField, Tooltip("マス目1辺の長さ")]
     float _Unit = 10f;
+
+    [SerializeField, Tooltip("true : 乱数シードを指定する")]
+    bool _UseSeed = false;
+
+    [SerializeField, Tooltip("乱数シード")]
+    int _Seed = 10;
 
 
 
@@ -41,6 +45,27 @@ public class MapRandomizer : MonoBehaviour
     [SerializeField, Tooltip("壁の角を埋める柱")]
     GameObject _WallCornerPost = null;
 
+    [Header("建物プレハブ")]
+    [SerializeField, Tooltip("4×3の土地を使う建物")]
+    GameObject[] _Buldings4x3 = null;
+
+    [SerializeField, Tooltip("3×3の土地を使う建物")]
+    GameObject[] _Buldings3x3 = null;
+
+    [SerializeField, Tooltip("3×2の土地を使う建物")]
+    GameObject[] _Buldings3x2 = null;
+
+    [SerializeField, Tooltip("2×2の土地を使う建物")]
+    GameObject[] _Buldings2x2 = null;
+
+    [SerializeField, Tooltip("2×1の土地を使う建物")]
+    GameObject[] _Buldings2x1 = null;
+
+    [SerializeField, Tooltip("1つの土地を使う建物")]
+    GameObject[] _Buldings1x1 = null;
+
+
+
 
     /// <summary>マップテーブル</summary>
     MapCell[,] map = null;
@@ -65,10 +90,17 @@ public class MapRandomizer : MonoBehaviour
         CurveRoad = 4,
     }
 
-
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
+        /*乱数指定*/
+        if (!_UseSeed)
+        {
+            //シード値生成
+            _Seed = Random.Range(int.MinValue, int.MaxValue);
+        }
+        Random.InitState(_Seed);
+
+
         /*テーブル初期化*/
         if (_MapSize.x < 5) _MapSize.x = 5;
         if (_MapSize.y < 5) _MapSize.y = 5;
@@ -135,6 +167,13 @@ public class MapRandomizer : MonoBehaviour
         SetHeightDiff();
         SetRoad();
         SetParts();
+    }
+
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        
     }
 
     /// <summary>高低差構成</summary>
@@ -573,6 +612,10 @@ public class MapRandomizer : MonoBehaviour
     /// <summary>パーツ配置</summary>
     void SetParts()
     {
+        //構造物配置決めのためのリスト
+        List<Vector2Int> buildCandidates = new List<Vector2Int>(_MapSize.x * _MapSize.y);
+
+        /*地形配置*/
         GameObject pref = null;
         for (int y = 0; y < _MapSize.y; y++)
         {
@@ -862,7 +905,48 @@ public class MapRandomizer : MonoBehaviour
                 ins.transform.SetParent(transform);
                 ins.transform.position = new Vector3(x, map[y, x].isUpperFloor ? 0.2f : 0f, y) * _Unit;
                 ins.transform.forward = forward;
+
+                //道路以外は建造物配置候補
+                if (map[y, x].floorType == FloorType.CommonFloor)
+                {
+                    buildCandidates.Add(new Vector2Int(x, y));
+                }
             }
+        }
+
+        /*建造物配置*/
+        int numberOfCandidate = buildCandidates.Count / 2;
+        for (int i = 0; i < numberOfCandidate; i++)
+        {
+            //ランダムで候補地を指定
+            int targetIndex = (int)Random.Range(1f, buildCandidates.Count) - 1;
+            Vector2Int candidate = buildCandidates[targetIndex];
+
+            //建造物が建てられていない
+            if(!map[candidate.y, candidate.x].isBuilt)
+            {
+                MapCell[] cells = map[candidate.y, candidate.x].GetField3x3();
+                if (cells is not null)
+                {
+                    GameObject build = Instantiate(_Buldings3x3[(int)Random.Range(0f, _Buldings3x3.Length - 0.01f)]);
+                    build.transform.SetParent(transform);
+                    build.transform.position = new Vector3(candidate.x, map[candidate.y, candidate.x].isUpperFloor ? 0.2f : 0f, candidate.y) * _Unit;
+
+                    foreach (MapCell cell in cells)
+                    {
+                        cell.isBuilt = true;
+                    }
+                }
+                else
+                {
+                    GameObject build = Instantiate(_Buldings1x1[(int)Random.Range(0f, _Buldings1x1.Length - 0.01f)]);
+                    build.transform.SetParent(transform);
+                    build.transform.position = new Vector3(candidate.x, map[candidate.y, candidate.x].isUpperFloor ? 0.2f : 0f, candidate.y) * _Unit;
+                    map[candidate.y, candidate.x].isBuilt = true;
+                }
+            }
+
+            buildCandidates.Remove(candidate);
         }
     }
 
@@ -881,6 +965,11 @@ public class MapRandomizer : MonoBehaviour
 
         /// <summary>true : 一段高い床</summary>
         public bool isUpperFloor = false;
+
+        /// <summary>true : 建物が占有されている</summary>
+        public bool isBuilt = false;
+
+
 
         /// <summary>左上の区画の情報</summary>
         public MapCell upLeft = null;
@@ -905,6 +994,25 @@ public class MapRandomizer : MonoBehaviour
 
         /// <summary>右下の区画の情報</summary>
         public MapCell downRight = null;
+
+
+        /// <summary>未占有の3×3の地形を探す</summary>
+        /// <returns>あれば対象の全区画</returns>
+        public MapCell[] GetField3x3()
+        {
+            MapCell[] cells = { this, upLeft, up, upRight, left, right, downLeft, down, downRight };
+
+            if (cells.Contains(null)
+                || cells.Where(c => c.isUpperFloor != isUpperFloor 
+                                || c.floorType != FloorType.CommonFloor 
+                                || c.isBuilt).Count() > 0)
+            {
+                return null;
+            }
+
+            return cells;
+        }
+
 
 
         public MapCell(FloorType floorType = FloorType.CommonFloor)
