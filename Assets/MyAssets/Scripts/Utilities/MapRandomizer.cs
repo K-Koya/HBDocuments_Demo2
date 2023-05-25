@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static UnityEditor.PlayerSettings;
+using System.Net;
 
 //[RequireComponent(typeof(BoxCollider))]
 public class MapRandomizer : MonoBehaviour
@@ -16,9 +17,12 @@ public class MapRandomizer : MonoBehaviour
     /// <summary>空中回廊の1辺の長さ</summary>
     float UNIT_FOR_BRIDGE = 5f;
 
+    /// <summary>ゲームするエリアとなる外周からの距離</summary>
+    byte GAME_AREA_AROUND_DISTANCE = 7;
 
-    [SerializeField, Tooltip("マスの数(一辺5マス以上)")]
-    Vector2Int _mapSize = new Vector2Int(5, 5);
+
+    [SerializeField, Tooltip("マスの数(一辺15マス以上)")]
+    Vector2Int _mapSize = new Vector2Int(15, 15);
 
     [SerializeField, Tooltip("true : 乱数シードを指定する")]
     bool _useSeed = false;
@@ -44,7 +48,11 @@ public class MapRandomizer : MonoBehaviour
     [SerializeField, Tooltip("曲線道路区画")]
     GameObject _curveRoad = null;
 
-    [Header("壁プレハブ")]
+    [SerializeField, Tooltip("階段が食い込んだ普通地面区画")]
+    GameObject _commonFloorInnerStair = null;
+
+
+    [Header("高低差壁プレハブ")]
     [SerializeField, Tooltip("高低差埋めの壁 普通")]
     GameObject _differentHeightWall = null;
 
@@ -53,6 +61,33 @@ public class MapRandomizer : MonoBehaviour
 
     [SerializeField, Tooltip("壁の角を埋める柱")]
     GameObject _wallCornerPost = null;
+
+    [SerializeField, Tooltip("壁と埋め込まれた左階段")]
+    GameObject _innerStairLeft = null;
+
+    [SerializeField, Tooltip("壁と埋め込まれた右階段")]
+    GameObject _innerStairRight = null;
+
+    [SerializeField, Tooltip("壁と左側にせり出した階段")]
+    GameObject _outerStairLeft = null;
+
+    [SerializeField, Tooltip("壁と右側にせり出した階段")]
+    GameObject _outerStairRight = null;
+
+
+    [Header("フェンスプレハブ")]
+    [SerializeField, Tooltip("コンクリートの壁")]
+    GameObject _concreteFence = null;
+
+    [SerializeField, Tooltip("コンクリート壁の角を埋める柱")]
+    GameObject _concreteFenceCornerPost = null;
+
+    [SerializeField, Tooltip("金網の壁")]
+    GameObject _latticeFence = null;
+
+    [SerializeField, Tooltip("エリア外となる道止め")]
+    GameObject _roadBlockAreaLimit = null;
+
 
     [Header("連絡通路プレハブ")]
     [SerializeField, Tooltip("階段")]
@@ -67,12 +102,14 @@ public class MapRandomizer : MonoBehaviour
     [SerializeField, Tooltip("曲進通路")]
     GameObject _bridgeCorner = null;
 
+
     [Header("配管プレハブ")]
     [SerializeField, Tooltip("二本並列配管")]
-    GameObject _PipeTwoStraight = null;
+    GameObject _pipeTwoStraight = null;
 
     [SerializeField, Tooltip("二本並列上下配管")]
-    GameObject _PipeTwoHigher = null;
+    GameObject _pipeTwoHigher = null;
+
 
     [Header("建物プレハブ")]
     [SerializeField, Tooltip("4×3の土地を使う建物")]
@@ -160,13 +197,17 @@ public class MapRandomizer : MonoBehaviour
         SetParts();
 
         //BoxCollider col = GetComponent<BoxCollider>();
+
+        /*メモリ解放*/
+        map = null;
+        bridges = null;
     }
 
     /// <summary>テーブル初期化</summary>
     private void Initialize()
     {
-        if (_mapSize.x < 5) _mapSize.x = 5;
-        if (_mapSize.y < 5) _mapSize.y = 5;
+        if (_mapSize.x < 15) _mapSize.x = 15;
+        if (_mapSize.y < 15) _mapSize.y = 15;
         map = new MapCell[_mapSize.y, _mapSize.x];
         bridges = new BridgeCell[_mapSize.y * 2, _mapSize.x * 2];
         for (int y = 0; y < _mapSize.y; y++)
@@ -178,6 +219,16 @@ public class MapRandomizer : MonoBehaviour
                 bridges[y * 2 + 1, x * 2] = new BridgeCell(map[y, x]);
                 bridges[y * 2, x * 2 + 1] = new BridgeCell(map[y, x]);
                 bridges[y * 2 + 1, x * 2 + 1] = new BridgeCell(map[y, x]);
+
+                if(GAME_AREA_AROUND_DISTANCE - 1 < y && y < _mapSize.y - GAME_AREA_AROUND_DISTANCE - 1
+                    && GAME_AREA_AROUND_DISTANCE - 1 < x && x < _mapSize.x - GAME_AREA_AROUND_DISTANCE - 1)
+                {
+                    map[y, x].region = 1;
+                }
+                else
+                {
+                    map[y, x].region = 0;
+                }
             }
         }
 
@@ -392,7 +443,7 @@ public class MapRandomizer : MonoBehaviour
         int[] advanceLimit = new int[4];
         if (rand < 0.5f)
         {
-            int startX = (int)Random.Range(_mapSize.x * 0.2f, _mapSize.x * 0.6f);
+            int startX = (int)Random.Range(_mapSize.x * 0.4f, _mapSize.x * 0.6f);
             //北方向へ
             if (rand < 0.25f)
             {
@@ -430,7 +481,7 @@ public class MapRandomizer : MonoBehaviour
         }
         else
         {
-            int startY = (int)Random.Range(_mapSize.y * 0.2f, _mapSize.y * 0.6f);
+            int startY = (int)Random.Range(_mapSize.y * 0.4f, _mapSize.y * 0.6f);
             //東方向へ
             if (rand < 0.75f)
             {
@@ -847,8 +898,11 @@ public class MapRandomizer : MonoBehaviour
                     }
                 }
 
-                //すでに通路が定義されていれば中断
-                if (bridges[enterPos.y, enterPos.x].bridgeType != BridgeType.None)
+                //すでに通路が定義されている、または、スタート位置よりも高い位置で地面が道の場合は中断
+                if (bridges[enterPos.y, enterPos.x].bridgeType != BridgeType.None
+                    || (!bridges[enterPos.y, enterPos.x].FloorData.isUpperFloor
+                        && bridges[exitPos.y, exitPos.x].FloorData.isUpperFloor
+                        && bridges[enterPos.y, enterPos.x].FloorData.floorType != FloorType.CommonFloor))
                 {
                     err = true;
                     break;
@@ -1031,6 +1085,7 @@ public class MapRandomizer : MonoBehaviour
                     pref = _commonFloor;
                 }
 
+                //高低差壁配置
                 //南隣の区画をチェック
                 if (map[y, x].down != null)
                 {
@@ -1061,7 +1116,25 @@ public class MapRandomizer : MonoBehaviour
                         else
                         {
                             //高低差壁作成
-                            GameObject wall = Instantiate(_differentHeightWall, transform);
+                            GameObject wallPref = _differentHeightWall;
+                            if (pref == _commonFloor)
+                            {
+                                float rand = Random.value;
+                                if(rand > 0.8f)
+                                {
+                                    if(rand > 0.9f)
+                                    {
+                                        wallPref = _outerStairLeft;
+                                        map[y, x].buildType = BuildType.FloorStair;
+                                    }
+                                    else
+                                    {
+                                        wallPref = _outerStairRight;
+                                        map[y, x].buildType = BuildType.FloorStair;
+                                    }
+                                }
+                            }
+                            GameObject wall = Instantiate(wallPref, transform);
                             wall.transform.position = new Vector3(x * UNIT_FOR_FLOOR, 0f, y * UNIT_FOR_FLOOR - UNIT_FOR_FLOOR / 2f);
                             wall.transform.forward = Vector3.back;
                         }
@@ -1113,7 +1186,23 @@ public class MapRandomizer : MonoBehaviour
                         else
                         {
                             //高低差壁作成
-                            GameObject wall = Instantiate(_differentHeightWall, transform);
+                            GameObject wallPref = _differentHeightWall;
+                            if (pref == _commonFloor)
+                            {
+                                float rand = Random.value;
+                                if (rand > 0.8f)
+                                {
+                                    if (rand > 0.9f)
+                                    {
+                                        wallPref = _outerStairLeft;
+                                    }
+                                    else
+                                    {
+                                        wallPref = _outerStairRight;
+                                    }
+                                }
+                            }
+                            GameObject wall = Instantiate(wallPref, transform);
                             wall.transform.position = new Vector3(x * UNIT_FOR_FLOOR, 0f, y * UNIT_FOR_FLOOR + UNIT_FOR_FLOOR / 2f);
                         }
                     }
@@ -1162,7 +1251,23 @@ public class MapRandomizer : MonoBehaviour
                         else
                         {
                             //高低差壁作成
-                            GameObject wall = Instantiate(_differentHeightWall, transform);
+                            GameObject wallPref = _differentHeightWall;
+                            if (pref == _commonFloor)
+                            {
+                                float rand = Random.value;
+                                if (rand > 0.8f)
+                                {
+                                    if (rand > 0.9f)
+                                    {
+                                        wallPref = _outerStairLeft;
+                                    }
+                                    else
+                                    {
+                                        wallPref = _outerStairRight;
+                                    }
+                                }
+                            }
+                            GameObject wall = Instantiate(wallPref, transform);
                             wall.transform.position = new Vector3(x * UNIT_FOR_FLOOR - UNIT_FOR_FLOOR / 2f, 0f, y * UNIT_FOR_FLOOR);
                             wall.transform.forward = Vector3.left;
                         }
@@ -1197,7 +1302,23 @@ public class MapRandomizer : MonoBehaviour
                         else
                         {
                             //高低差壁作成
-                            GameObject wall = Instantiate(_differentHeightWall, transform);
+                            GameObject wallPref = _differentHeightWall;
+                            if (pref == _commonFloor)
+                            {
+                                float rand = Random.value;
+                                if (rand > 0.8f)
+                                {
+                                    if (rand > 0.9f)
+                                    {
+                                        wallPref = _outerStairLeft;
+                                    }
+                                    else
+                                    {
+                                        wallPref = _outerStairRight;
+                                    }
+                                }
+                            }
+                            GameObject wall = Instantiate(wallPref, transform);
                             wall.transform.position = new Vector3(x * UNIT_FOR_FLOOR + UNIT_FOR_FLOOR / 2f, 0f, y * UNIT_FOR_FLOOR);
                             wall.transform.forward = Vector3.right;
                         }
@@ -1327,7 +1448,7 @@ public class MapRandomizer : MonoBehaviour
                 }
 
                 //確率で連絡通路の柱をつける
-                if(pref == _bridgeStraight)
+                if(bridges[y, x].FloorData.floorType == FloorType.CommonFloor && pref == _bridgeStraight)
                 {
                     pref = Random.value < 0.5f ? pref : _bridgeStraightStrut;
                 }
@@ -1338,33 +1459,231 @@ public class MapRandomizer : MonoBehaviour
             }
         }
 
+        /*壁配置*/
+        //右と上に対して壁の配置を検討
+        for(int y = 0; y < _mapSize.y - 1; y++)
+        {
+            for(int x = 0; x < _mapSize.x - 1; x++)
+            {
+                //配置する高さ
+                float height = 0f;                
+                //true : 道つながりである
+                bool isConectRoad = false;
+                //true : 自分が高い位置である
+                bool isUpperThisFloor = false;
+                //true : 相手が高い位置である
+                bool isUpperThatFloor = false;
+
+                //上側を検討
+                if (map[y, x].up is not null)
+                {
+                    pref = null;
+
+                    isConectRoad = (map[y, x].floorType != FloorType.CommonFloor && map[y, x].up.floorType != FloorType.CommonFloor);
+                                    //&& ((map[y, x].enter == Compass.North && map[y, x].up.exit == Compass.South)
+                                    //    || (map[y, x].enter == Compass.South && map[y, x].up.exit == Compass.North));
+                    isUpperThisFloor = map[y, x].isUpperFloor && !map[y, x].up.isUpperFloor;
+                    isUpperThatFloor = !map[y, x].isUpperFloor && map[y, x].up.isUpperFloor;
+
+                    //自分がゲーム範囲外で上側が範囲内の時
+                    if(map[y, x].region == 0 && map[y, x].up.region > 0)
+                    {
+                        GameObject ins;
+
+                        pref = _concreteFence;
+                        if (isConectRoad)
+                        {
+                            pref = _roadBlockAreaLimit;
+                        }
+                        if (map[y, x].isUpperFloor || map[y, x].up.isUpperFloor)
+                        {
+                            height = 2f;
+                        }
+                        else if (map[y, x].left.isUpperFloor || map[y, x].left.up.isUpperFloor)
+                        {
+                            ins = Instantiate(_concreteFenceCornerPost, transform);
+                            ins.transform.position = new Vector3(x * UNIT_FOR_FLOOR - UNIT_FOR_FLOOR / 2f, 2f, y * UNIT_FOR_FLOOR + UNIT_FOR_FLOOR / 2f);
+                        }
+
+                        ins = Instantiate(_concreteFenceCornerPost, transform);
+                        ins.transform.position = new Vector3(x * UNIT_FOR_FLOOR - UNIT_FOR_FLOOR / 2f, height, y * UNIT_FOR_FLOOR + UNIT_FOR_FLOOR / 2f);
+                    }
+                    //自分がゲーム範囲内で上側が範囲外の時
+                    else if (map[y, x].region > 0 && map[y, x].up.region == 0)
+                    {
+                        GameObject ins;
+
+                        pref = _concreteFence;
+                        if (isConectRoad)
+                        {
+                            pref = _roadBlockAreaLimit;
+                        }
+                        if (map[y, x].isUpperFloor || map[y, x].up.isUpperFloor)
+                        {
+                            height = 2f;
+                        }
+                        else if (map[y, x].left.isUpperFloor || map[y, x].left.up.isUpperFloor)
+                        {
+                            ins = Instantiate(_concreteFenceCornerPost, transform);
+                            ins.transform.position = new Vector3(x * UNIT_FOR_FLOOR - UNIT_FOR_FLOOR / 2f, 2f, y * UNIT_FOR_FLOOR + UNIT_FOR_FLOOR / 2f);
+                        }
+
+                        ins = Instantiate(_concreteFenceCornerPost, transform);
+                        ins.transform.position = new Vector3(x * UNIT_FOR_FLOOR - UNIT_FOR_FLOOR / 2f, height, y * UNIT_FOR_FLOOR + UNIT_FOR_FLOOR / 2f);
+                    }
+
+                    if (pref)
+                    {
+                        GameObject ins = Instantiate(pref, transform);
+                        ins.transform.position = new Vector3(x * UNIT_FOR_FLOOR, height, y * UNIT_FOR_FLOOR + UNIT_FOR_FLOOR / 2f);
+                        ins.transform.forward = Vector3.back;
+                    }
+                }
+                //右側を検討
+                if (map[y, x].right is not null)
+                {
+                    pref = null;
+
+                    isConectRoad = (map[y, x].floorType != FloorType.CommonFloor && map[y, x].right.floorType != FloorType.CommonFloor);
+                                    //&& ((map[y, x].enter == Compass.East && map[y, x].right.exit == Compass.West)
+                                    //    || (map[y, x].enter == Compass.West && map[y, x].right.exit == Compass.East));
+                    isUpperThisFloor = map[y, x].isUpperFloor && !map[y, x].right.isUpperFloor;
+                    isUpperThatFloor = !map[y, x].isUpperFloor && map[y, x].right.isUpperFloor;
+
+                    //自分がゲーム範囲外で右側が範囲内の時
+                    if (map[y, x].region == 0 && map[y, x].right.region > 0)
+                    {
+                        GameObject ins;
+
+                        pref = _concreteFence;
+                        if (isConectRoad)
+                        {
+                            pref = _roadBlockAreaLimit;
+                        }
+
+                        if (map[y, x].isUpperFloor || map[y, x].right.isUpperFloor)
+                        {
+                            height = 2f;
+                        }
+                        else if (map[y, x].down.isUpperFloor || map[y, x].down.right.isUpperFloor)
+                        {
+                            ins = Instantiate(_concreteFenceCornerPost, transform);
+                            ins.transform.position = new Vector3(x * UNIT_FOR_FLOOR + UNIT_FOR_FLOOR / 2f, 2f, y * UNIT_FOR_FLOOR - UNIT_FOR_FLOOR / 2f);
+                        }
+
+                        ins = Instantiate(_concreteFenceCornerPost, transform);
+                        ins.transform.position = new Vector3(x * UNIT_FOR_FLOOR + UNIT_FOR_FLOOR / 2f, height, y * UNIT_FOR_FLOOR - UNIT_FOR_FLOOR / 2f);
+                    }
+                    //自分がゲーム範囲内で右側が範囲外の時
+                    else if (map[y, x].region > 0 && map[y, x].right.region == 0)
+                    {
+                        GameObject ins;
+
+                        pref = _concreteFence;
+                        if (isConectRoad)
+                        {
+                            pref = _roadBlockAreaLimit;
+                        }
+
+                        if (map[y, x].isUpperFloor || map[y, x].right.isUpperFloor)
+                        {
+                            height = 2f;
+                        }
+                        else if (map[y, x].down.isUpperFloor || map[y, x].down.right.isUpperFloor)
+                        {
+                            ins = Instantiate(_concreteFenceCornerPost, transform);
+                            ins.transform.position = new Vector3(x * UNIT_FOR_FLOOR + UNIT_FOR_FLOOR / 2f, 2f, y * UNIT_FOR_FLOOR - UNIT_FOR_FLOOR / 2f);
+                        }
+
+                        ins = Instantiate(_concreteFenceCornerPost, transform);
+                        ins.transform.position = new Vector3(x * UNIT_FOR_FLOOR + UNIT_FOR_FLOOR / 2f, height, y * UNIT_FOR_FLOOR - UNIT_FOR_FLOOR / 2f);
+                    }
+
+                    if (pref)
+                    {
+                        GameObject ins = Instantiate(pref, transform);
+                        ins.transform.position = new Vector3(x * UNIT_FOR_FLOOR + UNIT_FOR_FLOOR / 2f, height, y * UNIT_FOR_FLOOR);
+                        ins.transform.forward = Vector3.right;
+                    }                    
+                }
+            }
+        }
+
+        
         /*建造物配置*/
-        int numberOfCandidate = buildCandidates.Count / 2;
+        int numberOfCandidate = (int)(buildCandidates.Count * 0.75f);
         for (int i = 0; i < numberOfCandidate; i++)
         {
             //ランダムで候補地を指定
             int targetIndex = (int)Random.Range(1f, buildCandidates.Count) - 1;
             Vector2Int candidate = buildCandidates[targetIndex];
 
-            //建造物が建てられていない
-            if (map[candidate.y, candidate.x].buildType == BuildType.None)
+            //建造物が建てられていない、かつ、道ではない
+            if (map[candidate.y, candidate.x].buildType == BuildType.None
+                && map[candidate.y, candidate.x].floorType == FloorType.CommonFloor)
             {
-                MapCell[] cells = map[candidate.y, candidate.x].GetField3x3();
-                if (cells is not null)
+                map[candidate.y, candidate.x].CheckAroundBuildFlag();
+                for(int k = 0; k < 5; k++)
                 {
-                    GameObject build = Instantiate(_buldings3x3[(int)Random.Range(0f, _buldings3x3.Length - 0.01f)], transform);
-                    build.transform.position = new Vector3(candidate.x, map[candidate.y, candidate.x].isUpperFloor ? 0.2f : 0f, candidate.y) * UNIT_FOR_FLOOR;
-
-                    foreach (MapCell cell in cells)
+                    MapCell[] cells = null;
+                    Vector3 forward = Vector3.forward;
+                    Vector3 centerPos = new Vector3(candidate.x, 0f, candidate.y);
+                    float rand = Random.value;
+                    if(rand > 0.75f){ forward = Vector3.right; }
+                    else if(rand > 0.5f) { forward = Vector3.back; }
+                    else if(rand > 0.25f) { forward = Vector3.left; }
+                    (MapCell[], Vector3) data;
+                    switch (k)
                     {
-                        cell.buildType = BuildType.BuildLarge;
+                        //3x3の探索
+                        case 0:
+                            cells = map[candidate.y, candidate.x].GetField3x3();
+                            pref = _buldings3x3[(int)Random.Range(0f, _buldings3x3.Length - 0.01f)];
+                            break;
+                        //3x2の探索
+                        case 1:
+                            data = map[candidate.y, candidate.x].GetField3x2();
+                            cells = data.Item1;
+                            forward = data.Item2;
+                            centerPos += forward * 0.5f;
+                            pref = _buldings3x2[(int)Random.Range(0f, _buldings3x2.Length - 0.01f)];
+                            break;
+                        //2x2の探索
+                        case 2:
+                            data = map[candidate.y, candidate.x].GetField2x2();
+                            cells = data.Item1;
+                            centerPos += data.Item2 * 0.5f;
+                            pref = _buldings2x1[(int)Random.Range(0f, _buldings2x1.Length - 0.01f)];
+                            break;
+                        //2x1の探索
+                        case 3:
+                            data = map[candidate.y, candidate.x].GetField2x1();
+                            cells = data.Item1;
+                            forward = data.Item2;
+                            centerPos += forward * 0.5f;
+                            pref = _buldings2x1[(int)Random.Range(0f, _buldings2x1.Length - 0.01f)];
+                            break;
+                        //1x1の探索
+                        case 4:
+                            cells = new MapCell[] { map[candidate.y, candidate.x] };
+                            pref = _buldings1x1[(int)Random.Range(0f, _buldings1x1.Length - 0.01f)];
+                            break;
+                        default: break;
                     }
-                }
-                else
-                {
-                    GameObject build = Instantiate(_buldings1x1[(int)Random.Range(0f, _buldings1x1.Length - 0.01f)], transform);
-                    build.transform.position = new Vector3(candidate.x, map[candidate.y, candidate.x].isUpperFloor ? 0.2f : 0f, candidate.y) * UNIT_FOR_FLOOR;
-                    map[candidate.y, candidate.x].buildType = BuildType.BuildLarge;
+
+                    if (cells is not null)
+                    {
+                        GameObject build = Instantiate(pref, transform);
+                        build.transform.position = new Vector3(centerPos.x, map[candidate.y, candidate.x].isUpperFloor ? 0.2f : 0f, centerPos.z) * UNIT_FOR_FLOOR;
+                        build.transform.forward = forward;
+
+                        foreach (MapCell cell in cells)
+                        {
+                            cell.buildType = BuildType.BuildLarge;
+                        }
+
+                        break;
+                    }
                 }
             }
 
@@ -1391,6 +1710,11 @@ public class MapRandomizer : MonoBehaviour
         /// <summary>その区画の建造物の種類</summary>
         public BuildType buildType = BuildType.None;
 
+        /// <summary>柵で区切る区画集合の番号（0はゲームステージ外）</summary>
+        public byte region = 0;
+
+        /// <summary>建物建てるスペースの存在フラグ集</summary>
+        byte buildBitFlags = 0;
 
 
         /// <summary>左上の区画の情報</summary>
@@ -1418,22 +1742,120 @@ public class MapRandomizer : MonoBehaviour
         public MapCell downRight = null;
 
 
+        /// <summary>周辺の建築状況を確認しフラグにまとめる</summary>
+        public void CheckAroundBuildFlag()
+        {
+            buildBitFlags = 0;
+            buildBitFlags += (byte)(upLeft != null    && upLeft.IsBuildable(isUpperFloor, region)    ? 1 : 0);
+            buildBitFlags += (byte)(up != null        && up.IsBuildable(isUpperFloor, region)        ? 2 : 0);
+            buildBitFlags += (byte)(upRight != null   && upRight.IsBuildable(isUpperFloor, region)   ? 4 : 0);
+            buildBitFlags += (byte)(left != null      && left.IsBuildable(isUpperFloor, region)      ? 8 : 0);
+            buildBitFlags += (byte)(right != null     && right.IsBuildable(isUpperFloor, region)     ? 16 : 0);
+            buildBitFlags += (byte)(downLeft != null  && downLeft.IsBuildable(isUpperFloor, region)  ? 32 : 0);
+            buildBitFlags += (byte)(down != null      && down.IsBuildable(isUpperFloor, region)      ? 64 : 0);
+            buildBitFlags += (byte)(downRight != null && downRight.IsBuildable(isUpperFloor, region) ? 128 : 0);
+        }
+
+        /// <summary>隣接地に建物を建てられるかを確かめる</summary>
+        /// <param name="isUpperFloor">隣接元の床位置</param>
+        /// <returns>true : 建てられる</returns>
+        public bool IsBuildable(bool isUpperFloor, byte region)
+        {
+            return this.region == region 
+                    && this.isUpperFloor == isUpperFloor 
+                    && floorType == FloorType.CommonFloor 
+                    && buildType == BuildType.None;
+        }
+
         /// <summary>未占有の3×3の地形を探す</summary>
         /// <returns>あれば対象の全区画</returns>
         public MapCell[] GetField3x3()
         {
-            MapCell[] cells = { this, upLeft, up, upRight, left, right, downLeft, down, downRight };
-
-            if (cells.Contains(null)
-                || cells.Where(c => c.isUpperFloor != isUpperFloor
-                                || c.floorType != FloorType.CommonFloor
-                                || c.buildType != BuildType.None).Count() > 0)
+            if(buildBitFlags > 254)
             {
-                return null;
+                MapCell[] cells = { this, upLeft, up, upRight, left, right, downLeft, down, downRight };
+                return cells;
+            }
+            return null;
+        }
+
+        /// <summary>未占有の3×2の地形を探す</summary>
+        /// <returns>あれば対象の全区画</returns>
+        public (MapCell[], Vector3) GetField3x2()
+        {
+            MapCell[] cells = new MapCell[6];
+            switch (buildBitFlags)
+            {
+                case 63:
+                    cells[0] = this; cells[1] = upLeft; cells[2] = up; cells[3] = upRight; cells[4] = left; cells[5] = right;
+                    return (cells, Vector3.forward);
+
+                case 214:
+                    cells[0] = this; cells[1] = up; cells[2] = upRight; cells[3] = right; cells[4] = down; cells[5] = downRight;
+                    return (cells, Vector3.right);
+
+                case 248:
+                    cells[0] = this; cells[1] = left; cells[2] = right; cells[3] = downLeft; cells[4] = down; cells[5] = downRight;
+                    return (cells, Vector3.back);
+
+                case 107:
+                    cells[0] = this; cells[1] = upLeft; cells[2] = up; cells[3] = left; cells[4] = downLeft; cells[5] = down;
+                    return (cells, Vector3.left);
+                default: break;
             }
 
-            return cells;
+            return (null, Vector3.zero);
         }
+
+        /// <summary>未占有の2×2の地形を探す</summary>
+        /// <returns>あれば対象の全区画</returns>
+        public (MapCell[], Vector3) GetField2x2()
+        {
+            MapCell[] cells = new MapCell[4];
+            switch (buildBitFlags)
+            {
+                case 11:
+                    cells[0] = this; cells[1] = upLeft; cells[2] = up; cells[3] = left;
+                    return (cells, Vector3.forward + Vector3.left);
+                case 22:
+                    cells[0] = this; cells[1] = up; cells[2] = upRight; cells[3] = right;
+                    return (cells, Vector3.forward + Vector3.right);
+                case 104:
+                    cells[0] = this; cells[1] = left; cells[2] = downLeft; cells[3] = down;
+                    return (cells, Vector3.back + Vector3.left);
+                case 208:
+                    cells[0] = this; cells[1] = right; cells[2] = down; cells[3] = downRight;
+                    return (cells, Vector3.back + Vector3.right);
+                default: break;
+            }
+
+            return (null, Vector3.zero);
+        }
+
+        /// <summary>未占有の2×1の地形を探す</summary>
+        /// <returns>あれば対象の全区画</returns>
+        public (MapCell[], Vector3) GetField2x1()
+        {
+            MapCell[] cells = new MapCell[2];
+            switch (buildBitFlags)
+            {
+                case 2:
+                    cells[0] = this; cells[1] = up;
+                    return (cells, Vector3.forward);
+                case 8:
+                    cells[0] = this; cells[1] = left;
+                    return (cells, Vector3.left);
+                case 16:
+                    cells[0] = this; cells[1] = right;
+                    return (cells, Vector3.right);
+                case 64:
+                    cells[0] = this; cells[1] = down;
+                    return (cells, Vector3.back);
+                default: break;
+            }
+            return (null, Vector3.zero);
+        }
+
 
         public MapCell(FloorType floorType = FloorType.CommonFloor)
         {

@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 1b633269e4ab8dc4f8434d5bc3ba1023, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.46858686, g: 0.6202678, b: 0.7814552, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -505,6 +505,10 @@ PrefabInstance:
     serializedVersion: 2
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 6336559889197785562, guid: bcc2686c2bd662745a1111812ea0df65, type: 3}
+      propertyPath: m_Lens.FarClipPlane
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 6336559889197785563, guid: bcc2686c2bd662745a1111812ea0df65, type: 3}
       propertyPath: m_RootOrder
       value: 8
@@ -670,6 +674,22 @@ PrefabInstance:
     - target: {fileID: 6582160663157124853, guid: 1a31562a0ddc954458dfb4051bf50286, type: 3}
       propertyPath: m_Name
       value: Main Camera
+      objectReference: {fileID: 0}
+    - target: {fileID: 6582160663157124855, guid: 1a31562a0ddc954458dfb4051bf50286, type: 3}
+      propertyPath: field of view
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 6582160663157124855, guid: 1a31562a0ddc954458dfb4051bf50286, type: 3}
+      propertyPath: m_FocalLength
+      value: 32.96973
+      objectReference: {fileID: 0}
+    - target: {fileID: 6582160663157124855, guid: 1a31562a0ddc954458dfb4051bf50286, type: 3}
+      propertyPath: far clip plane
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 6582160663157124855, guid: 1a31562a0ddc954458dfb4051bf50286, type: 3}
+      propertyPath: m_projectionMatrixMode
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
@@ -1153,7 +1173,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fb53fff26c99a6428558ae189f3a169, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _mapSize: {x: 20, y: 20}
+  _mapSize: {x: 30, y: 30}
   _useSeed: 0
   _seed: 10
   _commonFloor: {fileID: 8318677690160863254, guid: aefa72aa6d1cc6d4ab422d4c20c03211, type: 3}
@@ -1161,20 +1181,39 @@ MonoBehaviour:
   _steepSlopeRoad: {fileID: 4797157088309641137, guid: 3bce5e96b9100c04984975e216d94381, type: 3}
   _gentleSlopeRoad: {fileID: 0}
   _curveRoad: {fileID: 3990418977516283613, guid: e0e3b0bec7c98a649a48cdcb6fb6b727, type: 3}
+  _commonFloorInnerStair: {fileID: 2483208149281015612, guid: 36daa222f43194848b3f5389cba9b987, type: 3}
   _differentHeightWall: {fileID: 7126736635773846509, guid: 79a684bbcd4972e489a2f0fd7279d392, type: 3}
   _bothSideWall: {fileID: 4417099514701376387, guid: 954d895973205164a82b866b80b57149, type: 3}
   _wallCornerPost: {fileID: 923731591599587551, guid: bc421ee7b6f45b0408378ed618df553f, type: 3}
+  _innerStairLeft: {fileID: 8544237057830643551, guid: 92fe2866183a0204581bfd28a3412aa5, type: 3}
+  _innerStairRight: {fileID: 4407123046204002992, guid: fa9c48ad2c246714a91490bcdf628e53, type: 3}
+  _outerStairLeft: {fileID: 104578430144610950, guid: ad73147da0d7bee4f8af07436e8f9b94, type: 3}
+  _outerStairRight: {fileID: 7749702476187365121, guid: 398b855b9358a6d41ab389b0a879f7b6, type: 3}
+  _concreteFence: {fileID: 5268849572505154618, guid: 7e119080e90e381479265291ac68f128, type: 3}
+  _concreteFenceCornerPost: {fileID: 4966365708199559901, guid: 9086ca128d34ba445837f34ad7704245, type: 3}
+  _latticeFence: {fileID: 7986655438538341638, guid: bde41912097da254cb0490c5bd05b05c, type: 3}
+  _roadBlockAreaLimit: {fileID: 862514359819192315, guid: a19527df0b0a40f4c947f5292a58431d, type: 3}
   _bridgeStair: {fileID: 2072180452001570780, guid: f3bad400cfcc8b64280baf82020e29a9, type: 3}
   _bridgeStraight: {fileID: 284717702702682400, guid: fa016245ac709354dadd191c780b539b, type: 3}
   _bridgeStraightStrut: {fileID: 6565637941918872714, guid: 3b30ebd9bfa6644438e50b4e93b14761, type: 3}
   _bridgeCorner: {fileID: 1050730003059631365, guid: 3edab9d0380f59c4183da0b44b85fa50, type: 3}
+  _pipeTwoStraight: {fileID: 0}
+  _pipeTwoHigher: {fileID: 0}
   _buldings4x3: []
   _buldings3x3:
   - {fileID: 7014089133179523098, guid: 824f1ac0af450364e9c173592c753765, type: 3}
   - {fileID: 2466545049246801578, guid: 8e18cbcca9280e4499c3fcef982b11cd, type: 3}
-  _buldings3x2: []
-  _buldings2x2: []
-  _buldings2x1: []
+  _buldings3x2:
+  - {fileID: 9115724347144186956, guid: 8d15086370e42a240bfc8acfb527332b, type: 3}
+  - {fileID: 2384300629250923748, guid: c648226b94fe4734885e4066ee17457e, type: 3}
+  - {fileID: 819133034792880706, guid: 4abf64dd93da1e64789139553e41763d, type: 3}
+  - {fileID: 7795499069509161474, guid: 20fbc4e38c6c6504d8bcbbae5edfd5b6, type: 3}
+  _buldings2x2:
+  - {fileID: 5023524354914911255, guid: 90787c962fe942b4197a873a2f4d2afa, type: 3}
+  - {fileID: 1486586378937764705, guid: 82134df9a8d16594a99713debc738acf, type: 3}
+  _buldings2x1:
+  - {fileID: 8165097857628927976, guid: dd94fa23dc367d74cbfdfbdbd81e4fc9, type: 3}
+  - {fileID: 3388684676739645332, guid: 0daec726359cc24438b19c510d60153e, type: 3}
   _buldings1x1:
   - {fileID: 667466312562358309, guid: 6be93db8c51910f4497504ad958d28b7, type: 3}
   - {fileID: 5876276153994014568, guid: a8c9fbe9f2568fe4f82ecbb600119350, type: 3}
